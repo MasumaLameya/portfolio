@@ -1,0 +1,20 @@
+<app-preloader></app-preloader>
+
+<ng-container *ngIf="!isAdminRoute">
+  <app-bg-lines></app-bg-lines>
+
+  <div class="relative z-10">
+    <div class="container max-w-[1320px] mx-auto px-5 xl:px-3">
+      <!-- Header & Drawer -->
+      <app-header (toggleMenu)="toggleDrawer()"></app-header>
+      <app-drawer-menu [isOpen]="isMenuOpen" (closeMenu)="closeDrawer()"></app-drawer-menu>
+
+      <!-- Routed Page Content (Home / Blog Single / Portfolio Single) -->
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="isAdminRoute">
+  <router-outlet></router-outlet>
+</ng-container>
