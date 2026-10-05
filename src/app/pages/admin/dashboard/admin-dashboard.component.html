@@ -350,18 +350,28 @@
               <textarea [(ngModel)]="profile.bio" rows="3" class="form-textarea"></textarea>
             </div>
 
+            <!-- Skill Names & Percentages -->
             <div class="form-row-3" style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 1rem;">
               <div>
-                <label class="field-label">Photoshoot (%)</label>
-                <input type="number" [(ngModel)]="profile.photoshoot_pct" min="0" max="100" class="form-input" />
+                <label class="field-label">Skill 1 (Name & %)</label>
+                <div style="display: flex; gap: 0.5rem;">
+                  <input type="text" [(ngModel)]="profile.skill_1_name" placeholder="Photoshoot" class="form-input" style="flex: 2;" />
+                  <input type="number" [(ngModel)]="profile.photoshoot_pct" min="0" max="100" class="form-input" style="flex: 1;" />
+                </div>
               </div>
               <div>
-                <label class="field-label">Tailwind (%)</label>
-                <input type="number" [(ngModel)]="profile.tailwind_pct" min="0" max="100" class="form-input" />
+                <label class="field-label">Skill 2 (Name & %)</label>
+                <div style="display: flex; gap: 0.5rem;">
+                  <input type="text" [(ngModel)]="profile.skill_2_name" placeholder="Tailwind" class="form-input" style="flex: 2;" />
+                  <input type="number" [(ngModel)]="profile.tailwind_pct" min="0" max="100" class="form-input" style="flex: 1;" />
+                </div>
               </div>
               <div>
-                <label class="field-label">SEO (%)</label>
-                <input type="number" [(ngModel)]="profile.seo_pct" min="0" max="100" class="form-input" />
+                <label class="field-label">Skill 3 (Name & %)</label>
+                <div style="display: flex; gap: 0.5rem;">
+                  <input type="text" [(ngModel)]="profile.skill_3_name" placeholder="SEO" class="form-input" style="flex: 2;" />
+                  <input type="number" [(ngModel)]="profile.seo_pct" min="0" max="100" class="form-input" style="flex: 1;" />
+                </div>
               </div>
             </div>
 
@@ -405,8 +415,23 @@
                 <input type="text" [(ngModel)]="profile.social_twitter" placeholder="https://..." class="form-input" style="font-size: 0.75rem;" />
               </div>
               <div>
+                <label class="field-label">Instagram URL</label>
+                <input type="text" [(ngModel)]="profile.social_instagram" placeholder="https://..." class="form-input" style="font-size: 0.75rem;" />
+              </div>
+            </div>
+
+            <div class="form-row-3" style="padding-top: 0.5rem;">
+              <div>
+                <label class="field-label">GitHub URL</label>
+                <input type="text" [(ngModel)]="profile.social_github" placeholder="https://..." class="form-input" style="font-size: 0.75rem;" />
+              </div>
+              <div>
                 <label class="field-label">LinkedIn URL</label>
                 <input type="text" [(ngModel)]="profile.social_linkedin" placeholder="https://..." class="form-input" style="font-size: 0.75rem;" />
+              </div>
+              <div>
+                <label class="field-label">CV / Resume PDF Link</label>
+                <input type="text" [(ngModel)]="profile.resume_url" placeholder="https://... or /assets/..." class="form-input" style="font-size: 0.75rem;" />
               </div>
             </div>
 
@@ -772,13 +797,19 @@
             <input type="text" [(ngModel)]="currentProject.start_date" placeholder="March 2024" class="form-input" />
           </div>
           <div>
+            <label class="field-label">Designer</label>
+            <input type="text" [(ngModel)]="currentProject.designer" placeholder="Lead Designer" class="form-input" />
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div>
+            <label class="field-label">Tools Used</label>
+            <input type="text" [(ngModel)]="currentProject.tools" placeholder="Photoshop, Figma, Blender" class="form-input" />
+          </div>
+          <div>
             <label class="field-label">Live Preview URL</label>
             <input type="text" [(ngModel)]="currentProject.project_url" placeholder="https://..." class="form-input" />
           </div>
-        </div>
-        <div class="form-group">
-          <label class="field-label">Tools Used</label>
-          <input type="text" [(ngModel)]="currentProject.tools" placeholder="Photoshop, Figma, Blender" class="form-input" />
         </div>
 
         <!-- Project Image Upload -->
@@ -814,7 +845,7 @@
           <label class="field-label">URL Slug</label>
           <input type="text" [(ngModel)]="currentBlog.slug" class="form-input" style="font-family: monospace; font-size: 0.75rem;" />
         </div>
-        <div class="form-row-2">
+        <div class="form-row-3">
           <div>
             <label class="field-label">Category</label>
             <input type="text" [(ngModel)]="currentBlog.category" class="form-input" />
@@ -822,6 +853,10 @@
           <div>
             <label class="field-label">Publish Date</label>
             <input type="text" [(ngModel)]="currentBlog.date" class="form-input" />
+          </div>
+          <div>
+            <label class="field-label">Author</label>
+            <input type="text" [(ngModel)]="currentBlog.author" class="form-input" />
           </div>
         </div>
 

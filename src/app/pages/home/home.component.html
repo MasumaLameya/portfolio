@@ -19,13 +19,13 @@
           <h2 class="text-4xl font-poppins font-semibold mb-2 dark:text-white max-w-96">{{ profile().role }}</h2>
           <ul class="space-y-3 mb-4">
             <li class="list-none inline-block px-4 py-2 me-2 rounded-full border border-black/20 dark:border-white/30 border-dashed text-pColor hover:text-black dark:text-white/70 dark:hover:text-white transition ease-linear duration-100">
-              <i class="bi bi-camera pe-1"></i> Photoshoot <div class="inline-block font-mono text-sm">(<span class="counter">{{ profile().photoshoot_pct }}</span>%)</div>
+              <i class="bi bi-camera pe-1"></i> {{ profile().skill_1_name || 'Photoshoot' }} <div class="inline-block font-mono text-sm">(<span class="counter">{{ profile().photoshoot_pct }}</span>%)</div>
             </li>
             <li class="list-none inline-block px-4 py-2 me-2 rounded-full border border-black/20 dark:border-white/30 border-dashed text-pColor hover:text-black dark:text-white/70 dark:hover:text-white transition ease-linear duration-100">
-              <i class="bi bi-code-slash pe-1"></i> Tailwind <div class="inline-block font-mono text-sm">(<span class="counter">{{ profile().tailwind_pct }}</span>%)</div>
+              <i class="bi bi-code-slash pe-1"></i> {{ profile().skill_2_name || 'Tailwind' }} <div class="inline-block font-mono text-sm">(<span class="counter">{{ profile().tailwind_pct }}</span>%)</div>
             </li>
             <li class="list-none inline-block px-4 py-2 me-2 rounded-full border border-black/20 dark:border-white/30 border-dashed text-pColor hover:text-black dark:text-white/70 dark:hover:text-white transition ease-linear duration-100">
-              <i class="bi bi-search pe-1"></i> SEO <div class="inline-block font-mono text-sm">(<span class="counter">{{ profile().seo_pct }}</span>%)</div>
+              <i class="bi bi-search pe-1"></i> {{ profile().skill_3_name || 'SEO' }} <div class="inline-block font-mono text-sm">(<span class="counter">{{ profile().seo_pct }}</span>%)</div>
             </li>
           </ul>
           <p class="text-pColor dark:text-white/70">{{ profile().bio }}</p>

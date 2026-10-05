@@ -12,12 +12,16 @@ export interface ProfileData {
   photoshoot_pct: number;
   tailwind_pct: number;
   seo_pct: number;
+  skill_1_name?: string;
+  skill_2_name?: string;
+  skill_3_name?: string;
   years_experience: number;
   hours_working: string;
   projects_done: number;
   email: string;
   phone: string;
   address: string;
+  resume_url?: string;
   social_facebook?: string;
   social_twitter?: string;
   social_instagram?: string;
