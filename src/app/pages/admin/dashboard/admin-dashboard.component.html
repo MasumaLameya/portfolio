@@ -1,487 +1,422 @@
-<div class="min-h-screen bg-[#090a0f] text-slate-200 flex flex-col md:flex-row antialiased selection:bg-indigo-500/30 selection:text-indigo-200">
+<div class="admin-layout">
   
-  <!-- FLOATING TOAST NOTIFICATION -->
-  <div *ngIf="toastMessage()" class="fixed top-6 right-6 z-50 transition-all duration-300 transform translate-y-0">
-    <div [ngClass]="toastMessage()?.type === 'success' ? 'bg-slate-900/95 border-emerald-500/50 shadow-emerald-500/10' : 'bg-slate-900/95 border-red-500/50 shadow-red-500/10'" class="px-5 py-3.5 rounded-xl shadow-2xl backdrop-blur-xl border text-white text-sm flex items-center space-x-3 max-w-md">
-      <div [ngClass]="toastMessage()?.type === 'success' ? 'text-emerald-400 bg-emerald-500/10' : 'text-red-400 bg-red-500/10'" class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0">
-        <i [class]="toastMessage()?.type === 'success' ? 'bi bi-check-circle-fill' : 'bi bi-exclamation-triangle-fill'"></i>
+  <!-- TOAST NOTIFICATION -->
+  <div *ngIf="toastMessage()" class="toast-container">
+    <div [class]="'toast-box ' + toastMessage()?.type">
+      <div class="toast-icon">
+        <i [class]="toastMessage()?.type === 'success' ? 'bi bi-check-lg' : 'bi bi-exclamation-triangle'"></i>
       </div>
-      <span class="font-medium text-slate-200 text-xs sm:text-sm">{{ toastMessage()?.text }}</span>
-      <button (click)="toastMessage.set(null)" class="text-slate-400 hover:text-white ml-2">
+      <span>{{ toastMessage()?.text }}</span>
+      <button (click)="toastMessage.set(null)" class="toast-close">
         <i class="bi bi-x"></i>
       </button>
     </div>
   </div>
 
   <!-- UPLOAD PROGRESS BANNER -->
-  <div *ngIf="isUploading()" class="fixed bottom-6 right-6 z-50 bg-indigo-950/90 border border-indigo-500/40 rounded-xl px-5 py-3 shadow-2xl backdrop-blur-md flex items-center space-x-3 text-indigo-200 text-xs font-mono animate-pulse">
-    <i class="bi bi-arrow-repeat text-base animate-spin text-indigo-400"></i>
-    <span>{{ uploadProgressText() || 'Uploading media asset...' }}</span>
+  <div *ngIf="isUploading()" class="toast-container" style="top: auto; bottom: 1.5rem;">
+    <div class="toast-box success" style="border-color: #6366f1; background: #1c1f2e;">
+      <i class="bi bi-arrow-repeat spin" style="color: #a5b4fc;"></i>
+      <span>{{ uploadProgressText() || 'Uploading media asset...' }}</span>
+    </div>
   </div>
 
-  <!-- SIDEBAR NAVIGATION -->
-  <aside class="w-full md:w-64 admin-sidebar flex flex-col flex-shrink-0 z-30">
+  <!-- ================= 1. SIDEBAR ================= -->
+  <aside class="admin-sidebar">
+    
     <!-- Brand Header -->
-    <div class="p-5 flex items-center justify-between border-b border-white/[0.07]">
-      <div class="flex items-center space-x-3">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 text-white flex items-center justify-center font-bold font-sans text-base shadow-lg shadow-indigo-500/20">
-          G
-        </div>
-        <div>
-          <div class="flex items-center space-x-2">
-            <h1 class="text-sm font-semibold text-white tracking-wide">Gray CMS</h1>
-            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">v2.4</span>
-          </div>
-          <p class="text-[11px] text-slate-400 flex items-center space-x-1.5 mt-0.5">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>Live Engine</span>
+    <div class="sidebar-header">
+      <div class="brand-wrapper">
+        <div class="brand-logo">G</div>
+        <div class="brand-info">
+          <h1>
+            <span>Gray CMS</span>
+            <span class="version-tag">v2.4</span>
+          </h1>
+          <p class="brand-status">
+            <span class="status-dot"></span>
+            <span>Online Control</span>
           </p>
         </div>
       </div>
-
-      <a routerLink="/" target="_blank" title="View Live Public Portfolio" class="text-slate-400 hover:text-white text-base p-1.5 rounded-lg hover:bg-white/5 transition">
+      <a routerLink="/" target="_blank" title="View Public Website" class="external-link-btn">
         <i class="bi bi-box-arrow-up-right"></i>
       </a>
     </div>
 
-    <!-- Navigation Menu Items -->
-    <nav class="p-3 space-y-1 flex-1 overflow-y-auto">
-      <div class="sidebar-section-title">Main</div>
-      
+    <!-- Navigation Menu -->
+    <nav class="sidebar-nav">
+      <div class="nav-section-title">Main</div>
       <button (click)="setTab('overview')" [class.active]="activeTab() === 'overview'" class="nav-item-btn">
-        <i class="bi bi-grid-1x2 text-base text-indigo-400"></i>
+        <span class="nav-icon" style="color: #818cf8;"><i class="bi bi-grid-1x2"></i></span>
         <span>Overview</span>
       </button>
 
-      <div class="sidebar-section-title mt-2">Content</div>
-
+      <div class="nav-section-title">Content & Identity</div>
       <button (click)="setTab('profile')" [class.active]="activeTab() === 'profile'" class="nav-item-btn">
-        <i class="bi bi-person-badge text-base text-sky-400"></i>
+        <span class="nav-icon" style="color: #38bdf8;"><i class="bi bi-person-badge"></i></span>
         <span>Hero & Profile</span>
       </button>
-
       <button (click)="setTab('projects')" [class.active]="activeTab() === 'projects'" class="nav-item-btn">
-        <i class="bi bi-folder2-open text-base text-amber-400"></i>
+        <span class="nav-icon" style="color: #fbbf24;"><i class="bi bi-folder2-open"></i></span>
         <span>Projects Showcase</span>
         <span class="nav-badge">{{ projects().length }}</span>
       </button>
-
       <button (click)="setTab('blogs')" [class.active]="activeTab() === 'blogs'" class="nav-item-btn">
-        <i class="bi bi-newspaper text-base text-purple-400"></i>
+        <span class="nav-icon" style="color: #c084fc;"><i class="bi bi-newspaper"></i></span>
         <span>Blog Articles</span>
         <span class="nav-badge">{{ blogs().length }}</span>
       </button>
 
-      <div class="sidebar-section-title mt-2">Showcase & Resume</div>
-
+      <div class="nav-section-title">Showcase</div>
       <button (click)="setTab('services')" [class.active]="activeTab() === 'services'" class="nav-item-btn">
-        <i class="bi bi-lightning-charge text-base text-emerald-400"></i>
+        <span class="nav-icon" style="color: #34d399;"><i class="bi bi-lightning-charge"></i></span>
         <span>Services</span>
         <span class="nav-badge">{{ services().length }}</span>
       </button>
-
       <button (click)="setTab('testimonials')" [class.active]="activeTab() === 'testimonials'" class="nav-item-btn">
-        <i class="bi bi-chat-heart text-base text-pink-400"></i>
+        <span class="nav-icon" style="color: #f472b6;"><i class="bi bi-chat-heart"></i></span>
         <span>Testimonials</span>
         <span class="nav-badge">{{ testimonials().length }}</span>
       </button>
-
       <button (click)="setTab('resume')" [class.active]="activeTab() === 'resume'" class="nav-item-btn">
-        <i class="bi bi-award text-base text-cyan-400"></i>
+        <span class="nav-icon" style="color: #22d3ee;"><i class="bi bi-award"></i></span>
         <span>Resume Timeline</span>
         <span class="nav-badge">{{ resumeItems().length }}</span>
       </button>
-
       <button (click)="setTab('clients')" [class.active]="activeTab() === 'clients'" class="nav-item-btn">
-        <i class="bi bi-buildings text-base text-teal-400"></i>
-        <span>Clients & Brands</span>
+        <span class="nav-icon" style="color: #2dd4bf;"><i class="bi bi-buildings"></i></span>
+        <span>Client Logos</span>
         <span class="nav-badge">{{ clients().length }}</span>
       </button>
 
-      <div class="sidebar-section-title mt-2">Communication</div>
-
+      <div class="nav-section-title">Communication</div>
       <button (click)="setTab('messages')" [class.active]="activeTab() === 'messages'" class="nav-item-btn">
-        <i class="bi bi-envelope text-base text-blue-400"></i>
-        <span>Inbox Messages</span>
-        <span *ngIf="messages().length > 0" class="nav-badge bg-blue-500/20 text-blue-300 font-semibold border-blue-500/40">{{ messages().length }}</span>
+        <span class="nav-icon" style="color: #60a5fa;"><i class="bi bi-envelope"></i></span>
+        <span>Messages</span>
+        <span *ngIf="messages().length > 0" class="nav-badge" style="background: rgba(59, 130, 246, 0.2); color: #93c5fd;">{{ messages().length }}</span>
       </button>
 
-      <div class="sidebar-section-title mt-2">System</div>
-
+      <div class="nav-section-title">System</div>
       <button (click)="setTab('security')" [class.active]="activeTab() === 'security'" class="nav-item-btn">
-        <i class="bi bi-shield-lock text-base text-rose-400"></i>
+        <span class="nav-icon" style="color: #fb7185;"><i class="bi bi-shield-lock"></i></span>
         <span>Security & Auth</span>
       </button>
     </nav>
 
-    <!-- Admin User Footer -->
-    <div class="p-3.5 border-t border-white/[0.07] bg-[#090a0f]/60 flex items-center justify-between">
-      <div class="flex items-center space-x-2.5 truncate">
-        <img [src]="profile.avatar_url || '/assets/images/hero-avatar.1925fb85.jpg'" alt="Avatar" class="w-8 h-8 rounded-lg object-cover border border-white/10" />
-        <div class="truncate text-xs">
-          <p class="text-white font-medium truncate">{{ profile.name || 'Christina Gray' }}</p>
-          <p class="text-slate-400 truncate text-[11px] font-mono">Administrator</p>
+    <!-- Sidebar User Footer -->
+    <div class="sidebar-footer">
+      <div class="user-profile-mini">
+        <img [src]="profile.avatar_url || '/assets/images/hero-avatar.1925fb85.jpg'" alt="User" class="user-avatar-mini" style="width: 34px !important; height: 34px !important; object-fit: cover !important; border-radius: 8px;" />
+        <div class="user-info-text">
+          <p class="user-name">{{ profile.name || 'Christina Gray' }}</p>
+          <p class="user-role">Administrator</p>
         </div>
       </div>
-      <button (click)="logout()" title="Sign out" class="text-slate-400 hover:text-red-400 p-2 rounded-lg hover:bg-red-500/10 transition">
-        <i class="bi bi-box-arrow-right text-base"></i>
+      <button (click)="logout()" title="Sign Out" class="logout-btn">
+        <i class="bi bi-box-arrow-right"></i>
       </button>
     </div>
+
   </aside>
 
-  <!-- MAIN CONTENT CONTAINER -->
-  <main class="flex-1 p-5 md:p-8 overflow-y-auto max-w-7xl mx-auto w-full">
+  <!-- ================= 2. MAIN CONTENT ================= -->
+  <main class="admin-main">
     
-    <!-- TOP BAR -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 mb-6 border-b border-white/[0.07] gap-4">
+    <!-- Top Bar -->
+    <div class="main-topbar">
       <div>
-        <div class="flex items-center space-x-2 text-xs font-mono text-slate-400 mb-1">
-          <span>CMS</span>
-          <i class="bi bi-chevron-right text-[10px]"></i>
-          <span class="text-indigo-400 uppercase">{{ activeTab() }}</span>
+        <div class="topbar-breadcrumb">
+          <span>PORTAL</span>
+          <i class="bi bi-chevron-right" style="font-size: 0.6rem;"></i>
+          <span style="color: #818cf8; text-transform: uppercase;">{{ activeTab() }}</span>
         </div>
-        <h2 class="text-2xl font-bold text-white tracking-tight capitalize">
-          {{ activeTab() === 'overview' ? 'Control Dashboard' : activeTab() + ' Manager' }}
+        <h2 class="topbar-title">
+          {{ activeTab() === 'overview' ? 'Control Dashboard' : activeTab() + ' Management' }}
         </h2>
       </div>
 
-      <!-- Action Buttons -->
-      <div class="flex items-center space-x-2.5 flex-wrap">
-        <button (click)="loadAllData()" [disabled]="isLoading()" class="btn-secondary text-xs">
-          <i class="bi bi-arrow-clockwise" [class.animate-spin]="isLoading()"></i>
+      <div class="topbar-actions">
+        <button (click)="loadAllData()" [disabled]="isLoading()" class="btn-secondary">
+          <i class="bi bi-arrow-clockwise" [class.spin]="isLoading()"></i>
           <span>{{ isLoading() ? 'Syncing...' : 'Sync Database' }}</span>
         </button>
 
-        <a routerLink="/" target="_blank" class="btn-secondary text-xs">
-          <i class="bi bi-eye"></i>
+        <a routerLink="/" target="_blank" class="btn-secondary">
+          <i class="bi bi-box-arrow-up-right"></i>
           <span>Live Site</span>
         </a>
 
-        <button *ngIf="['projects', 'blogs', 'services', 'testimonials', 'resume', 'clients'].includes(activeTab())" (click)="openAddModal(activeTab())" class="btn-primary text-xs">
+        <button *ngIf="['projects', 'blogs', 'services', 'testimonials', 'resume', 'clients'].includes(activeTab())" (click)="openAddModal(activeTab())" class="btn-primary">
           <i class="bi bi-plus-lg"></i>
           <span>Add New</span>
         </button>
       </div>
     </div>
 
-    <!-- ================= 1. OVERVIEW TAB ================= -->
-    <div *ngIf="activeTab() === 'overview'" class="space-y-6">
+    <!-- ================= TAB 1: OVERVIEW ================= -->
+    <div *ngIf="activeTab() === 'overview'">
       
       <!-- Metrics Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="metric-card cursor-pointer" (click)="setTab('projects')">
-          <div class="flex items-center justify-between text-slate-400 mb-2">
-            <span class="text-xs font-mono uppercase tracking-wider">Portfolio Items</span>
-            <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center">
-              <i class="bi bi-folder2-open text-base"></i>
-            </div>
+      <div class="stats-grid">
+        
+        <div class="stat-card" (click)="setTab('projects')">
+          <div class="stat-header">
+            <span class="stat-title">Portfolio Items</span>
+            <div class="stat-icon amber"><i class="bi bi-folder2-open"></i></div>
           </div>
-          <div class="text-2xl font-bold text-white">{{ projects().length }}</div>
-          <div class="flex items-center justify-between mt-2 text-xs">
-            <span class="text-slate-400">Works Showcase</span>
-            <span class="text-amber-400 flex items-center space-x-1">
-              <span>Manage</span> <i class="bi bi-arrow-right text-[10px]"></i>
-            </span>
+          <div class="stat-value">{{ projects().length }}</div>
+          <div class="stat-footer">
+            <span>Showcase Works</span>
+            <span class="stat-action">Manage &rarr;</span>
           </div>
         </div>
 
-        <div class="metric-card cursor-pointer" (click)="setTab('blogs')">
-          <div class="flex items-center justify-between text-slate-400 mb-2">
-            <span class="text-xs font-mono uppercase tracking-wider">Blog Posts</span>
-            <div class="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center">
-              <i class="bi bi-newspaper text-base"></i>
-            </div>
+        <div class="stat-card" (click)="setTab('blogs')">
+          <div class="stat-header">
+            <span class="stat-title">Blog Posts</span>
+            <div class="stat-icon purple"><i class="bi bi-newspaper"></i></div>
           </div>
-          <div class="text-2xl font-bold text-white">{{ blogs().length }}</div>
-          <div class="flex items-center justify-between mt-2 text-xs">
-            <span class="text-slate-400">Published Articles</span>
-            <span class="text-purple-400 flex items-center space-x-1">
-              <span>Manage</span> <i class="bi bi-arrow-right text-[10px]"></i>
-            </span>
+          <div class="stat-value">{{ blogs().length }}</div>
+          <div class="stat-footer">
+            <span>Published Articles</span>
+            <span class="stat-action">Manage &rarr;</span>
           </div>
         </div>
 
-        <div class="metric-card cursor-pointer" (click)="setTab('testimonials')">
-          <div class="flex items-center justify-between text-slate-400 mb-2">
-            <span class="text-xs font-mono uppercase tracking-wider">Reviews</span>
-            <div class="w-8 h-8 rounded-lg bg-pink-500/10 text-pink-400 flex items-center justify-center">
-              <i class="bi bi-chat-heart text-base"></i>
-            </div>
+        <div class="stat-card" (click)="setTab('testimonials')">
+          <div class="stat-header">
+            <span class="stat-title">Reviews</span>
+            <div class="stat-icon pink"><i class="bi bi-chat-heart"></i></div>
           </div>
-          <div class="text-2xl font-bold text-white">{{ testimonials().length }}</div>
-          <div class="flex items-center justify-between mt-2 text-xs">
-            <span class="text-slate-400">Client Ratings</span>
-            <span class="text-pink-400 flex items-center space-x-1">
-              <span>Manage</span> <i class="bi bi-arrow-right text-[10px]"></i>
-            </span>
+          <div class="stat-value">{{ testimonials().length }}</div>
+          <div class="stat-footer">
+            <span>Client Ratings</span>
+            <span class="stat-action">Manage &rarr;</span>
           </div>
         </div>
 
-        <div class="metric-card cursor-pointer" (click)="setTab('messages')">
-          <div class="flex items-center justify-between text-slate-400 mb-2">
-            <span class="text-xs font-mono uppercase tracking-wider">Inbox</span>
-            <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center">
-              <i class="bi bi-envelope text-base"></i>
-            </div>
+        <div class="stat-card" (click)="setTab('messages')">
+          <div class="stat-header">
+            <span class="stat-title">Inbox</span>
+            <div class="stat-icon blue"><i class="bi bi-envelope"></i></div>
           </div>
-          <div class="text-2xl font-bold text-white">{{ messages().length }}</div>
-          <div class="flex items-center justify-between mt-2 text-xs">
-            <span class="text-slate-400">Inquiries Received</span>
-            <span class="text-blue-400 flex items-center space-x-1">
-              <span>View</span> <i class="bi bi-arrow-right text-[10px]"></i>
-            </span>
+          <div class="stat-value">{{ messages().length }}</div>
+          <div class="stat-footer">
+            <span>Inquiries Received</span>
+            <span class="stat-action">View &rarr;</span>
           </div>
+        </div>
+
+      </div>
+
+      <!-- Sync Banner -->
+      <div class="sync-banner">
+        <div class="sync-info">
+          <h3>
+            <span class="status-dot"></span>
+            <span>Database & Storage Synchronization</span>
+          </h3>
+          <p>
+            Your portfolio changes commit to Supabase PostgreSQL and local storage in real-time. Any media uploads are hosted with automatic high-availability fallback.
+          </p>
+        </div>
+        <div class="sync-actions">
+          <button (click)="setTab('profile')" class="btn-secondary">
+            <i class="bi bi-person-gear"></i> Edit Profile
+          </button>
+          <button (click)="openAddModal('projects')" class="btn-primary">
+            <i class="bi bi-plus-lg"></i> New Project
+          </button>
         </div>
       </div>
 
-      <!-- Live Sync & Engine Status Banner -->
-      <div class="dashboard-card p-6 border-indigo-500/20 bg-gradient-to-r from-indigo-950/40 via-slate-900 to-slate-900">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div class="space-y-1">
-            <div class="flex items-center space-x-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              <h3 class="text-base font-semibold text-white">Database & Media Synchronization</h3>
-              <span class="status-pill success text-[10px]">Connected</span>
-            </div>
-            <p class="text-xs text-slate-400 leading-relaxed max-w-2xl">
-              All updates directly commit to Supabase PostgreSQL and synchronize to local browser storage. Any uploaded media assets are automatically processed and hosted via Supabase Storage (<code class="text-indigo-300 font-mono">portfolio-media</code>) with high-availability fallback.
-            </p>
-          </div>
-          <div class="flex items-center space-x-2.5 flex-shrink-0">
-            <button (click)="setTab('profile')" class="btn-secondary text-xs">
-              <i class="bi bi-person-gear"></i>
-              <span>Profile Settings</span>
-            </button>
-            <button (click)="openAddModal('projects')" class="btn-primary text-xs">
-              <i class="bi bi-plus-lg"></i>
-              <span>New Project</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Quick Recent Showcase Table -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Quick Recent Tables -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
         
         <!-- Recent Projects -->
-        <div class="dashboard-card p-5 space-y-4">
-          <div class="flex items-center justify-between border-b border-white/[0.07] pb-3">
-            <h4 class="text-sm font-semibold text-white flex items-center space-x-2">
-              <i class="bi bi-folder2 text-amber-400"></i>
-              <span>Recent Projects</span>
+        <div class="stat-card" style="cursor: default;">
+          <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.75rem; margin-bottom: 0.75rem;">
+            <h4 style="margin: 0; font-size: 0.85rem; font-weight: 600; color: #ffffff; display: flex; align-items: center; gap: 0.4rem;">
+              <i class="bi bi-folder2 text-amber-400"></i> Recent Projects
             </h4>
-            <button (click)="setTab('projects')" class="text-xs text-indigo-400 hover:text-indigo-300">View All ({{ projects().length }})</button>
+            <button (click)="setTab('projects')" class="stat-action" style="background: transparent; border: none; font-size: 0.75rem; cursor: pointer;">View All ({{ projects().length }})</button>
           </div>
-          <div class="space-y-2.5">
-            <div *ngFor="let p of projects().slice(0, 4)" class="flex items-center justify-between p-2.5 rounded-lg bg-white/[0.02] border border-white/[0.04] hover:border-white/[0.08] transition">
-              <div class="flex items-center space-x-3 truncate">
-                <img [src]="p.main_image || '/assets/images/portfolio-1.9aa83f65.jpg'" [alt]="p.title" class="w-10 h-10 rounded-lg object-cover flex-shrink-0 border border-white/10" />
-                <div class="truncate">
-                  <p class="text-xs font-semibold text-white truncate">{{ p.title }}</p>
-                  <p class="text-[11px] text-slate-400 truncate">{{ p.category }}</p>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <div *ngFor="let p of projects().slice(0, 4)" style="display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0.75rem; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px solid rgba(255,255,255,0.04);">
+              <div style="display: flex; align-items: center; gap: 0.65rem; overflow: hidden;">
+                <img [src]="p.main_image || '/assets/images/portfolio-1.9aa83f65.jpg'" [alt]="p.title" style="width: 36px !important; height: 36px !important; object-fit: cover !important; border-radius: 6px; flex-shrink: 0;" />
+                <div style="overflow: hidden;">
+                  <p style="margin: 0; font-size: 0.8rem; font-weight: 600; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ p.title }}</p>
+                  <p style="margin: 0; font-size: 0.7rem; color: #94a3b8;">{{ p.category }}</p>
                 </div>
               </div>
-              <button (click)="openEditModal('projects', p)" class="p-1.5 text-slate-400 hover:text-white rounded hover:bg-white/10 transition">
-                <i class="bi bi-pencil text-xs"></i>
+              <button (click)="openEditModal('projects', p)" class="btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.7rem;">
+                <i class="bi bi-pencil"></i>
               </button>
             </div>
           </div>
         </div>
 
-        <!-- Recent Articles -->
-        <div class="dashboard-card p-5 space-y-4">
-          <div class="flex items-center justify-between border-b border-white/[0.07] pb-3">
-            <h4 class="text-sm font-semibold text-white flex items-center space-x-2">
-              <i class="bi bi-newspaper text-purple-400"></i>
-              <span>Recent Blog Posts</span>
+        <!-- Recent Blogs -->
+        <div class="stat-card" style="cursor: default;">
+          <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.75rem; margin-bottom: 0.75rem;">
+            <h4 style="margin: 0; font-size: 0.85rem; font-weight: 600; color: #ffffff; display: flex; align-items: center; gap: 0.4rem;">
+              <i class="bi bi-newspaper text-purple-400"></i> Recent Blog Posts
             </h4>
-            <button (click)="setTab('blogs')" class="text-xs text-indigo-400 hover:text-indigo-300">View All ({{ blogs().length }})</button>
+            <button (click)="setTab('blogs')" class="stat-action" style="background: transparent; border: none; font-size: 0.75rem; cursor: pointer;">View All ({{ blogs().length }})</button>
           </div>
-          <div class="space-y-2.5">
-            <div *ngFor="let b of blogs().slice(0, 4)" class="flex items-center justify-between p-2.5 rounded-lg bg-white/[0.02] border border-white/[0.04] hover:border-white/[0.08] transition">
-              <div class="flex items-center space-x-3 truncate">
-                <img [src]="b.cover_image || '/assets/images/blog-post-1.a6d3ea41.jpg'" [alt]="b.title" class="w-10 h-10 rounded-lg object-cover flex-shrink-0 border border-white/10" />
-                <div class="truncate">
-                  <p class="text-xs font-semibold text-white truncate">{{ b.title }}</p>
-                  <p class="text-[11px] text-slate-400 truncate">{{ b.date }} • {{ b.category }}</p>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <div *ngFor="let b of blogs().slice(0, 4)" style="display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0.75rem; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px solid rgba(255,255,255,0.04);">
+              <div style="display: flex; align-items: center; gap: 0.65rem; overflow: hidden;">
+                <img [src]="b.cover_image || '/assets/images/blog-post-1.a6d3ea41.jpg'" [alt]="b.title" style="width: 36px !important; height: 36px !important; object-fit: cover !important; border-radius: 6px; flex-shrink: 0;" />
+                <div style="overflow: hidden;">
+                  <p style="margin: 0; font-size: 0.8rem; font-weight: 600; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ b.title }}</p>
+                  <p style="margin: 0; font-size: 0.7rem; color: #94a3b8;">{{ b.date }}</p>
                 </div>
               </div>
-              <button (click)="openEditModal('blogs', b)" class="p-1.5 text-slate-400 hover:text-white rounded hover:bg-white/10 transition">
-                <i class="bi bi-pencil text-xs"></i>
+              <button (click)="openEditModal('blogs', b)" class="btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.7rem;">
+                <i class="bi bi-pencil"></i>
               </button>
             </div>
           </div>
         </div>
 
       </div>
+
     </div>
 
-    <!-- ================= 2. HERO & PROFILE TAB ================= -->
-    <div *ngIf="activeTab() === 'profile'" class="space-y-6">
-      <div class="dashboard-card p-6 md:p-8 space-y-8">
+    <!-- ================= TAB 2: HERO & PROFILE ================= -->
+    <div *ngIf="activeTab() === 'profile'">
+      <div class="profile-panel">
         
-        <!-- Header Banner -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/[0.07] pb-5 gap-3">
+        <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 1rem; margin-bottom: 1.5rem;">
           <div>
-            <h3 class="text-lg font-semibold text-white">Hero Section & Identity</h3>
-            <p class="text-xs text-slate-400">Customize main header avatar, bio, typewriter animations, skills & social accounts</p>
+            <h3 style="margin: 0; font-size: 1.1rem; font-weight: 600; color: #ffffff;">Hero Section & Personal Info</h3>
+            <p style="margin: 0.25rem 0 0 0; font-size: 0.75rem; color: #94a3b8;">Update your main headline, avatar, bio, typewriter animations & social accounts</p>
           </div>
-          <button (click)="saveProfile()" [disabled]="isSaving()" class="btn-primary text-xs px-5">
-            <i class="bi bi-check2-circle"></i>
+          <button (click)="saveProfile()" [disabled]="isSaving()" class="btn-primary">
+            <i class="bi bi-check2"></i>
             <span>{{ isSaving() ? 'Saving Changes...' : 'Save Profile' }}</span>
           </button>
         </div>
 
-        <!-- Avatar Upload & Identity -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        <div class="profile-grid">
           
-          <!-- Avatar Media Manager -->
-          <div class="space-y-3">
-            <label class="form-label">
-              <span>Avatar Image</span>
-              <span class="text-[10px] text-indigo-400 font-mono">Interactive</span>
-            </label>
+          <!-- Avatar Column -->
+          <div class="avatar-uploader-box">
+            <label class="field-label" style="margin: 0;">Avatar Photo</label>
+            <img [src]="profile.avatar_url || '/assets/images/hero-avatar.1925fb85.jpg'" alt="Avatar" class="avatar-large-preview" style="width: 180px !important; height: 180px !important; max-width: 180px !important; max-height: 180px !important; object-fit: cover !important; border-radius: 14px;" />
             
-            <div class="image-preview-box aspect-square w-full max-w-[240px] mx-auto lg:mx-0">
-              <img [src]="profile.avatar_url || '/assets/images/hero-avatar.1925fb85.jpg'" alt="Avatar Preview" class="w-full h-full object-cover" />
-              <div class="image-preview-overlay">
-                <label class="btn-primary text-xs cursor-pointer">
-                  <i class="bi bi-camera"></i> Replace
-                  <input type="file" (change)="onFileUpload($event, 'avatar')" accept="image/*" class="hidden" />
-                </label>
-                <button type="button" (click)="removeImage('avatar')" class="btn-danger text-xs p-2" title="Reset">
-                  <i class="bi bi-trash"></i>
-                </button>
-              </div>
-            </div>
-
-            <!-- Dropzone -->
-            <div (drop)="onFileDrop($event, 'avatar')" (dragover)="onDragOver($event)" class="media-dropzone">
-              <i class="bi bi-cloud-arrow-up text-2xl text-indigo-400 mb-1"></i>
-              <p class="text-xs text-slate-300 font-medium">Drag & Drop Avatar</p>
-              <p class="text-[11px] text-slate-500 mb-2">PNG, JPG, WEBP up to 5MB</p>
-              <label class="btn-secondary text-[11px] py-1 px-3 cursor-pointer">
-                <span>Browse Files</span>
-                <input type="file" (change)="onFileUpload($event, 'avatar')" accept="image/*" class="hidden" />
+            <div (drop)="onFileDrop($event, 'avatar')" (dragover)="onDragOver($event)" class="dropzone-box">
+              <i class="bi bi-cloud-arrow-up" style="font-size: 1.5rem; color: #818cf8;"></i>
+              <p style="margin: 0.25rem 0; font-size: 0.75rem; color: #e2e8f0; font-weight: 500;">Drag & Drop Image</p>
+              <label class="btn-secondary" style="font-size: 0.7rem; padding: 0.3rem 0.65rem; cursor: pointer; display: inline-block; margin-top: 0.25rem;">
+                <span>Browse File</span>
+                <input type="file" (change)="onFileUpload($event, 'avatar')" accept="image/*" style="display: none;" />
               </label>
             </div>
 
-            <!-- Direct URL input -->
-            <div>
-              <label class="text-[11px] text-slate-400 block mb-1">Or direct Image URL:</label>
-              <input type="text" [(ngModel)]="profile.avatar_url" placeholder="https://... or /assets/..." class="form-control text-xs font-mono" />
+            <div style="width: 100%;">
+              <label class="field-label" style="font-size: 0.65rem;">Direct Image URL:</label>
+              <input type="text" [(ngModel)]="profile.avatar_url" placeholder="https://... or /assets/..." class="form-input" style="font-size: 0.75rem; font-family: monospace;" />
             </div>
+
+            <button type="button" (click)="removeImage('avatar')" class="btn-danger" style="width: 100%; font-size: 0.7rem;">
+              <i class="bi bi-trash"></i> Reset to Default
+            </button>
           </div>
 
-          <!-- Basic Info Fields -->
-          <div class="lg:col-span-2 space-y-4">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Fields Column -->
+          <div>
+            <div class="form-row-2">
               <div>
-                <label class="form-label">Full Name</label>
-                <input type="text" [(ngModel)]="profile.name" class="form-control" />
+                <label class="field-label">Full Name</label>
+                <input type="text" [(ngModel)]="profile.name" class="form-input" />
               </div>
               <div>
-                <label class="form-label">Headline Role</label>
-                <input type="text" [(ngModel)]="profile.role" class="form-control" />
+                <label class="field-label">Headline Role</label>
+                <input type="text" [(ngModel)]="profile.role" class="form-input" />
               </div>
             </div>
 
-            <div>
-              <label class="form-label">
-                <span>Animated Typewriter Words</span>
-                <span class="text-[10px] text-slate-400">Comma separated</span>
-              </label>
-              <input type="text" [(ngModel)]="typewriterWordsInput" placeholder="Christina Gray, UI/UX Designer, Photographer" class="form-control" />
+            <div class="form-group">
+              <label class="field-label">Animated Typewriter Words (Comma separated)</label>
+              <input type="text" [(ngModel)]="typewriterWordsInput" placeholder="Christina Gray, UI/UX Designer, Photographer" class="form-input" />
             </div>
 
-            <div>
-              <label class="form-label">About Me Bio</label>
-              <textarea [(ngModel)]="profile.bio" rows="3" class="form-control leading-relaxed"></textarea>
+            <div class="form-group">
+              <label class="field-label">About Me Bio</label>
+              <textarea [(ngModel)]="profile.bio" rows="3" class="form-textarea"></textarea>
             </div>
 
-            <!-- Skill Percentages -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+            <div class="form-row-3" style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 1rem;">
               <div>
-                <label class="form-label">Photoshoot Skill (%)</label>
-                <input type="number" [(ngModel)]="profile.photoshoot_pct" min="0" max="100" class="form-control" />
+                <label class="field-label">Photoshoot (%)</label>
+                <input type="number" [(ngModel)]="profile.photoshoot_pct" min="0" max="100" class="form-input" />
               </div>
               <div>
-                <label class="form-label">Tailwind Skill (%)</label>
-                <input type="number" [(ngModel)]="profile.tailwind_pct" min="0" max="100" class="form-control" />
+                <label class="field-label">Tailwind (%)</label>
+                <input type="number" [(ngModel)]="profile.tailwind_pct" min="0" max="100" class="form-input" />
               </div>
               <div>
-                <label class="form-label">SEO Skill (%)</label>
-                <input type="number" [(ngModel)]="profile.seo_pct" min="0" max="100" class="form-control" />
+                <label class="field-label">SEO (%)</label>
+                <input type="number" [(ngModel)]="profile.seo_pct" min="0" max="100" class="form-input" />
               </div>
             </div>
+
+            <div class="form-row-3" style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 1rem;">
+              <div>
+                <label class="field-label">Years Experience</label>
+                <input type="number" [(ngModel)]="profile.years_experience" class="form-input" />
+              </div>
+              <div>
+                <label class="field-label">Hours Working</label>
+                <input type="text" [(ngModel)]="profile.hours_working" placeholder="50k" class="form-input" />
+              </div>
+              <div>
+                <label class="field-label">Projects Completed</label>
+                <input type="number" [(ngModel)]="profile.projects_done" class="form-input" />
+              </div>
+            </div>
+
+            <div class="form-row-3" style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 1rem;">
+              <div>
+                <label class="field-label">Email Address</label>
+                <input type="email" [(ngModel)]="profile.email" class="form-input" />
+              </div>
+              <div>
+                <label class="field-label">Phone Number</label>
+                <input type="text" [(ngModel)]="profile.phone" class="form-input" />
+              </div>
+              <div>
+                <label class="field-label">Location Address</label>
+                <input type="text" [(ngModel)]="profile.address" class="form-input" />
+              </div>
+            </div>
+
+            <div class="form-row-3" style="padding-top: 0.5rem;">
+              <div>
+                <label class="field-label">Facebook URL</label>
+                <input type="text" [(ngModel)]="profile.social_facebook" placeholder="https://..." class="form-input" style="font-size: 0.75rem;" />
+              </div>
+              <div>
+                <label class="field-label">Twitter / X URL</label>
+                <input type="text" [(ngModel)]="profile.social_twitter" placeholder="https://..." class="form-input" style="font-size: 0.75rem;" />
+              </div>
+              <div>
+                <label class="field-label">LinkedIn URL</label>
+                <input type="text" [(ngModel)]="profile.social_linkedin" placeholder="https://..." class="form-input" style="font-size: 0.75rem;" />
+              </div>
+            </div>
+
           </div>
+
         </div>
 
-        <!-- Highlight Counters -->
-        <div class="pt-6 border-t border-white/[0.07] space-y-4">
-          <h4 class="text-sm font-semibold text-white">Experience & Statistics Counters</h4>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div>
-              <label class="form-label">Years of Experience</label>
-              <input type="number" [(ngModel)]="profile.years_experience" class="form-control" />
-            </div>
-            <div>
-              <label class="form-label">Hours of Working (e.g. 50k)</label>
-              <input type="text" [(ngModel)]="profile.hours_working" class="form-control" />
-            </div>
-            <div>
-              <label class="form-label">Projects Completed</label>
-              <input type="number" [(ngModel)]="profile.projects_done" class="form-control" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Contact & Social Details -->
-        <div class="pt-6 border-t border-white/[0.07] space-y-4">
-          <h4 class="text-sm font-semibold text-white">Contact Info & Social Links</h4>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div>
-              <label class="form-label">Email Address</label>
-              <input type="email" [(ngModel)]="profile.email" class="form-control" />
-            </div>
-            <div>
-              <label class="form-label">Phone Number</label>
-              <input type="text" [(ngModel)]="profile.phone" class="form-control" />
-            </div>
-            <div>
-              <label class="form-label">Location Address</label>
-              <input type="text" [(ngModel)]="profile.address" class="form-control" />
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-            <div>
-              <label class="form-label">Facebook URL</label>
-              <input type="text" [(ngModel)]="profile.social_facebook" placeholder="https://..." class="form-control text-xs" />
-            </div>
-            <div>
-              <label class="form-label">Twitter / X URL</label>
-              <input type="text" [(ngModel)]="profile.social_twitter" placeholder="https://..." class="form-control text-xs" />
-            </div>
-            <div>
-              <label class="form-label">Instagram URL</label>
-              <input type="text" [(ngModel)]="profile.social_instagram" placeholder="https://..." class="form-control text-xs" />
-            </div>
-            <div>
-              <label class="form-label">GitHub URL</label>
-              <input type="text" [(ngModel)]="profile.social_github" placeholder="https://..." class="form-control text-xs" />
-            </div>
-            <div>
-              <label class="form-label">LinkedIn URL</label>
-              <input type="text" [(ngModel)]="profile.social_linkedin" placeholder="https://..." class="form-control text-xs" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Submit Button Footer -->
-        <div class="pt-6 border-t border-white/[0.07] flex justify-end">
-          <button (click)="saveProfile()" [disabled]="isSaving()" class="btn-primary px-8">
-            <i class="bi bi-check2-circle"></i>
+        <div style="display: flex; justify-content: flex-end; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.08);">
+          <button (click)="saveProfile()" [disabled]="isSaving()" class="btn-primary" style="padding: 0.65rem 1.75rem;">
+            <i class="bi bi-check2"></i>
             <span>{{ isSaving() ? 'Saving Profile...' : 'Save Profile Changes' }}</span>
           </button>
         </div>
@@ -489,51 +424,44 @@
       </div>
     </div>
 
-    <!-- ================= 3. PROJECTS TAB ================= -->
-    <div *ngIf="activeTab() === 'projects'" class="space-y-6">
+    <!-- ================= TAB 3: PROJECTS ================= -->
+    <div *ngIf="activeTab() === 'projects'">
       
-      <!-- Filter & Search Bar -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div class="flex items-center space-x-2 flex-wrap gap-y-2">
-          <button *ngFor="let cat of projectCategories" (click)="selectedCategory.set(cat)" [class.active]="selectedCategory() === cat" class="btn-secondary text-xs capitalize" [ngClass]="selectedCategory() === cat ? 'bg-indigo-600 text-white border-indigo-500' : ''">
+      <!-- Filter Bar -->
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+          <button *ngFor="let cat of projectCategories" (click)="selectedCategory.set(cat)" class="btn-secondary" [style.background]="selectedCategory() === cat ? '#6366f1' : ''" [style.color]="selectedCategory() === cat ? '#ffffff' : ''" style="font-size: 0.75rem; text-transform: capitalize;">
             {{ cat }}
           </button>
         </div>
-        <div class="relative min-w-[240px]">
-          <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-          <input type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)" placeholder="Search projects..." class="form-control pl-8 text-xs" />
+        <div style="min-width: 240px;">
+          <input type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)" placeholder="Search projects..." class="form-input" style="font-size: 0.8rem;" />
         </div>
       </div>
 
       <!-- Projects Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div *ngFor="let p of filteredProjects" class="dashboard-card overflow-hidden group flex flex-col justify-between">
+      <div class="showcase-grid">
+        <div *ngFor="let p of filteredProjects" class="showcase-card">
           <div>
-            <div class="relative aspect-video w-full overflow-hidden bg-slate-950">
-              <img [src]="p.main_image || '/assets/images/portfolio-1.9aa83f65.jpg'" [alt]="p.title" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
-              <span class="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md text-white text-[10px] font-mono px-2.5 py-1 rounded-full uppercase border border-white/10">
-                {{ p.category }}
-              </span>
+            <div class="card-thumb-wrapper">
+              <img [src]="p.main_image || '/assets/images/portfolio-1.9aa83f65.jpg'" [alt]="p.title" class="card-thumb" style="width: 100% !important; height: 100% !important; object-fit: cover !important;" />
+              <span class="card-category-badge">{{ p.category }}</span>
             </div>
-            <div class="p-5 space-y-2">
-              <div class="flex items-center justify-between">
-                <h3 class="font-semibold text-white text-base truncate">{{ p.title }}</h3>
-              </div>
-              <p class="text-[11px] text-indigo-400 font-mono truncate">/portfolio/{{ p.slug }}</p>
-              <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed">{{ p.short_description }}</p>
+            <div class="card-body">
+              <h3 class="card-title">{{ p.title }}</h3>
+              <p class="card-slug">/portfolio/{{ p.slug }}</p>
+              <p class="card-desc">{{ p.short_description }}</p>
             </div>
           </div>
-
-          <div class="p-5 pt-0 border-t border-white/[0.04] mt-2 flex items-center justify-between">
-            <a [routerLink]="['/portfolio', p.slug]" target="_blank" class="text-xs text-slate-400 hover:text-white transition flex items-center space-x-1">
-              <i class="bi bi-box-arrow-up-right text-[10px]"></i>
-              <span>Preview</span>
+          <div class="card-footer">
+            <a [routerLink]="['/portfolio', p.slug]" target="_blank" style="font-size: 0.75rem; color: #94a3b8; text-decoration: none; display: flex; align-items: center; gap: 0.3rem;">
+              <i class="bi bi-box-arrow-up-right" style="font-size: 0.65rem;"></i> Preview
             </a>
-            <div class="flex items-center space-x-2">
-              <button (click)="openEditModal('projects', p)" class="btn-secondary text-xs py-1 px-2.5">
+            <div style="display: flex; gap: 0.4rem;">
+              <button (click)="openEditModal('projects', p)" class="btn-secondary" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">
                 <i class="bi bi-pencil"></i> Edit
               </button>
-              <button (click)="deleteItem('projects', p.id!)" class="btn-danger text-xs py-1 px-2.5" title="Delete">
+              <button (click)="deleteItem('projects', p.id!)" class="btn-danger" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">
                 <i class="bi bi-trash"></i>
               </button>
             </div>
@@ -541,57 +469,48 @@
         </div>
       </div>
 
-      <div *ngIf="filteredProjects.length === 0" class="dashboard-card p-12 text-center space-y-3">
-        <i class="bi bi-folder-x text-4xl text-slate-500"></i>
-        <p class="text-slate-300 font-medium text-sm">No projects match your filter.</p>
-        <button (click)="openAddModal('projects')" class="btn-primary text-xs">
-          <i class="bi bi-plus-lg"></i> Create Project
+      <div *ngIf="filteredProjects.length === 0" class="stat-card" style="text-align: center; padding: 3rem 1.5rem;">
+        <i class="bi bi-folder-x" style="font-size: 2.5rem; color: #64748b;"></i>
+        <p style="margin: 0.75rem 0; font-size: 0.9rem; color: #cbd5e1;">No projects found.</p>
+        <button (click)="openAddModal('projects')" class="btn-primary" style="font-size: 0.8rem;">
+          <i class="bi bi-plus-lg"></i> Add New Project
         </button>
       </div>
+
     </div>
 
-    <!-- ================= 4. BLOGS TAB ================= -->
-    <div *ngIf="activeTab() === 'blogs'" class="space-y-6">
+    <!-- ================= TAB 4: BLOGS ================= -->
+    <div *ngIf="activeTab() === 'blogs'">
       
-      <!-- Filter & Search Bar -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <p class="text-xs text-slate-400 font-mono">Showing {{ filteredBlogs.length }} articles</p>
-        <div class="relative min-w-[240px]">
-          <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-          <input type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)" placeholder="Search articles..." class="form-control pl-8 text-xs" />
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <p style="margin: 0; font-size: 0.8rem; color: #94a3b8;">Showing {{ filteredBlogs.length }} articles</p>
+        <div style="min-width: 240px;">
+          <input type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)" placeholder="Search articles..." class="form-input" style="font-size: 0.8rem;" />
         </div>
       </div>
 
-      <!-- Blogs Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div *ngFor="let b of filteredBlogs" class="dashboard-card overflow-hidden group flex flex-col justify-between">
+      <div class="showcase-grid">
+        <div *ngFor="let b of filteredBlogs" class="showcase-card">
           <div>
-            <div class="relative aspect-video w-full overflow-hidden bg-slate-950">
-              <img [src]="b.cover_image || '/assets/images/blog-post-1.a6d3ea41.jpg'" [alt]="b.title" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
-              <span class="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md text-white text-[10px] font-mono px-2.5 py-1 rounded-full uppercase border border-white/10">
-                {{ b.category }}
-              </span>
+            <div class="card-thumb-wrapper">
+              <img [src]="b.cover_image || '/assets/images/blog-post-1.a6d3ea41.jpg'" [alt]="b.title" class="card-thumb" style="width: 100% !important; height: 100% !important; object-fit: cover !important;" />
+              <span class="card-category-badge">{{ b.category }}</span>
             </div>
-            <div class="p-5 space-y-2">
-              <div class="flex items-center space-x-2 text-[11px] text-slate-400 font-mono">
-                <i class="bi bi-calendar3"></i>
-                <span>{{ b.date }}</span>
-              </div>
-              <h3 class="font-semibold text-white text-base truncate">{{ b.title }}</h3>
-              <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed">{{ b.summary }}</p>
+            <div class="card-body">
+              <p style="margin: 0 0 0.25rem 0; font-size: 0.7rem; color: #94a3b8; font-family: monospace;">{{ b.date }}</p>
+              <h3 class="card-title">{{ b.title }}</h3>
+              <p class="card-desc">{{ b.summary }}</p>
             </div>
           </div>
-
-          <div class="p-5 pt-0 border-t border-white/[0.04] mt-2 flex items-center justify-between">
-            <a [routerLink]="['/blog', b.slug]" target="_blank" class="text-xs text-slate-400 hover:text-white transition flex items-center space-x-1">
-              <i class="bi bi-box-arrow-up-right text-[10px]"></i>
-              <span>Read Post</span>
+          <div class="card-footer">
+            <a [routerLink]="['/blog', b.slug]" target="_blank" style="font-size: 0.75rem; color: #94a3b8; text-decoration: none; display: flex; align-items: center; gap: 0.3rem;">
+              <i class="bi bi-box-arrow-up-right" style="font-size: 0.65rem;"></i> Read
             </a>
-            <div class="flex items-center space-x-2">
-              <button (click)="openEditModal('blogs', b)" class="btn-secondary text-xs py-1 px-2.5">
+            <div style="display: flex; gap: 0.4rem;">
+              <button (click)="openEditModal('blogs', b)" class="btn-secondary" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">
                 <i class="bi bi-pencil"></i> Edit
               </button>
-              <button (click)="deleteItem('blogs', b.id!)" class="btn-danger text-xs py-1 px-2.5" title="Delete">
+              <button (click)="deleteItem('blogs', b.id!)" class="btn-danger" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">
                 <i class="bi bi-trash"></i>
               </button>
             </div>
@@ -599,116 +518,97 @@
         </div>
       </div>
 
-      <div *ngIf="filteredBlogs.length === 0" class="dashboard-card p-12 text-center space-y-3">
-        <i class="bi bi-newspaper text-4xl text-slate-500"></i>
-        <p class="text-slate-300 font-medium text-sm">No blog posts found.</p>
-        <button (click)="openAddModal('blogs')" class="btn-primary text-xs">
-          <i class="bi bi-plus-lg"></i> Write Article
-        </button>
-      </div>
     </div>
 
-    <!-- ================= 5. SERVICES TAB ================= -->
-    <div *ngIf="activeTab() === 'services'" class="space-y-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div *ngFor="let s of services()" class="dashboard-card p-6 flex flex-col justify-between space-y-4">
-          <div class="space-y-3">
-            <div class="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex items-center justify-center text-xl">
-              <i [class]="s.icon"></i>
-            </div>
-            <h3 class="font-semibold text-white text-base">{{ s.title }}</h3>
-            <p class="text-xs text-slate-400 leading-relaxed">{{ s.description }}</p>
+    <!-- ================= TAB 5: SERVICES ================= -->
+    <div *ngIf="activeTab() === 'services'">
+      <div class="showcase-grid">
+        <div *ngFor="let s of services()" class="stat-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div class="stat-icon purple" style="font-size: 1.25rem; margin-bottom: 0.75rem;"><i [class]="s.icon"></i></div>
+            <h3 style="margin: 0 0 0.35rem 0; font-size: 1rem; color: #ffffff; font-weight: 600;">{{ s.title }}</h3>
+            <p style="margin: 0; font-size: 0.775rem; color: #94a3b8; line-height: 1.5;">{{ s.description }}</p>
           </div>
-          <div class="pt-4 border-t border-white/[0.05] flex items-center justify-between">
-            <span class="text-[11px] font-mono text-slate-500">Order #{{ s.sort_order || 1 }}</span>
-            <div class="flex items-center space-x-2">
-              <button (click)="openEditModal('services', s)" class="btn-secondary text-xs py-1 px-2.5">
-                <i class="bi bi-pencil"></i>
-              </button>
-              <button (click)="deleteItem('services', s.id!)" class="btn-danger text-xs py-1 px-2.5">
-                <i class="bi bi-trash"></i>
-              </button>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.06);">
+            <span style="font-size: 0.7rem; font-family: monospace; color: #64748b;">Order #{{ s.sort_order || 1 }}</span>
+            <div style="display: flex; gap: 0.4rem;">
+              <button (click)="openEditModal('services', s)" class="btn-secondary" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;"><i class="bi bi-pencil"></i></button>
+              <button (click)="deleteItem('services', s.id!)" class="btn-danger" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;"><i class="bi bi-trash"></i></button>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ================= 6. TESTIMONIALS TAB ================= -->
-    <div *ngIf="activeTab() === 'testimonials'" class="space-y-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div *ngFor="let t of testimonials()" class="dashboard-card p-6 flex flex-col justify-between space-y-4">
-          <div class="space-y-3">
-            <div class="flex items-center space-x-3">
-              <img [src]="t.avatar || '/assets/images/testimonial-1.7265d4b8.jpg'" [alt]="t.name" class="w-12 h-12 rounded-full object-cover border border-white/10" />
+    <!-- ================= TAB 6: TESTIMONIALS ================= -->
+    <div *ngIf="activeTab() === 'testimonials'">
+      <div class="showcase-grid">
+        <div *ngFor="let t of testimonials()" class="stat-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+              <img [src]="t.avatar || '/assets/images/testimonial-1.7265d4b8.jpg'" [alt]="t.name" style="width: 42px !important; height: 42px !important; object-fit: cover !important; border-radius: 50%;" />
               <div>
-                <h4 class="font-semibold text-white text-sm">{{ t.name }}</h4>
-                <p class="text-[11px] text-slate-400">{{ t.role }}</p>
+                <h4 style="margin: 0; font-size: 0.85rem; font-weight: 600; color: #ffffff;">{{ t.name }}</h4>
+                <p style="margin: 0; font-size: 0.7rem; color: #94a3b8;">{{ t.role }}</p>
               </div>
             </div>
-            <p class="text-xs text-slate-300 italic leading-relaxed">"{{ t.feedback }}"</p>
+            <p style="margin: 0; font-size: 0.8rem; color: #cbd5e1; font-style: italic; line-height: 1.5;">"{{ t.feedback }}"</p>
           </div>
-          <div class="pt-4 border-t border-white/[0.05] flex items-center justify-between">
-            <div class="flex text-amber-400 text-xs">
-              <i class="bi bi-star-fill" *ngFor="let star of [1,2,3,4,5]"></i>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.06);">
+            <div style="color: #fbbf24; font-size: 0.75rem;">
+              <i class="bi bi-star-fill"></i> <i class="bi bi-star-fill"></i> <i class="bi bi-star-fill"></i> <i class="bi bi-star-fill"></i> <i class="bi bi-star-fill"></i>
             </div>
-            <div class="flex items-center space-x-2">
-              <button (click)="openEditModal('testimonials', t)" class="btn-secondary text-xs py-1 px-2.5">
-                <i class="bi bi-pencil"></i>
-              </button>
-              <button (click)="deleteItem('testimonials', t.id!)" class="btn-danger text-xs py-1 px-2.5">
-                <i class="bi bi-trash"></i>
-              </button>
+            <div style="display: flex; gap: 0.4rem;">
+              <button (click)="openEditModal('testimonials', t)" class="btn-secondary" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;"><i class="bi bi-pencil"></i></button>
+              <button (click)="deleteItem('testimonials', t.id!)" class="btn-danger" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;"><i class="bi bi-trash"></i></button>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ================= 7. RESUME TIMELINE TAB ================= -->
-    <div *ngIf="activeTab() === 'resume'" class="space-y-6">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- ================= TAB 7: RESUME ================= -->
+    <div *ngIf="activeTab() === 'resume'">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
         
-        <!-- Experience Column -->
-        <div class="space-y-4">
-          <h3 class="text-base font-semibold text-white flex items-center space-x-2">
-            <i class="bi bi-briefcase text-cyan-400"></i>
-            <span>Work Experience</span>
+        <!-- Experience -->
+        <div>
+          <h3 style="margin: 0 0 1rem 0; font-size: 1rem; font-weight: 600; color: #ffffff; display: flex; align-items: center; gap: 0.4rem;">
+            <i class="bi bi-briefcase text-cyan-400"></i> Work Experience
           </h3>
-          <div class="space-y-3">
-            <div *ngFor="let r of resumeItems()" [ngClass]="r.type === 'experience' ? 'block' : 'hidden'" class="dashboard-card p-5 space-y-2">
-              <div class="flex items-center justify-between">
-                <span class="status-pill info text-[10px]">{{ r.period }}</span>
-                <div class="flex items-center space-x-2">
-                  <button (click)="openEditModal('resume', r)" class="text-slate-400 hover:text-white"><i class="bi bi-pencil"></i></button>
-                  <button (click)="deleteItem('resume', r.id!)" class="text-slate-400 hover:text-red-400"><i class="bi bi-trash"></i></button>
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <div *ngFor="let r of resumeItems()" [style.display]="r.type === 'experience' ? 'block' : 'none'" class="stat-card">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+                <span style="font-size: 0.68rem; font-family: monospace; background: rgba(34, 211, 238, 0.15); color: #67e8f9; padding: 0.1rem 0.5rem; border-radius: 4px;">{{ r.period }}</span>
+                <div style="display: flex; gap: 0.3rem;">
+                  <button (click)="openEditModal('resume', r)" class="btn-secondary" style="padding: 0.2rem 0.4rem; font-size: 0.7rem;"><i class="bi bi-pencil"></i></button>
+                  <button (click)="deleteItem('resume', r.id!)" class="btn-danger" style="padding: 0.2rem 0.4rem; font-size: 0.7rem;"><i class="bi bi-trash"></i></button>
                 </div>
               </div>
-              <h4 class="font-semibold text-white text-sm">{{ r.title }}</h4>
-              <p class="text-xs text-indigo-400">{{ r.organization }}</p>
-              <p class="text-xs text-slate-400 leading-relaxed">{{ r.description }}</p>
+              <h4 style="margin: 0 0 0.15rem 0; font-size: 0.85rem; font-weight: 600; color: #ffffff;">{{ r.title }}</h4>
+              <p style="margin: 0 0 0.35rem 0; font-size: 0.75rem; color: #818cf8;">{{ r.organization }}</p>
+              <p style="margin: 0; font-size: 0.75rem; color: #94a3b8; line-height: 1.5;">{{ r.description }}</p>
             </div>
           </div>
         </div>
 
-        <!-- Education Column -->
-        <div class="space-y-4">
-          <h3 class="text-base font-semibold text-white flex items-center space-x-2">
-            <i class="bi bi-mortarboard text-purple-400"></i>
-            <span>Education & Degrees</span>
+        <!-- Education -->
+        <div>
+          <h3 style="margin: 0 0 1rem 0; font-size: 1rem; font-weight: 600; color: #ffffff; display: flex; align-items: center; gap: 0.4rem;">
+            <i class="bi bi-mortarboard text-purple-400"></i> Education & Degrees
           </h3>
-          <div class="space-y-3">
-            <div *ngFor="let r of resumeItems()" [ngClass]="r.type === 'education' ? 'block' : 'hidden'" class="dashboard-card p-5 space-y-2">
-              <div class="flex items-center justify-between">
-                <span class="status-pill purple text-[10px]">{{ r.period }}</span>
-                <div class="flex items-center space-x-2">
-                  <button (click)="openEditModal('resume', r)" class="text-slate-400 hover:text-white"><i class="bi bi-pencil"></i></button>
-                  <button (click)="deleteItem('resume', r.id!)" class="text-slate-400 hover:text-red-400"><i class="bi bi-trash"></i></button>
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <div *ngFor="let r of resumeItems()" [style.display]="r.type === 'education' ? 'block' : 'none'" class="stat-card">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+                <span style="font-size: 0.68rem; font-family: monospace; background: rgba(168, 85, 247, 0.15); color: #d8b4fe; padding: 0.1rem 0.5rem; border-radius: 4px;">{{ r.period }}</span>
+                <div style="display: flex; gap: 0.3rem;">
+                  <button (click)="openEditModal('resume', r)" class="btn-secondary" style="padding: 0.2rem 0.4rem; font-size: 0.7rem;"><i class="bi bi-pencil"></i></button>
+                  <button (click)="deleteItem('resume', r.id!)" class="btn-danger" style="padding: 0.2rem 0.4rem; font-size: 0.7rem;"><i class="bi bi-trash"></i></button>
                 </div>
               </div>
-              <h4 class="font-semibold text-white text-sm">{{ r.title }}</h4>
-              <p class="text-xs text-purple-400">{{ r.organization }}</p>
-              <p class="text-xs text-slate-400 leading-relaxed">{{ r.description }}</p>
+              <h4 style="margin: 0 0 0.15rem 0; font-size: 0.85rem; font-weight: 600; color: #ffffff;">{{ r.title }}</h4>
+              <p style="margin: 0 0 0.35rem 0; font-size: 0.75rem; color: #c084fc;">{{ r.organization }}</p>
+              <p style="margin: 0; font-size: 0.75rem; color: #94a3b8; line-height: 1.5;">{{ r.description }}</p>
             </div>
           </div>
         </div>
@@ -716,27 +616,26 @@
       </div>
     </div>
 
-    <!-- ================= 8. CLIENT LOGOS TAB ================= -->
-    <div *ngIf="activeTab() === 'clients'" class="space-y-6">
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-        <div *ngFor="let c of clients()" class="dashboard-card p-4 flex flex-col items-center justify-between text-center space-y-3 group">
-          <div class="w-full h-16 flex items-center justify-center p-2 bg-slate-950/60 rounded-lg border border-white/[0.05]">
-            <img [src]="c.logo_url || '/assets/images/client-1.e45f9e2b.png'" [alt]="c.name" class="max-h-12 max-w-full object-contain filter grayscale group-hover:grayscale-0 transition duration-300" />
+    <!-- ================= TAB 8: CLIENTS ================= -->
+    <div *ngIf="activeTab() === 'clients'">
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem;">
+        <div *ngFor="let c of clients()" class="stat-card" style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.75rem;">
+          <div style="width: 100%; height: 70px; background: #090a0f; border-radius: 8px; display: flex; align-items: center; justify-content: center; padding: 0.5rem;">
+            <img [src]="c.logo_url || '/assets/images/client-1.e45f9e2b.png'" [alt]="c.name" style="max-height: 50px; max-width: 100%; object-fit: contain;" />
           </div>
-          <p class="text-xs font-semibold text-white truncate w-full">{{ c.name }}</p>
-          <div class="flex items-center space-x-2">
-            <button (click)="openEditModal('clients', c)" class="p-1 text-slate-400 hover:text-white"><i class="bi bi-pencil text-xs"></i></button>
-            <button (click)="deleteItem('clients', c.id!)" class="p-1 text-slate-400 hover:text-red-400"><i class="bi bi-trash text-xs"></i></button>
+          <p style="margin: 0; font-size: 0.8rem; font-weight: 600; color: #ffffff;">{{ c.name }}</p>
+          <div style="display: flex; gap: 0.4rem;">
+            <button (click)="openEditModal('clients', c)" class="btn-secondary" style="font-size: 0.7rem; padding: 0.2rem 0.5rem;"><i class="bi bi-pencil"></i></button>
+            <button (click)="deleteItem('clients', c.id!)" class="btn-danger" style="font-size: 0.7rem; padding: 0.2rem 0.5rem;"><i class="bi bi-trash"></i></button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ================= 9. INBOX MESSAGES TAB ================= -->
-    <div *ngIf="activeTab() === 'messages'" class="space-y-6">
-      
-      <div class="data-table-container">
-        <table class="data-table">
+    <!-- ================= TAB 9: MESSAGES ================= -->
+    <div *ngIf="activeTab() === 'messages'">
+      <div class="data-table-wrap">
+        <table class="admin-table">
           <thead>
             <tr>
               <th>Status</th>
@@ -744,25 +643,25 @@
               <th>Email</th>
               <th>Subject</th>
               <th>Date</th>
-              <th class="text-right">Actions</th>
+              <th style="text-align: right;">Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let msg of filteredMessages">
               <td>
-                <span [ngClass]="msg.is_read ? 'status-pill success' : 'status-pill warning'">
-                  {{ msg.is_read ? 'Read' : 'New Inactive' }}
+                <span [style.background]="msg.is_read ? 'rgba(52,211,153,0.15)' : 'rgba(245,158,11,0.15)'" [style.color]="msg.is_read ? '#34d399' : '#fbbf24'" style="font-size: 0.65rem; padding: 0.15rem 0.5rem; border-radius: 9999px; font-weight: 600;">
+                  {{ msg.is_read ? 'Read' : 'New' }}
                 </span>
               </td>
-              <td class="font-medium text-white">{{ msg.name }}</td>
-              <td class="font-mono text-xs">{{ msg.email }}</td>
-              <td class="truncate max-w-xs">{{ msg.subject || 'Portfolio Inquiry' }}</td>
-              <td class="font-mono text-xs text-slate-400">{{ msg.created_at ? (msg.created_at | date:'mediumDate') : 'Recent' }}</td>
-              <td class="text-right space-x-2">
-                <button (click)="viewMessage(msg)" class="btn-secondary text-xs py-1 px-2.5">
+              <td style="font-weight: 600; color: #ffffff;">{{ msg.name }}</td>
+              <td style="font-family: monospace; font-size: 0.75rem;">{{ msg.email }}</td>
+              <td>{{ msg.subject || 'Portfolio Inquiry' }}</td>
+              <td style="font-family: monospace; font-size: 0.75rem; color: #94a3b8;">{{ msg.created_at ? (msg.created_at | date:'mediumDate') : 'Recent' }}</td>
+              <td style="text-align: right;">
+                <button (click)="viewMessage(msg)" class="btn-secondary" style="font-size: 0.7rem; padding: 0.25rem 0.5rem; margin-right: 0.35rem;">
                   <i class="bi bi-eye"></i> View
                 </button>
-                <button (click)="deleteItem('messages', msg.id!)" class="btn-danger text-xs py-1 px-2.5">
+                <button (click)="deleteItem('messages', msg.id!)" class="btn-danger" style="font-size: 0.7rem; padding: 0.25rem 0.5rem;">
                   <i class="bi bi-trash"></i>
                 </button>
               </td>
@@ -771,81 +670,66 @@
         </table>
       </div>
 
-      <div *ngIf="messages().length === 0" class="dashboard-card p-12 text-center space-y-3">
-        <i class="bi bi-envelope-open text-4xl text-slate-500"></i>
-        <p class="text-slate-300 font-medium text-sm">No messages received yet.</p>
-      </div>
-
-      <!-- Message Details Modal -->
-      <div *ngIf="selectedMessage" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-        <div class="dashboard-card max-w-lg w-full p-6 space-y-4 animate-modal-in shadow-2xl border-white/20">
-          <div class="flex items-center justify-between border-b border-white/[0.07] pb-3">
-            <h3 class="font-semibold text-white">Visitor Message</h3>
-            <button (click)="selectedMessage = null" class="text-slate-400 hover:text-white">
-              <i class="bi bi-x-lg"></i>
-            </button>
+      <!-- Message View Modal -->
+      <div *ngIf="selectedMessage" class="modal-overlay">
+        <div class="modal-dialog">
+          <div class="modal-header">
+            <h3>Visitor Message</h3>
+            <button (click)="selectedMessage = null" class="modal-close"><i class="bi bi-x-lg"></i></button>
           </div>
-          <div class="space-y-2 text-xs">
-            <p><strong class="text-slate-400">From:</strong> <span class="text-white">{{ selectedMessage.name }}</span> ({{ selectedMessage.email }})</p>
-            <p><strong class="text-slate-400">Subject:</strong> <span class="text-white">{{ selectedMessage.subject }}</span></p>
-            <div class="pt-3">
-              <p class="text-slate-400 uppercase font-mono text-[10px] mb-1">Message:</p>
-              <div class="p-4 rounded-xl bg-black/40 border border-white/5 text-slate-200 whitespace-pre-wrap leading-relaxed text-xs">
+          <div style="font-size: 0.825rem; display: flex; flex-direction: column; gap: 0.5rem;">
+            <p style="margin: 0;"><strong style="color: #94a3b8;">From:</strong> <span style="color: #ffffff;">{{ selectedMessage.name }}</span> ({{ selectedMessage.email }})</p>
+            <p style="margin: 0;"><strong style="color: #94a3b8;">Subject:</strong> <span style="color: #ffffff;">{{ selectedMessage.subject }}</span></p>
+            <div style="margin-top: 0.5rem;">
+              <p style="margin: 0 0 0.25rem 0; font-size: 0.7rem; font-family: monospace; color: #94a3b8;">MESSAGE BODY:</p>
+              <div style="padding: 1rem; background: #090a0f; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); color: #e2e8f0; line-height: 1.6; white-space: pre-wrap;">
                 {{ selectedMessage.message }}
               </div>
             </div>
           </div>
-          <div class="flex justify-end space-x-2 pt-3 border-t border-white/[0.07]">
-            <a [href]="'mailto:' + selectedMessage.email + '?subject=Re: ' + selectedMessage.subject" class="btn-primary text-xs">
+          <div class="modal-footer">
+            <a [href]="'mailto:' + selectedMessage.email + '?subject=Re: ' + selectedMessage.subject" class="btn-primary" style="font-size: 0.75rem;">
               <i class="bi bi-reply-fill"></i> Reply by Email
             </a>
-            <button (click)="selectedMessage = null" class="btn-secondary text-xs">Close</button>
+            <button (click)="selectedMessage = null" class="btn-secondary" style="font-size: 0.75rem;">Close</button>
           </div>
         </div>
       </div>
 
     </div>
 
-    <!-- ================= 10. SECURITY TAB ================= -->
-    <div *ngIf="activeTab() === 'security'" class="space-y-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- ================= TAB 10: SECURITY ================= -->
+    <div *ngIf="activeTab() === 'security'">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
         
-        <!-- Password Change Card -->
-        <div class="dashboard-card p-6 md:p-8 space-y-5">
-          <h3 class="text-base font-semibold text-white border-b border-white/[0.07] pb-3 flex items-center space-x-2">
-            <i class="bi bi-key text-indigo-400"></i>
-            <span>Change Admin Password</span>
+        <div class="profile-panel">
+          <h3 style="margin: 0 0 1rem 0; font-size: 1rem; font-weight: 600; color: #ffffff; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.75rem;">
+            <i class="bi bi-key" style="color: #818cf8;"></i> Change Password
           </h3>
-          <div class="space-y-4">
-            <div>
-              <label class="form-label">New Password</label>
-              <input type="password" [(ngModel)]="newPassword" placeholder="Minimum 6 characters" class="form-control" />
-            </div>
-            <div>
-              <label class="form-label">Confirm New Password</label>
-              <input type="password" [(ngModel)]="confirmPassword" placeholder="Re-enter password" class="form-control" />
-            </div>
-            <button (click)="changePassword()" [disabled]="isSaving()" class="btn-primary text-xs">
-              <i class="bi bi-shield-check"></i> Update Password
-            </button>
+          <div class="form-group">
+            <label class="field-label">New Password</label>
+            <input type="password" [(ngModel)]="newPassword" placeholder="Minimum 6 characters" class="form-input" />
           </div>
+          <div class="form-group">
+            <label class="field-label">Confirm Password</label>
+            <input type="password" [(ngModel)]="confirmPassword" placeholder="Confirm password" class="form-input" />
+          </div>
+          <button (click)="changePassword()" [disabled]="isSaving()" class="btn-primary" style="font-size: 0.8rem;">
+            <i class="bi bi-shield-check"></i> Update Password
+          </button>
         </div>
 
-        <!-- Email Update Card -->
-        <div class="dashboard-card p-6 md:p-8 space-y-5">
-          <h3 class="text-base font-semibold text-white border-b border-white/[0.07] pb-3 flex items-center space-x-2">
-            <i class="bi bi-envelope-at text-sky-400"></i>
-            <span>Update Admin Email</span>
+        <div class="profile-panel">
+          <h3 style="margin: 0 0 1rem 0; font-size: 1rem; font-weight: 600; color: #ffffff; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.75rem;">
+            <i class="bi bi-envelope-at" style="color: #38bdf8;"></i> Update Email Address
           </h3>
-          <div class="space-y-4">
-            <div>
-              <label class="form-label">New Email Address</label>
-              <input type="email" [(ngModel)]="newEmail" placeholder="admin@example.com" class="form-control" />
-            </div>
-            <button (click)="changeEmail()" [disabled]="isSaving()" class="btn-secondary text-xs">
-              <i class="bi bi-send"></i> Send Verification Link
-            </button>
+          <div class="form-group">
+            <label class="field-label">New Email Address</label>
+            <input type="email" [(ngModel)]="newEmail" placeholder="admin@example.com" class="form-input" />
           </div>
+          <button (click)="changeEmail()" [disabled]="isSaving()" class="btn-secondary" style="font-size: 0.8rem;">
+            <i class="bi bi-send"></i> Send Verification Link
+          </button>
         </div>
 
       </div>
@@ -854,278 +738,228 @@
   </main>
 
   <!-- ================= UNIVERSAL ADD / EDIT MODAL ================= -->
-  <div *ngIf="showModal()" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-    <div class="dashboard-card max-w-2xl w-full p-6 md:p-8 space-y-6 animate-modal-in shadow-2xl border-white/20 my-8">
+  <div *ngIf="showModal()" class="modal-overlay">
+    <div class="modal-dialog">
       
-      <!-- Modal Header -->
-      <div class="flex items-center justify-between border-b border-white/[0.07] pb-4">
-        <h3 class="font-semibold text-lg text-white capitalize flex items-center space-x-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
-          <span>{{ modalMode === 'add' ? 'Create New' : 'Edit' }} {{ modalType }}</span>
-        </h3>
-        <button (click)="closeModal()" class="text-slate-400 hover:text-white text-lg">
-          <i class="bi bi-x-lg"></i>
-        </button>
+      <div class="modal-header">
+        <h3>{{ modalMode === 'add' ? 'Create New' : 'Edit' }} {{ modalType }}</h3>
+        <button (click)="closeModal()" class="modal-close"><i class="bi bi-x-lg"></i></button>
       </div>
 
-      <!-- 1. PROJECT FORM -->
-      <div *ngIf="modalType === 'projects'" class="space-y-4 max-h-[65vh] overflow-y-auto pr-2">
-        <div>
-          <label class="form-label">Project Title</label>
-          <input type="text" [(ngModel)]="currentProject.title" (ngModelChange)="generateSlug($event, 'project')" placeholder="e.g. Glasses of Cocktail" class="form-control" />
+      <!-- PROJECT FORM -->
+      <div *ngIf="modalType === 'projects'">
+        <div class="form-group">
+          <label class="field-label">Project Title</label>
+          <input type="text" [(ngModel)]="currentProject.title" (ngModelChange)="generateSlug($event, 'project')" placeholder="e.g. Glasses of Cocktail" class="form-input" />
         </div>
-        <div>
-          <label class="form-label">URL Slug</label>
-          <input type="text" [(ngModel)]="currentProject.slug" placeholder="glasses-of-cocktail" class="form-control font-mono text-xs" />
+        <div class="form-group">
+          <label class="field-label">URL Slug</label>
+          <input type="text" [(ngModel)]="currentProject.slug" placeholder="glasses-of-cocktail" class="form-input" style="font-family: monospace; font-size: 0.75rem;" />
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="form-row-2">
           <div>
-            <label class="form-label">Category</label>
-            <input type="text" [(ngModel)]="currentProject.category" placeholder="Branding, Mockup, Web Design" class="form-control" />
-          </div>
-          <div>
-            <label class="form-label">Client Name</label>
-            <input type="text" [(ngModel)]="currentProject.client" placeholder="Studio FlaTheme" class="form-control" />
-          </div>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label class="form-label">Timeline / Start Date</label>
-            <input type="text" [(ngModel)]="currentProject.start_date" placeholder="March 2024" class="form-control" />
+            <label class="field-label">Category</label>
+            <input type="text" [(ngModel)]="currentProject.category" placeholder="Branding, Mockup, Web Design" class="form-input" />
           </div>
           <div>
-            <label class="form-label">Live Preview URL</label>
-            <input type="text" [(ngModel)]="currentProject.project_url" placeholder="https://..." class="form-control" />
+            <label class="field-label">Client Name</label>
+            <input type="text" [(ngModel)]="currentProject.client" placeholder="Studio FlaTheme" class="form-input" />
           </div>
         </div>
-        <div>
-          <label class="form-label">Tools Used</label>
-          <input type="text" [(ngModel)]="currentProject.tools" placeholder="Photoshop, Figma, Blender" class="form-control" />
-        </div>
-
-        <!-- Project Image Upload / Dropzone -->
-        <div class="space-y-2">
-          <label class="form-label">
-            <span>Project Cover Image</span>
-            <span class="text-[10px] text-indigo-400 font-mono">Upload or Paste URL</span>
-          </label>
-          
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
-            <div class="image-preview-box aspect-video w-full">
-              <img [src]="currentProject.main_image || '/assets/images/portfolio-1.9aa83f65.jpg'" alt="Preview" class="w-full h-full object-cover" />
-              <div class="image-preview-overlay">
-                <label class="btn-primary text-xs cursor-pointer">
-                  <i class="bi bi-camera"></i> Change
-                  <input type="file" (change)="onFileUpload($event, 'project')" accept="image/*" class="hidden" />
-                </label>
-                <button type="button" (click)="removeImage('project')" class="btn-danger text-xs p-2">
-                  <i class="bi bi-trash"></i>
-                </button>
-              </div>
-            </div>
-
-            <div (drop)="onFileDrop($event, 'project')" (dragover)="onDragOver($event)" class="sm:col-span-2 media-dropzone">
-              <i class="bi bi-cloud-arrow-up text-xl text-indigo-400 mb-1"></i>
-              <p class="text-xs text-slate-300 font-medium">Drag & Drop Image Here</p>
-              <label class="btn-secondary text-[11px] py-1 px-3 cursor-pointer mt-1">
-                <span>Browse File</span>
-                <input type="file" (change)="onFileUpload($event, 'project')" accept="image/*" class="hidden" />
-              </label>
-            </div>
+        <div class="form-row-2">
+          <div>
+            <label class="field-label">Timeline / Date</label>
+            <input type="text" [(ngModel)]="currentProject.start_date" placeholder="March 2024" class="form-input" />
           </div>
-
-          <input type="text" [(ngModel)]="currentProject.main_image" placeholder="Or direct Image URL: https://... or /assets/..." class="form-control text-xs font-mono mt-1" />
+          <div>
+            <label class="field-label">Live Preview URL</label>
+            <input type="text" [(ngModel)]="currentProject.project_url" placeholder="https://..." class="form-input" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="field-label">Tools Used</label>
+          <input type="text" [(ngModel)]="currentProject.tools" placeholder="Photoshop, Figma, Blender" class="form-input" />
         </div>
 
-        <div>
-          <label class="form-label">Short Summary Description</label>
-          <textarea [(ngModel)]="currentProject.short_description" rows="2" class="form-control"></textarea>
+        <!-- Project Image Upload -->
+        <div class="form-group" style="padding: 0.75rem; background: #090a0f; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);">
+          <label class="field-label">Cover Image</label>
+          <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+            <img [src]="currentProject.main_image || '/assets/images/portfolio-1.9aa83f65.jpg'" alt="Preview" style="width: 100px !important; height: 60px !important; object-fit: cover !important; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15);" />
+            <label class="btn-secondary" style="font-size: 0.75rem; cursor: pointer;">
+              <i class="bi bi-camera"></i> Upload Image
+              <input type="file" (change)="onFileUpload($event, 'project')" accept="image/*" style="display: none;" />
+            </label>
+          </div>
+          <input type="text" [(ngModel)]="currentProject.main_image" placeholder="Or direct Image URL: https://... or /assets/..." class="form-input" style="font-size: 0.75rem; font-family: monospace;" />
         </div>
-        <div>
-          <label class="form-label">Full Case Study Content</label>
-          <textarea [(ngModel)]="currentProject.full_description" rows="4" class="form-control"></textarea>
+
+        <div class="form-group">
+          <label class="field-label">Short Summary</label>
+          <textarea [(ngModel)]="currentProject.short_description" rows="2" class="form-textarea"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="field-label">Full Case Study</label>
+          <textarea [(ngModel)]="currentProject.full_description" rows="4" class="form-textarea"></textarea>
         </div>
       </div>
 
-      <!-- 2. BLOG FORM -->
-      <div *ngIf="modalType === 'blogs'" class="space-y-4 max-h-[65vh] overflow-y-auto pr-2">
-        <div>
-          <label class="form-label">Blog Title</label>
-          <input type="text" [(ngModel)]="currentBlog.title" (ngModelChange)="generateSlug($event, 'blog')" placeholder="e.g. 4 Years of Working From Home" class="form-control" />
+      <!-- BLOG FORM -->
+      <div *ngIf="modalType === 'blogs'">
+        <div class="form-group">
+          <label class="field-label">Blog Title</label>
+          <input type="text" [(ngModel)]="currentBlog.title" (ngModelChange)="generateSlug($event, 'blog')" class="form-input" />
         </div>
-        <div>
-          <label class="form-label">URL Slug</label>
-          <input type="text" [(ngModel)]="currentBlog.slug" placeholder="4-years-of-working-from-home" class="form-control font-mono text-xs" />
+        <div class="form-group">
+          <label class="field-label">URL Slug</label>
+          <input type="text" [(ngModel)]="currentBlog.slug" class="form-input" style="font-family: monospace; font-size: 0.75rem;" />
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="form-row-2">
           <div>
-            <label class="form-label">Category</label>
-            <input type="text" [(ngModel)]="currentBlog.category" placeholder="Design, Tech, Trends" class="form-control" />
+            <label class="field-label">Category</label>
+            <input type="text" [(ngModel)]="currentBlog.category" class="form-input" />
           </div>
           <div>
-            <label class="form-label">Publish Date</label>
-            <input type="text" [(ngModel)]="currentBlog.date" placeholder="24 Oct 2024" class="form-control" />
+            <label class="field-label">Publish Date</label>
+            <input type="text" [(ngModel)]="currentBlog.date" class="form-input" />
           </div>
         </div>
 
-        <!-- Blog Image Upload / Dropzone -->
-        <div class="space-y-2">
-          <label class="form-label">Cover Image</label>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
-            <div class="image-preview-box aspect-video w-full">
-              <img [src]="currentBlog.cover_image || '/assets/images/blog-post-1.a6d3ea41.jpg'" alt="Preview" class="w-full h-full object-cover" />
-              <div class="image-preview-overlay">
-                <label class="btn-primary text-xs cursor-pointer">
-                  <i class="bi bi-camera"></i> Change
-                  <input type="file" (change)="onFileUpload($event, 'blog')" accept="image/*" class="hidden" />
-                </label>
-                <button type="button" (click)="removeImage('blog')" class="btn-danger text-xs p-2">
-                  <i class="bi bi-trash"></i>
-                </button>
-              </div>
-            </div>
-
-            <div (drop)="onFileDrop($event, 'blog')" (dragover)="onDragOver($event)" class="sm:col-span-2 media-dropzone">
-              <i class="bi bi-cloud-arrow-up text-xl text-indigo-400 mb-1"></i>
-              <p class="text-xs text-slate-300 font-medium">Drag & Drop Cover Image</p>
-              <label class="btn-secondary text-[11px] py-1 px-3 cursor-pointer mt-1">
-                <span>Browse File</span>
-                <input type="file" (change)="onFileUpload($event, 'blog')" accept="image/*" class="hidden" />
-              </label>
-            </div>
+        <!-- Blog Image Upload -->
+        <div class="form-group" style="padding: 0.75rem; background: #090a0f; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);">
+          <label class="field-label">Cover Image</label>
+          <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+            <img [src]="currentBlog.cover_image || '/assets/images/blog-post-1.a6d3ea41.jpg'" alt="Preview" style="width: 100px !important; height: 60px !important; object-fit: cover !important; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15);" />
+            <label class="btn-secondary" style="font-size: 0.75rem; cursor: pointer;">
+              <i class="bi bi-camera"></i> Upload Image
+              <input type="file" (change)="onFileUpload($event, 'blog')" accept="image/*" style="display: none;" />
+            </label>
           </div>
-          <input type="text" [(ngModel)]="currentBlog.cover_image" placeholder="Or direct Image URL: https://... or /assets/..." class="form-control text-xs font-mono mt-1" />
+          <input type="text" [(ngModel)]="currentBlog.cover_image" placeholder="Or direct Image URL: https://... or /assets/..." class="form-input" style="font-size: 0.75rem; font-family: monospace;" />
         </div>
 
-        <div>
-          <label class="form-label">Tags (Comma separated)</label>
-          <input type="text" [(ngModel)]="blogTagsInput" placeholder="Design, UI/UX, Productivity" class="form-control" />
+        <div class="form-group">
+          <label class="field-label">Tags (Comma separated)</label>
+          <input type="text" [(ngModel)]="blogTagsInput" placeholder="Design, UI/UX, Web" class="form-input" />
         </div>
-        <div>
-          <label class="form-label">Summary</label>
-          <textarea [(ngModel)]="currentBlog.summary" rows="2" class="form-control"></textarea>
+        <div class="form-group">
+          <label class="field-label">Summary</label>
+          <textarea [(ngModel)]="currentBlog.summary" rows="2" class="form-textarea"></textarea>
         </div>
-        <div>
-          <label class="form-label">Article Body Content</label>
-          <textarea [(ngModel)]="currentBlog.content" rows="6" class="form-control font-sans"></textarea>
+        <div class="form-group">
+          <label class="field-label">Body Content</label>
+          <textarea [(ngModel)]="currentBlog.content" rows="6" class="form-textarea"></textarea>
         </div>
       </div>
 
-      <!-- 3. SERVICES FORM -->
-      <div *ngIf="modalType === 'services'" class="space-y-4">
-        <div>
-          <label class="form-label">Service Title</label>
-          <input type="text" [(ngModel)]="currentService.title" class="form-control" />
+      <!-- SERVICES FORM -->
+      <div *ngIf="modalType === 'services'">
+        <div class="form-group">
+          <label class="field-label">Service Title</label>
+          <input type="text" [(ngModel)]="currentService.title" class="form-input" />
         </div>
-        <div>
-          <label class="form-label">Select Icon</label>
-          <div class="grid grid-cols-6 gap-2 pt-1">
-            <button *ngFor="let icon of availableIcons" type="button" (click)="currentService.icon = icon" [class.bg-indigo-600]="currentService.icon === icon" [class.text-white]="currentService.icon === icon" class="p-2.5 rounded-xl border border-white/10 hover:bg-white/10 text-lg flex items-center justify-center transition">
+        <div class="form-group">
+          <label class="field-label">Select Icon</label>
+          <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.5rem; margin-top: 0.35rem;">
+            <button *ngFor="let icon of availableIcons" type="button" (click)="currentService.icon = icon" [style.background]="currentService.icon === icon ? '#6366f1' : 'transparent'" [style.color]="currentService.icon === icon ? '#ffffff' : '#94a3b8'" style="padding: 0.6rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center;">
               <i [class]="icon"></i>
             </button>
           </div>
         </div>
-        <div>
-          <label class="form-label">Sort Order</label>
-          <input type="number" [(ngModel)]="currentService.sort_order" class="form-control" />
+        <div class="form-group">
+          <label class="field-label">Sort Order</label>
+          <input type="number" [(ngModel)]="currentService.sort_order" class="form-input" />
         </div>
-        <div>
-          <label class="form-label">Description</label>
-          <textarea [(ngModel)]="currentService.description" rows="3" class="form-control"></textarea>
+        <div class="form-group">
+          <label class="field-label">Description</label>
+          <textarea [(ngModel)]="currentService.description" rows="3" class="form-textarea"></textarea>
         </div>
       </div>
 
-      <!-- 4. TESTIMONIAL FORM -->
-      <div *ngIf="modalType === 'testimonials'" class="space-y-4">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <!-- TESTIMONIAL FORM -->
+      <div *ngIf="modalType === 'testimonials'">
+        <div class="form-row-2">
           <div>
-            <label class="form-label">Client Name</label>
-            <input type="text" [(ngModel)]="currentTestimonial.name" class="form-control" />
+            <label class="field-label">Client Name</label>
+            <input type="text" [(ngModel)]="currentTestimonial.name" class="form-input" />
           </div>
           <div>
-            <label class="form-label">Role & Company</label>
-            <input type="text" [(ngModel)]="currentTestimonial.role" placeholder="CTO, FlaTheme" class="form-control" />
+            <label class="field-label">Role & Company</label>
+            <input type="text" [(ngModel)]="currentTestimonial.role" placeholder="CTO, FlaTheme" class="form-input" />
           </div>
         </div>
-
-        <!-- Testimonial Avatar Upload -->
-        <div class="space-y-2">
-          <label class="form-label">Client Photo</label>
-          <div class="flex items-center space-x-4">
-            <img [src]="currentTestimonial.avatar || '/assets/images/testimonial-1.7265d4b8.jpg'" alt="Preview" class="w-14 h-14 rounded-full object-cover border border-white/20" />
-            <label class="btn-secondary text-xs cursor-pointer">
+        <div class="form-group" style="padding: 0.75rem; background: #090a0f; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);">
+          <label class="field-label">Client Photo</label>
+          <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+            <img [src]="currentTestimonial.avatar || '/assets/images/testimonial-1.7265d4b8.jpg'" alt="Preview" style="width: 44px !important; height: 44px !important; object-fit: cover !important; border-radius: 50%;" />
+            <label class="btn-secondary" style="font-size: 0.75rem; cursor: pointer;">
               <i class="bi bi-camera"></i> Upload Photo
-              <input type="file" (change)="onFileUpload($event, 'testimonial')" accept="image/*" class="hidden" />
+              <input type="file" (change)="onFileUpload($event, 'testimonial')" accept="image/*" style="display: none;" />
             </label>
           </div>
-          <input type="text" [(ngModel)]="currentTestimonial.avatar" placeholder="Or Image URL: https://..." class="form-control text-xs font-mono mt-1" />
+          <input type="text" [(ngModel)]="currentTestimonial.avatar" placeholder="Or Image URL: https://..." class="form-input" style="font-size: 0.75rem; font-family: monospace;" />
         </div>
-
-        <div>
-          <label class="form-label">Feedback Review</label>
-          <textarea [(ngModel)]="currentTestimonial.feedback" rows="3" class="form-control"></textarea>
+        <div class="form-group">
+          <label class="field-label">Feedback Review</label>
+          <textarea [(ngModel)]="currentTestimonial.feedback" rows="3" class="form-textarea"></textarea>
         </div>
       </div>
 
-      <!-- 5. RESUME FORM -->
-      <div *ngIf="modalType === 'resume'" class="space-y-4">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <!-- RESUME FORM -->
+      <div *ngIf="modalType === 'resume'">
+        <div class="form-row-2">
           <div>
-            <label class="form-label">Timeline Type</label>
-            <select [(ngModel)]="currentResume.type" class="form-control">
+            <label class="field-label">Type</label>
+            <select [(ngModel)]="currentResume.type" class="form-select">
               <option value="experience">Experience</option>
               <option value="education">Education</option>
             </select>
           </div>
           <div>
-            <label class="form-label">Period / Years</label>
-            <input type="text" [(ngModel)]="currentResume.period" placeholder="2022 - Present" class="form-control" />
+            <label class="field-label">Period</label>
+            <input type="text" [(ngModel)]="currentResume.period" placeholder="2022 - Present" class="form-input" />
           </div>
         </div>
-        <div>
-          <label class="form-label">Position / Degree Title</label>
-          <input type="text" [(ngModel)]="currentResume.title" placeholder="Lead Product Designer" class="form-control" />
+        <div class="form-group">
+          <label class="field-label">Position / Degree</label>
+          <input type="text" [(ngModel)]="currentResume.title" class="form-input" />
         </div>
-        <div>
-          <label class="form-label">Company / University</label>
-          <input type="text" [(ngModel)]="currentResume.organization" placeholder="FlaTheme Studio" class="form-control" />
+        <div class="form-group">
+          <label class="field-label">Company / University</label>
+          <input type="text" [(ngModel)]="currentResume.organization" class="form-input" />
         </div>
-        <div>
-          <label class="form-label">Description</label>
-          <textarea [(ngModel)]="currentResume.description" rows="3" class="form-control"></textarea>
+        <div class="form-group">
+          <label class="field-label">Description</label>
+          <textarea [(ngModel)]="currentResume.description" rows="3" class="form-textarea"></textarea>
         </div>
       </div>
 
-      <!-- 6. CLIENTS FORM -->
-      <div *ngIf="modalType === 'clients'" class="space-y-4">
-        <div>
-          <label class="form-label">Brand / Client Name</label>
-          <input type="text" [(ngModel)]="currentClient.name" placeholder="Acme Corp" class="form-control" />
+      <!-- CLIENTS FORM -->
+      <div *ngIf="modalType === 'clients'">
+        <div class="form-group">
+          <label class="field-label">Client / Brand Name</label>
+          <input type="text" [(ngModel)]="currentClient.name" class="form-input" />
         </div>
-        
-        <!-- Client Logo Upload -->
-        <div class="space-y-2">
-          <label class="form-label">Client Logo</label>
-          <div class="flex items-center space-x-4">
-            <img [src]="currentClient.logo_url || '/assets/images/client-1.e45f9e2b.png'" alt="Preview" class="h-12 max-w-[120px] object-contain p-1 rounded bg-slate-950 border border-white/20" />
-            <label class="btn-secondary text-xs cursor-pointer">
+        <div class="form-group" style="padding: 0.75rem; background: #090a0f; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);">
+          <label class="field-label">Client Logo</label>
+          <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+            <img [src]="currentClient.logo_url || '/assets/images/client-1.e45f9e2b.png'" alt="Preview" style="max-height: 40px; max-width: 100px; object-fit: contain;" />
+            <label class="btn-secondary" style="font-size: 0.75rem; cursor: pointer;">
               <i class="bi bi-upload"></i> Upload Logo
-              <input type="file" (change)="onFileUpload($event, 'client')" accept="image/*" class="hidden" />
+              <input type="file" (change)="onFileUpload($event, 'client')" accept="image/*" style="display: none;" />
             </label>
           </div>
-          <input type="text" [(ngModel)]="currentClient.logo_url" placeholder="Or Logo URL: https://..." class="form-control text-xs font-mono mt-1" />
+          <input type="text" [(ngModel)]="currentClient.logo_url" placeholder="Or Logo URL: https://..." class="form-input" style="font-size: 0.75rem; font-family: monospace;" />
         </div>
-
-        <div>
-          <label class="form-label">Website URL (Optional)</label>
-          <input type="text" [(ngModel)]="currentClient.website_url" placeholder="https://..." class="form-control" />
+        <div class="form-group">
+          <label class="field-label">Website URL</label>
+          <input type="text" [(ngModel)]="currentClient.website_url" placeholder="https://..." class="form-input" />
         </div>
       </div>
 
-      <!-- Modal Footer Actions -->
-      <div class="flex justify-end space-x-3 pt-4 border-t border-white/[0.07]">
-        <button (click)="closeModal()" class="btn-secondary text-xs">Cancel</button>
-        <button (click)="saveModalItem()" [disabled]="isSaving()" class="btn-primary text-xs">
+      <div class="modal-footer">
+        <button (click)="closeModal()" class="btn-secondary">Cancel</button>
+        <button (click)="saveModalItem()" [disabled]="isSaving()" class="btn-primary">
           <i class="bi bi-check2"></i>
           <span>{{ isSaving() ? 'Saving...' : 'Save Item' }}</span>
         </button>
