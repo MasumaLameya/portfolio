@@ -191,21 +191,23 @@
         <p class="text-pColor dark:text-white/70">Articles, tutorials and stories about design and development.</p>
       </div>
 
-      <div class="mt-6 lg:mt-12 space-y-8 md:space-y-6">
+      <div class="mt-6 lg:mt-12 space-y-8 md:space-y-8">
         @for (post of blogs(); track post.slug) {
-          <div class="md:flex md:items-center">
-            <div class="overflow-hidden relative rounded-lg group flex-shrink-0">
-              <a [routerLink]="['/blog', post.slug]">
-                <img [src]="getImageUrl(post.cover_image)" [alt]="post.title" class="md:max-w-[340px] w-full transition ease-custom duration-500 group-hover:scale-105 group-hover:blur-[1.5px] rounded-lg object-cover" />
-                <div class="absolute top-4 left-4 bg-black/20 px-4 py-2 rounded-full text-white backdrop-blur-[5px] font-mono font-normal uppercase text-sm tracking-[0.5px]">{{ post.category }}</div>
+          <div class="flex flex-col md:flex-row md:items-center gap-6 lg:gap-8 group">
+            <div class="overflow-hidden relative rounded-lg flex-shrink-0 w-full md:w-[320px] lg:w-[340px] h-[210px] md:h-[210px] bg-black/5 dark:bg-black/40">
+              <a [routerLink]="['/blog', post.slug]" class="block w-full h-full relative">
+                <img [src]="getImageUrl(post.cover_image)" [alt]="post.title" class="w-full h-full object-cover transition ease-custom duration-500 group-hover:scale-105 group-hover:blur-[1.2px] rounded-lg" />
+                <div class="absolute top-3.5 left-3.5 bg-black/40 px-3.5 py-1.5 rounded-full text-white backdrop-blur-[5px] font-mono font-normal uppercase text-xs tracking-[0.5px] border border-white/10 z-10">{{ post.category || 'Blog' }}</div>
               </a>
             </div>
-            <div class="mt-5 md:pl-7 md:mt-0 flex-1">
-              <p class="text-pColor dark:text-white/70">Posted on {{ post.date }}</p>
-              <h3 class="font-poppins font-semibold text-2xl lg:text-3xl mt-2">
-                <a [routerLink]="['/blog', post.slug]" class="hover:underline dark:text-white">{{ post.title }}</a>
+            <div class="flex flex-col justify-center flex-1">
+              <p class="font-mono text-xs md:text-sm text-pColor dark:text-white/70 mb-2">Posted on {{ post.date }}</p>
+              <h3 class="font-poppins font-semibold text-2xl lg:text-3xl leading-snug mb-3 lg:mb-4">
+                <a [routerLink]="['/blog', post.slug]" class="hover:underline dark:text-white transition-colors duration-150 block">{{ post.title }}</a>
               </h3>
-              <a [routerLink]="['/blog', post.slug]" class="inline-block border border-black border-dashed rounded-full px-6 py-3 mt-3 lg:mt-4 font-mono text-sm hover:bg-black hover:text-white transition ease-out duration-[120ms] dark:text-white dark:border-white dark:hover:bg-white dark:hover:text-black">Continue Reading</a>
+              <div>
+                <a [routerLink]="['/blog', post.slug]" class="inline-block border border-black border-dashed rounded-full px-6 py-2.5 lg:py-3 font-mono text-sm hover:bg-black hover:text-white transition ease-out duration-[120ms] dark:text-white dark:border-white dark:hover:bg-white dark:hover:text-black">Continue Reading</a>
+              </div>
             </div>
           </div>
         }
