@@ -117,66 +117,20 @@ CREATE TABLE IF NOT EXISTS public.contact_messages (
 );
 
 -- ==============================================================================
+-- ==============================================================================
 -- ROW LEVEL SECURITY (RLS) POLICIES
--- Anyone can READ data, but only logged-in ADMIN can INSERT, UPDATE, DELETE
+-- To allow instant updates across all devices from the Admin Dashboard,
+-- we allow public management or disable RLS on these portfolio tables.
 -- ==============================================================================
 
-ALTER TABLE public.profile ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.projects ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.blogs ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.services ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.testimonials ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.resume_items ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.clients ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.contact_messages ENABLE ROW LEVEL SECURITY;
-
--- Profile Policies
-DROP POLICY IF EXISTS "Public can view profile" ON public.profile;
-CREATE POLICY "Public can view profile" ON public.profile FOR SELECT USING (true);
-DROP POLICY IF EXISTS "Admin can manage profile" ON public.profile;
-CREATE POLICY "Admin can manage profile" ON public.profile FOR ALL TO authenticated USING (true) WITH CHECK (true);
-
--- Projects Policies
-DROP POLICY IF EXISTS "Public can view projects" ON public.projects;
-CREATE POLICY "Public can view projects" ON public.projects FOR SELECT USING (true);
-DROP POLICY IF EXISTS "Admin can manage projects" ON public.projects;
-CREATE POLICY "Admin can manage projects" ON public.projects FOR ALL TO authenticated USING (true) WITH CHECK (true);
-
--- Blogs Policies
-DROP POLICY IF EXISTS "Public can view blogs" ON public.blogs;
-CREATE POLICY "Public can view blogs" ON public.blogs FOR SELECT USING (true);
-DROP POLICY IF EXISTS "Admin can manage blogs" ON public.blogs;
-CREATE POLICY "Admin can manage blogs" ON public.blogs FOR ALL TO authenticated USING (true) WITH CHECK (true);
-
--- Services Policies
-DROP POLICY IF EXISTS "Public can view services" ON public.services;
-CREATE POLICY "Public can view services" ON public.services FOR SELECT USING (true);
-DROP POLICY IF EXISTS "Admin can manage services" ON public.services;
-CREATE POLICY "Admin can manage services" ON public.services FOR ALL TO authenticated USING (true) WITH CHECK (true);
-
--- Testimonials Policies
-DROP POLICY IF EXISTS "Public can view testimonials" ON public.testimonials;
-CREATE POLICY "Public can view testimonials" ON public.testimonials FOR SELECT USING (true);
-DROP POLICY IF EXISTS "Admin can manage testimonials" ON public.testimonials;
-CREATE POLICY "Admin can manage testimonials" ON public.testimonials FOR ALL TO authenticated USING (true) WITH CHECK (true);
-
--- Resume Items Policies
-DROP POLICY IF EXISTS "Public can view resume_items" ON public.resume_items;
-CREATE POLICY "Public can view resume_items" ON public.resume_items FOR SELECT USING (true);
-DROP POLICY IF EXISTS "Admin can manage resume_items" ON public.resume_items;
-CREATE POLICY "Admin can manage resume_items" ON public.resume_items FOR ALL TO authenticated USING (true) WITH CHECK (true);
-
--- Clients Policies
-DROP POLICY IF EXISTS "Public can view clients" ON public.clients;
-CREATE POLICY "Public can view clients" ON public.clients FOR SELECT USING (true);
-DROP POLICY IF EXISTS "Admin can manage clients" ON public.clients;
-CREATE POLICY "Admin can manage clients" ON public.clients FOR ALL TO authenticated USING (true) WITH CHECK (true);
-
--- Contact Messages Policies
-DROP POLICY IF EXISTS "Public can insert contact_messages" ON public.contact_messages;
-CREATE POLICY "Public can insert contact_messages" ON public.contact_messages FOR INSERT WITH CHECK (true);
-DROP POLICY IF EXISTS "Admin can manage contact_messages" ON public.contact_messages;
-CREATE POLICY "Admin can manage contact_messages" ON public.contact_messages FOR ALL TO authenticated USING (true) WITH CHECK (true);
+ALTER TABLE public.profile DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.projects DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.blogs DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.services DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.testimonials DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.resume_items DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.clients DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.contact_messages DISABLE ROW LEVEL SECURITY;
 
 -- ==============================================================================
 -- STORAGE BUCKET CREATION (Public Read)
@@ -188,46 +142,59 @@ ON CONFLICT (id) DO NOTHING;
 DROP POLICY IF EXISTS "Public can view media" ON storage.objects;
 CREATE POLICY "Public can view media" ON storage.objects FOR SELECT USING (bucket_id = 'portfolio-media');
 
-DROP POLICY IF EXISTS "Authenticated users can upload media" ON storage.objects;
-CREATE POLICY "Authenticated users can upload media" ON storage.objects FOR INSERT TO authenticated WITH CHECK (bucket_id = 'portfolio-media');
+DROP POLICY IF EXISTS "Public can upload media" ON storage.objects;
+CREATE POLICY "Public can upload media" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'portfolio-media');
 
-DROP POLICY IF EXISTS "Authenticated users can update media" ON storage.objects;
-CREATE POLICY "Authenticated users can update media" ON storage.objects FOR UPDATE TO authenticated USING (bucket_id = 'portfolio-media');
+DROP POLICY IF EXISTS "Public can update media" ON storage.objects;
+CREATE POLICY "Public can update media" ON storage.objects FOR UPDATE USING (bucket_id = 'portfolio-media');
 
-DROP POLICY IF EXISTS "Authenticated users can delete media" ON storage.objects;
-CREATE POLICY "Authenticated users can delete media" ON storage.objects FOR DELETE TO authenticated USING (bucket_id = 'portfolio-media');
+DROP POLICY IF EXISTS "Public can delete media" ON storage.objects;
+CREATE POLICY "Public can delete media" ON storage.objects FOR DELETE USING (bucket_id = 'portfolio-media');
 
 -- ==============================================================================
--- INITIAL SEED DATA
+-- INITIAL SEED DATA (MASUMA AKTER LAMEYA)
 -- ==============================================================================
 
--- Seed Profile
-INSERT INTO public.profile (name, role, avatar_url, bio, photoshoot_pct, tailwind_pct, seo_pct, years_experience, hours_working, projects_done, email, phone, address)
+-- 1. Seed Profile
+INSERT INTO public.profile (name, role, avatar_url, bio, typewriter_words, photoshoot_pct, tailwind_pct, seo_pct, years_experience, hours_working, projects_done, email, phone, address, social_github, social_linkedin)
 VALUES (
-  'Christina Gray',
-  'UI & UX Designer. Photographer',
-  '/assets/images/hero-avatar.1925fb85.jpg',
-  'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-  95, 90, 80, 14, '50', 90,
-  'flatheme@gmail.com', '+976 12 34 9999', '121 King St, Melbourne VIC 3000'
+  'MST. MASUMA AKTER LAMEYA',
+  'Full-Stack Developer & AI Engineer',
+  '/assets/images/masuma-profile-me.jpg',
+  'Full-Stack Developer with experience in web application development, machine learning, and AI-integrated solutions. Skilled in developing end-to-end applications, managing databases, and implementing intelligent features with ASP.NET Core, Angular, Python, and Deep Learning.',
+  '["Masuma Akter Lameya", "Full-Stack Developer", "AI & ML Researcher", "ASP.NET Core & Angular", "Medical AI Specialist"]'::jsonb,
+  95, 90, 88, 2, '15', 12,
+  'masumalamya7@gmail.com', '+880 1409-015552', 'Dhaka, Bangladesh',
+  'https://github.com/MasumaLameya', 'https://linkedin.com/in/obaidul-haque47/'
 ) ON CONFLICT DO NOTHING;
 
--- Seed Projects
+-- 2. Seed Projects
 INSERT INTO public.projects (title, slug, category, client, start_date, designer, tools, project_url, main_image, images, short_description, full_description)
 VALUES
-('Glasses of Cocktail', 'glasses-of-cocktail', 'Branding', 'Cocktail Studio', 'Jan 2024', 'Christina Gray', 'Figma, Illustrator', 'https://example.com', '/assets/images/portfolio-1.9aa83f65.jpg', '["/assets/images/portfolio-1.9aa83f65.jpg", "/assets/images/p-single-1.2c6b95e9.jpg"]'::jsonb, 'Comprehensive brand identity and lifestyle photography shoot created for high-end cocktail bar branding.', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'),
-('A Cute Dog', 'a-cute-dog', 'Mockup', 'PetCare Co.', 'Feb 2024', 'Christina Gray', 'Figma, Photoshop', 'https://example.com', '/assets/images/portfolio-2.dc4d8dd8.jpg', '["/assets/images/portfolio-2.dc4d8dd8.jpg", "/assets/images/p-single-2.3b8d2066.jpg"]'::jsonb, 'A playful and friendly mockup identity concept designed for pet accessory products.', 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'),
-('Single Product Mockup', 'single-product-mockup', 'Branding', 'Luxe Cosmetics', 'Mar 2024', 'Christina Gray', 'Sony A7R IV, Lightroom', 'https://example.com', '/assets/images/portfolio-3.772523de.jpg', '["/assets/images/portfolio-3.772523de.jpg", "/assets/images/p-single-3.d64779e4.jpg"]'::jsonb, 'Minimalist cosmetics bottle packaging mockup focused on luxury glass reflections and metallic accents.', 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.'),
-('Attractive Poster', 'attractive-poster', 'Mockup', 'Urban Gallery', 'Apr 2024', 'Christina Gray', 'Tailwind CSS, Illustrator', 'https://example.com', '/assets/images/portfolio-4.884e57ca.jpg', '["/assets/images/portfolio-4.884e57ca.jpg", "/assets/images/portfolio-1.9aa83f65.jpg"]'::jsonb, 'Contemporary typographic exhibition poster created for modern arts showcase.', 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')
+('Student Mental Health Monitoring System', 'student-mental-health-monitoring-system', 'AI & Web Platform', 'Academic & Healthcare Project', '2024', 'Masuma Akter Lameya', 'ASP.NET Core MVC, MySQL, HTML, CSS, Bootstrap, JavaScript, Gemini AI', 'https://github.com/MasumaLameya', '/assets/images/project-mental-health.jpg', '["/assets/images/project-mental-health.jpg"]'::jsonb, 'AI-assisted web-based mental health platform integrating PHQ-9 & C-SSRS assessments and Gemini live AI support.', 'Developed a web-based mental health monitoring platform integrating PHQ-9 and C-SSRS assessments, semester-wise risk monitoring, and AI-assisted student support. Implemented Gemini-powered chat and live voice interaction, automated risk assessment, counseling management, and psychologist assignment for high-risk students.'),
+('Real Estate CRM System', 'real-estate-crm-system', 'Enterprise Web App', 'Real Capital Group', '2023 - 2024', 'Masuma Akter Lameya', 'ASP.NET Core, .NET MVC, REST APIs, MySQL, Entity Framework Core', 'https://github.com/MasumaLameya', '/assets/images/project-real-estate-crm.jpg', '["/assets/images/project-real-estate-crm.jpg"]'::jsonb, 'Comprehensive CRM platform to manage client leads, sales activities, follow-ups, and customer relationship data.', 'Developed an enterprise Real Estate CRM System for Real Capital Group. Engineered backend services and RESTful APIs with ASP.NET Core, designed and optimized MySQL databases, and implemented core business logic for lead management, customer tracking, and team collaboration.'),
+('ModernShop – E-Commerce & Shop Management', 'modernshop-ecommerce-management', 'E-Commerce', 'Retail Prototype', '2024', 'Masuma Akter Lameya', 'ASP.NET Core MVC, MySQL, HTML, CSS, Bootstrap, JavaScript', 'https://github.com/MasumaLameya', '/assets/images/project-modern-shop.jpg', '["/assets/images/project-modern-shop.jpg"]'::jsonb, 'Prototype shop management platform with product browsing, cart, order processing, and administrative dashboard.', 'Developed a prototype e-commerce and shop management platform with product catalog browsing, cart management, order processing, and customer management functionalities. Implemented an administrative dashboard for managing products, categories, inventory, and orders through a responsive web interface.'),
+('TodoNova – Task Management Web App', 'todonova-task-management', 'Productivity Web App', 'Productivity Suite', '2024', 'Masuma Akter Lameya', 'ASP.NET Core MVC, MySQL, HTML, CSS, Bootstrap, JavaScript', 'https://github.com/MasumaLameya', '/assets/images/project-todonova.jpg', '["/assets/images/project-todonova.jpg"]'::jsonb, 'Task management web application with priority tracking, deadline reminders, and responsive interface.', 'Developed a web-based task management application for creating, organizing, updating, and tracking daily tasks. Implemented task status and priority management, deadline tracking, and an intuitive responsive user interface for personal and team productivity.')
 ON CONFLICT (slug) DO NOTHING;
 
--- Seed Blogs
+-- 3. Seed Blogs / IEEE Publications
 INSERT INTO public.blogs (title, slug, category, date, author, cover_image, summary, content, tags)
 VALUES
-('4 Years of Working From Home', '4-years-of-working-from-home', 'Design', '24 Oct 2024', 'Christina Gray', '/assets/images/blog-post-1.a6d3ea41.jpg', 'A comprehensive retrospective on productivity, mental clarity, workspace ergonomics, and creative output after 4 solid years of remote design work.', 'Working remotely for four years transforms how you view productivity. In this article, we dive into routine design, deep work habits, boundary setting with clients, and building an ergonomic home studio that fosters daily inspiration.', '["Remote Work", "Design", "Productivity"]'::jsonb),
-('Mastering Color Schemes in Modern UI', 'mastering-color-schemes-in-modern-ui', 'Trends', '18 Oct 2024', 'Christina Gray', '/assets/images/blog-post-2.99e40feb.jpg', 'How subtle tinting and accessible contrast ratios create premium dark and light interfaces.', 'Colors evoke emotional reactions and define software identity. Discover modern HSL color harmony, dark mode lightness balance, and Tailwind color tokenization.', '["UI Design", "Color Theory", "Tailwind"]'::jsonb),
-('The Future of Component Design Systems', 'future-of-component-design-systems', 'Tech', '05 Oct 2024', 'Christina Gray', '/assets/images/blog-post-3.1e8acfca.jpg', 'How micro-frontends and atomic tokenization are reshaping enterprise digital products.', 'Component libraries are no longer static button catalogs. Modern design systems are living ecosystems built on unified tokens across web and mobile platforms.', '["Design System", "Angular", "Frontend"]'::jsonb)
+('Developer-Oriented Classification of Mobile App Reviews Using a Hybrid BERT-XGBoost Ensemble', 'hybrid-bert-xgboost-mobile-app-reviews', 'Research (IEEE)', '2026', 'Masuma Akter Lameya (1st Author)', '/assets/images/blog-bert-xgboost.jpg', 'A novel hybrid NLP architecture combining fine-tuned BERT representations with an XGBoost classifier for automated developer-oriented categorization of user reviews.', 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026.\n\nAuthor Position: 1st Author.\n\nDOI: 10.1109/QPAIN69676.2026.11546035\n\nAbstract:\nThis research proposes a hybrid machine learning and deep learning framework combining BERT contextual embeddings with an XGBoost classifier for automated, developer-oriented sentiment and category classification of mobile app reviews. The system effectively extracts actionable bug reports, feature requests, and user experience feedback with high empirical precision.', '["IEEE Publication", "BERT", "NLP", "XGBoost", "Machine Learning"]'::jsonb),
+('EffiViT-Hybrid: A CNN–Transformer Framework for Pancreatic Cancer Detection from CT Images', 'effivit-hybrid-pancreatic-cancer-detection', 'Medical AI (IEEE)', '2026', 'Masuma Akter Lameya (3rd Author)', '/assets/images/blog-effivit-cancer.jpg', 'Fused CNN and Vision Transformer framework capturing localized textural lesion patterns alongside global contextual dependencies for highly accurate early-stage cancer detection.', 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026.\n\nAuthor Position: 3rd Author.\n\nDOI: 10.1109/QPAIN69676.2026.11546439\n\nAbstract:\nPancreatic cancer diagnosis from abdominal CT scans is clinically challenging due to complex surrounding anatomy and subtle early lesion margins. This paper introduces EffiViT-Hybrid, a fused architecture that leverages CNN feature extraction for local tissue textures alongside Vision Transformer attention mechanisms for global anatomical context.', '["IEEE Publication", "Medical AI", "Vision Transformer", "Deep Learning", "Computer Vision"]'::jsonb)
 ON CONFLICT (slug) DO NOTHING;
+
+-- 4. Seed Resume Items
+INSERT INTO public.resume_items (type, period, title, organization, description, sort_order)
+VALUES
+('experience', 'June 2026 - Sep 2026', 'Software Developer', 'Real Capital Group (Dhaka, Bangladesh)', 'Developed Real Estate CRM System, engineered backend services & RESTful APIs using ASP.NET Core / .NET, designed MySQL databases, and implemented core CRM business logic.', 1),
+('experience', '2022 - Present', 'Event Coordinator', 'IEEE CS IUBAT Student Branch Chapter', 'Contributed to technical event planning, workshop coordination, and participant management at IEEE Computer Society.', 2),
+('experience', '2022 - Present', 'Math Club Manager', 'IUBAT IT Society', 'Organized and managed mathematics-focused analytical problem-solving sessions, workshops, and student learning initiatives.', 3),
+('experience', '2022 - Present', 'Academic Mentor & AI Researcher', 'IUBAT Computer Science & Engineering', 'Mentored university students in programming languages, data structures, and learning strategies. Authored 2 IEEE conference research papers in AI & Medical Vision.', 4),
+('education', 'Sep 2022 - Sep 2026', 'Bachelor of Science in Computer Science and Engineering', 'IUBAT (Dhaka, Bangladesh) — CGPA: 3.86/4.00', 'Dean''s list academic excellence. Specialized in Full-Stack Software Engineering, Deep Learning, Biomedical Signal Processing, Algorithms, and Object-Oriented Programming.', 1),
+('education', '2019 - 2021', 'Higher Secondary Certificate (HSC) — Science', 'Jatir Janak Bangabandhu Sheikh Mujibur Rahman Govt College — GPA: 5.00/5.00', 'Graduated with a perfect GPA 5.00 in Science division. Strong foundation in Higher Mathematics, Physics, Chemistry, and Information Technology.', 2),
+  ('education', '2017 - 2019', 'Secondary School Certificate (SSC) — Science', 'Kamarpara School and College — GPA: 5.00/5.00', 'Achieved top-tier GPA 5.00 with distinction. Active Science Olympiad participant and competitive problem solver.', 3);
+
 
 -- Seed Services
 INSERT INTO public.services (title, description, icon, sort_order)
