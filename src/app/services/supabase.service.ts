@@ -958,6 +958,13 @@ export class SupabaseService {
       { id: 'res_7', type: 'education', period: '2017 - 2019', title: 'Secondary School Certificate (SSC) — Science', organization: 'Kamarpara School and College — GPA: 5.00/5.00', description: 'Achieved top-tier GPA 5.00 with distinction. Active Science Olympiad participant and competitive problem solver.', sort_order: 3 }
     ];
 
+    const sanitizeResumeItem = (r: ResumeItem): ResumeItem => {
+      if (r.title === 'Software Developer' || (r.title && r.title.toLowerCase().includes('software developer'))) {
+        r.period = 'June 2026 - Sep 2026';
+      }
+      return r;
+    };
+
     const isStaleResume = (r: any) => {
       if (!r || !r.title) return true;
       const o = (r.organization || '').toLowerCase();
@@ -972,7 +979,7 @@ export class SupabaseService {
         try {
           const parsed = JSON.parse(local);
           if (Array.isArray(parsed) && parsed.length > 0 && !parsed.some(isStaleResume)) {
-            return parsed;
+            return parsed.map(sanitizeResumeItem);
           }
         } catch {}
       }
@@ -991,8 +998,19 @@ export class SupabaseService {
         return defaultResume;
       }
 
-      const valid = (data as ResumeItem[]).filter(r => !isStaleResume(r));
-      if (valid.length < 4) {
+      const seen = new Set<string>();
+      const valid: ResumeItem[] = [];
+      for (const item of (data as ResumeItem[])) {
+        if (!isStaleResume(item)) {
+          const key = `${item.type}_${item.title}`.toLowerCase();
+          if (!seen.has(key)) {
+            seen.add(key);
+            valid.push(sanitizeResumeItem({ ...item }));
+          }
+        }
+      }
+
+      if (valid.length < 4 || !valid.some(r => r.title.includes('Software Developer'))) {
         if (typeof localStorage !== 'undefined') {
           localStorage.setItem('portfolio_resume', JSON.stringify(defaultResume));
         }
