@@ -14,6 +14,7 @@ export interface BlogPost {
   secondaryImage: string;
   videoThumb: string;
   videoUrl: string;
+  paper_url?: string;
 }
 
 @Injectable({
@@ -23,33 +24,35 @@ export class BlogService {
   private posts = signal<BlogPost[]>([
     {
       id: '1',
-      slug: 'effivit-hybrid-pancreatic-cancer-detection',
-      title: 'EffiViT-Hybrid: A CNN–Transformer Framework for Pancreatic Cancer Detection from CT Images',
-      category: 'Medical AI (IEEE)',
-      postedOn: '2026',
-      postedBy: 'Masuma Akter Lameya (1st Author)',
-      description: 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN).\n\nAuthor Position: 1st Author\n\nAbstract: Pancreatic cancer diagnosis from abdominal CT scans presents major clinical challenges due to subtle textural boundaries. This research presents EffiViT-Hybrid, a fused CNN-Vision Transformer architecture designed to capture localized lesion features alongside global context for highly sensitive early-stage cancer detection.',
-      tags: ['#IEEE', '#MedicalImaging', '#VisionTransformer', '#DeepLearning', '#ComputerVision'],
-      image: '/assets/images/blog-effivit-cancer.jpg',
-      singleImage: '/assets/images/blog-effivit-cancer.jpg',
-      secondaryImage: '/assets/images/blog-effivit-cancer.jpg',
-      videoThumb: '/assets/images/blog-effivit-cancer.jpg',
-      videoUrl: 'https://github.com/MasumaLameya'
-    },
-    {
-      id: '2',
       slug: 'hybrid-bert-xgboost-mobile-app-reviews',
       title: 'Developer-Oriented Classification of Mobile App Reviews Using a Hybrid BERT-XGBoost Ensemble',
       category: 'Research (IEEE)',
       postedOn: '2026',
-      postedBy: 'Masuma Akter Lameya (3rd Author)',
-      description: 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN).\n\nAuthor Position: 3rd Author\n\nAbstract: This paper introduces a novel hybrid NLP framework combining BERT embeddings and XGBoost ensemble classification to automate developer-oriented issue categorization, feature requests, and bug reports from large-scale mobile application user reviews with state-of-the-art accuracy.',
+      postedBy: 'Masuma Akter Lameya (1st Author)',
+      description: 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN).\n\nAuthor Position: 1st Author\n\nAbstract: This paper introduces a novel hybrid NLP framework combining BERT embeddings and XGBoost ensemble classification to automate developer-oriented issue categorization, feature requests, and bug reports from large-scale mobile application user reviews with state-of-the-art accuracy.',
       tags: ['#IEEE', '#BERT', '#NLP', '#XGBoost', '#MachineLearning'],
       image: '/assets/images/blog-bert-xgboost.jpg',
       singleImage: '/assets/images/blog-bert-xgboost.jpg',
       secondaryImage: '/assets/images/blog-bert-xgboost.jpg',
       videoThumb: '/assets/images/blog-bert-xgboost.jpg',
-      videoUrl: 'https://github.com/MasumaLameya'
+      videoUrl: 'https://github.com/MasumaLameya',
+      paper_url: 'https://doi.org/10.1109/QPAIN69676.2026.11546035'
+    },
+    {
+      id: '2',
+      slug: 'effivit-hybrid-pancreatic-cancer-detection',
+      title: 'EffiViT-Hybrid: A CNN–Transformer Framework for Pancreatic Cancer Detection from CT Images',
+      category: 'Medical AI (IEEE)',
+      postedOn: '2026',
+      postedBy: 'Masuma Akter Lameya (3rd Author)',
+      description: 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN).\n\nAuthor Position: 3rd Author\n\nAbstract: Pancreatic cancer diagnosis from abdominal CT scans presents major clinical challenges due to subtle textural boundaries. This research presents EffiViT-Hybrid, a fused CNN-Vision Transformer architecture designed to capture localized lesion features alongside global context for highly sensitive early-stage cancer detection.',
+      tags: ['#IEEE', '#MedicalImaging', '#VisionTransformer', '#DeepLearning', '#ComputerVision'],
+      image: '/assets/images/blog-effivit-cancer.jpg',
+      singleImage: '/assets/images/blog-effivit-cancer.jpg',
+      secondaryImage: '/assets/images/blog-effivit-cancer.jpg',
+      videoThumb: '/assets/images/blog-effivit-cancer.jpg',
+      videoUrl: 'https://github.com/MasumaLameya',
+      paper_url: 'https://doi.org/10.1109/QPAIN69676.2026.11546439'
     }
   ]);
 

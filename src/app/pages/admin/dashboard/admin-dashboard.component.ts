@@ -570,6 +570,7 @@ export class AdminDashboardComponent implements OnInit {
       date: new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }),
       author: 'Masuma Akter Lameya',
       cover_image: '',
+      paper_url: '',
       summary: '',
       content: '',
       tags: []

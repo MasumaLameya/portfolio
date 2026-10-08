@@ -58,6 +58,7 @@ export interface BlogItem {
   content: string;
   tags?: string[];
   created_at?: string;
+  paper_url?: string;
 }
 
 export interface ServiceItem {
@@ -357,7 +358,7 @@ export class SupabaseService {
       }
 
       // Check for template relics or old avatar that need auto-migration
-      const isOldAvatar = !data.avatar_url || !data.avatar_url.includes('masuma-profile-me.jpg');
+      const isOldAvatar = !data.avatar_url || data.avatar_url.includes('hero-avatar.1925fb85.jpg') || data.avatar_url.includes('flatheme');
       const isOldRole = !data.role || data.role.includes('Photographer') || data.role.includes('UI & UX') || data.role.includes('UI/UX');
       const isOldBio = !data.bio || data.bio.includes('Lorem ipsum') || data.bio.includes('dolore magna');
       const isOldName = !data.name || data.name.includes('Christina') || data.name.trim() === '';
@@ -397,8 +398,7 @@ export class SupabaseService {
 
         // Persist the migrated data to Supabase in background
         if (data.id) {
-          const updatePayload: any = { ...sanitized };
-          delete updatePayload.id;
+          const updatePayload: any = this.toSupabaseProfilePayload(sanitized);
           this.supabase.from('profile').update(updatePayload).eq('id', data.id).then();
         }
 
@@ -418,16 +418,32 @@ export class SupabaseService {
     }
   }
 
+  /** Strip fields not present in the Supabase profile table schema */
+  private toSupabaseProfilePayload(data: any): any {
+    const allowed = [
+      'name', 'role', 'avatar_url', 'bio', 'typewriter_words',
+      'photoshoot_pct', 'tailwind_pct', 'seo_pct',
+      'years_experience', 'hours_working', 'projects_done',
+      'email', 'phone', 'address',
+      'social_facebook', 'social_twitter', 'social_instagram',
+      'social_github', 'social_linkedin', 'updated_at'
+    ];
+    const payload: any = {};
+    for (const key of allowed) {
+      if (key in data) payload[key] = data[key];
+    }
+    return payload;
+  }
+
   async updateProfile(profile: Partial<ProfileData>) {
     const current = await this.getProfile() || {};
     const merged = { ...current, ...profile };
     localStorage.setItem('portfolio_profile', JSON.stringify(merged));
     try {
-      const payload: any = { ...merged };
-      delete payload.id;
+      const payload = this.toSupabaseProfilePayload(merged);
 
-      if (merged.id) {
-        const res = await this.supabase.from('profile').update(payload).eq('id', merged.id);
+      if ((merged as any).id) {
+        const res = await this.supabase.from('profile').update(payload).eq('id', (merged as any).id);
         return res;
       } else {
         const res = await this.supabase.from('profile').upsert([payload]);

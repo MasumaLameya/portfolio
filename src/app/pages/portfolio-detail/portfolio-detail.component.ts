@@ -17,21 +17,21 @@ import { SidebarComponent } from '../../components/sidebar/sidebar.component';
       <!-- Portfolio Single Article Content -->
       <div class="w-full lg:w-3/4 space-y-6 pb-12">
         @if (project) {
-          <div class="section bg-white dark:bg-boxDark rounded-lg px-6 py-8 md:px-8 md:py-10 lg:p-12 shadow-sectionBoxShadow hover:shadow-sectionBoxShadowHover transition ease-out duration-[160ms]">
+          <div class="section bg-white dark:bg-boxDark rounded-lg px-5 py-6 sm:px-8 sm:py-8 md:px-10 md:py-10 lg:p-12 shadow-sectionBoxShadow hover:shadow-sectionBoxShadowHover transition ease-out duration-[160ms]">
             <!-- Meta Info -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
               <div>
-                <h6 class="font-mono font-medium uppercase text-sm tracking-[0.5px] dark:text-white">Client:</h6>
-                <p class="text-pColor dark:text-white/70">{{ project.client || 'Creative Studio' }}</p>
+                <h6 class="font-mono font-medium uppercase text-xs sm:text-sm tracking-[0.5px] dark:text-white">Client:</h6>
+                <p class="text-xs sm:text-sm text-pColor dark:text-white/70">{{ project.client || 'Creative Studio' }}</p>
               </div>
               <div>
-                <h6 class="font-mono font-medium uppercase text-sm tracking-[0.5px] dark:text-white">Category:</h6>
-                <p class="text-pColor dark:text-white/70">{{ project.category }}</p>
+                <h6 class="font-mono font-medium uppercase text-xs sm:text-sm tracking-[0.5px] dark:text-white">Category:</h6>
+                <p class="text-xs sm:text-sm text-pColor dark:text-white/70">{{ project.category }}</p>
               </div>
               <div>
-                <h6 class="font-mono font-medium uppercase text-sm tracking-[0.5px] dark:text-white">Project link:</h6>
-                <p class="text-pColor dark:text-white/70">
-                  <a [href]="project.project_url || '#'" target="_blank" class="hover:underline">
+                <h6 class="font-mono font-medium uppercase text-xs sm:text-sm tracking-[0.5px] dark:text-white">Project link:</h6>
+                <p class="text-xs sm:text-sm text-pColor dark:text-white/70">
+                  <a [href]="project.project_url || '#'" target="_blank" class="hover:underline break-all">
                     {{ project.project_url || 'www.example.com' }}
                   </a>
                 </p>
@@ -40,25 +40,25 @@ import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 
             <!-- Title & Intro -->
             <div class="mt-6 lg:mt-8">
-              <h2 class="text-3xl lg:text-4xl font-poppins font-semibold dark:text-white mb-3">{{ project.title }}</h2>
-              <p class="leading-7 text-pColor dark:text-white/70">{{ project.short_description }}</p>
+              <h2 class="text-2xl sm:text-3xl lg:text-4xl font-poppins font-semibold dark:text-white mb-2 sm:mb-3 break-words">{{ project.title }}</h2>
+              <p class="text-sm sm:text-base leading-relaxed text-pColor dark:text-white/70">{{ project.short_description }}</p>
             </div>
 
             <!-- Hero Main Image -->
-            <div class="overflow-hidden rounded-lg mt-6 lg:mt-12">
+            <div class="overflow-hidden rounded-lg mt-6 lg:mt-10">
               <img [src]="project.main_image" [alt]="project.title" class="w-full h-auto object-cover rounded-lg" />
             </div>
 
             <!-- Full Description Case Study -->
             @if (project.full_description) {
-              <div class="mt-8 text-pColor dark:text-white/80 leading-relaxed whitespace-pre-wrap">
+              <div class="mt-6 sm:mt-8 text-sm sm:text-base text-pColor dark:text-white/80 leading-relaxed whitespace-pre-wrap">
                 {{ project.full_description }}
               </div>
             }
 
             <!-- Back Button -->
-            <div class="mt-10 pt-6 border-t border-dashed border-black/10 dark:border-white/10 flex justify-between items-center">
-              <a routerLink="/" fragment="portfolio" class="inline-flex items-center space-x-2 font-mono text-sm px-6 py-3 border border-black border-dashed rounded-full hover:bg-black hover:text-white dark:text-white dark:border-white dark:hover:bg-white dark:hover:text-black transition">
+            <div class="mt-8 sm:mt-10 pt-6 border-t border-dashed border-black/10 dark:border-white/10 flex flex-wrap gap-4 justify-between items-center">
+              <a routerLink="/" fragment="portfolio" class="inline-flex items-center space-x-2 font-mono text-xs sm:text-sm px-5 py-2.5 sm:px-6 sm:py-3 border border-black border-dashed rounded-full hover:bg-black hover:text-white dark:text-white dark:border-white dark:hover:bg-white dark:hover:text-black transition">
                 <i class="bi bi-arrow-left"></i> <span>Back to Portfolio</span>
               </a>
             </div>

@@ -97,32 +97,6 @@ import { SupabaseService } from '../../../services/supabase.service';
           </button>
         </form>
 
-        <!-- Supabase Settings Toggle Drawer -->
-        <div class="mt-4 pt-4 border-t border-white/10 text-xs">
-          <button type="button" (click)="toggleDbConfig()" class="w-full flex items-center justify-between text-slate-400 hover:text-white p-2 rounded-lg hover:bg-white/5 transition">
-            <span class="flex items-center space-x-2">
-              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span class="font-mono text-[11px]">Database Configuration</span>
-            </span>
-            <i [class]="showDbConfig() ? 'bi bi-chevron-up' : 'bi bi-chevron-down'"></i>
-          </button>
-
-          <div *ngIf="showDbConfig()" class="mt-3 p-3.5 rounded-xl bg-black/40 border border-white/10 space-y-3">
-            <div>
-              <label class="block text-[10px] font-mono text-slate-400 mb-1">SUPABASE PROJECT URL</label>
-              <input type="text" [(ngModel)]="customUrl" placeholder="https://xyz.supabase.co" class="w-full bg-[#0d0f17] border border-white/15 rounded-lg px-2.5 py-1.5 text-white font-mono text-[11px] focus:outline-none focus:border-indigo-500" />
-            </div>
-            <div>
-              <label class="block text-[10px] font-mono text-slate-400 mb-1">SUPABASE ANON / API KEY</label>
-              <input type="text" [(ngModel)]="customKey" placeholder="eyJhbGciOi..." class="w-full bg-[#0d0f17] border border-white/15 rounded-lg px-2.5 py-1.5 text-white font-mono text-[11px] focus:outline-none focus:border-indigo-500" />
-            </div>
-            <button type="button" (click)="saveDbConfig()" class="w-full py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-lg text-xs transition flex items-center justify-center space-x-1">
-              <i class="bi bi-arrow-repeat"></i>
-              <span>Save & Connect</span>
-            </button>
-          </div>
-        </div>
-
         <!-- Return to Portfolio -->
         <div class="footer-section">
           <a routerLink="/" class="back-link">
@@ -393,36 +367,10 @@ export class AdminLoginComponent {
   successMessage = signal('');
   showPassword = signal(false);
 
-  // Supabase Custom Config Drawer
-  showDbConfig = signal(false);
-  customUrl = 'https://euertyrqjpxeerirtars.supabase.co';
-  customKey = 'sb_publishable_cgG20CGLDSoWLz2I1pW7FQ_HNZpgwm-';
-
   constructor(
     private supabase: SupabaseService,
     private router: Router
-  ) {
-    const savedUrl = localStorage.getItem('custom_supabase_url');
-    const savedKey = localStorage.getItem('custom_supabase_key');
-    if (savedUrl) this.customUrl = savedUrl;
-    if (savedKey) this.customKey = savedKey;
-  }
-
-  toggleDbConfig(): void {
-    this.showDbConfig.update(v => !v);
-  }
-
-  saveDbConfig(): void {
-    if (!this.customUrl || !this.customKey) {
-      this.errorMessage.set('Please provide both Supabase URL and Key');
-      return;
-    }
-    const success = this.supabase.updateCredentials(this.customUrl, this.customKey);
-    if (success) {
-      this.successMessage.set('Database credentials saved & reconnected!');
-      setTimeout(() => this.successMessage.set(''), 3000);
-    }
-  }
+  ) {}
 
   togglePassword(): void {
     this.showPassword.update(v => !v);

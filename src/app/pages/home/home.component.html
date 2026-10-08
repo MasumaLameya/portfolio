@@ -6,45 +6,45 @@
   <div class="w-full lg:w-3/4 lg:flex-1 space-y-6 pb-12">
     
     <!-- 1. ABOUT ME SECTION -->
-    <div id="about" class="section bg-white dark:bg-boxDark rounded-lg px-6 py-8 md:px-8 md:py-10 lg:p-12 shadow-sectionBoxShadow hover:shadow-sectionBoxShadowHover transition ease-out duration-[160ms]">
-      <div class="lg:flex lg:space-x-10">
-        <div class="relative h-fit mb-6 lg:mb-0 flex-shrink-0">
-          <img [src]="getImageUrl(profile().avatar_url)" [alt]="profile().name" class="min-w-52 min-h-52 max-w-64 max-h-64 rounded-full object-cover" />
-          <div class="absolute bottom-4 left-2 bg-black/30 dark:bg-black/60 px-4 py-2 rounded-full shadow-avatarText backdrop-blur-[5px] text-white font-mono font-normal uppercase text-sm tracking-wider">
+    <div id="about" class="section bg-white dark:bg-boxDark rounded-lg px-5 py-6 sm:px-8 sm:py-8 md:px-10 md:py-10 lg:p-12 shadow-sectionBoxShadow hover:shadow-sectionBoxShadowHover transition ease-out duration-[160ms]">
+      <div class="flex flex-col lg:flex-row items-center lg:items-start gap-6 lg:gap-10">
+        <div class="relative h-fit flex-shrink-0 mx-auto lg:mx-0">
+          <img [src]="getImageUrl(profile().avatar_url)" (error)="onAvatarError($event)" [alt]="profile().name" class="w-44 h-44 sm:w-52 sm:h-52 md:w-60 md:h-60 rounded-full object-cover shadow-md" />
+          <div class="absolute bottom-3 left-1/2 -translate-x-1/2 lg:translate-x-0 lg:left-2 bg-black/40 dark:bg-black/70 px-3.5 py-1.5 rounded-full shadow-avatarText backdrop-blur-[5px] text-white font-mono font-normal uppercase text-xs sm:text-sm tracking-wider max-w-[90%] truncate text-center">
             <span>{{ typewriterText() }}</span><span class="Typewriter__cursor">|</span>
           </div>
         </div>
-        <div>
-          <h6 class="font-mono font-medium uppercase text-sm tracking-wider relative pt-4 mb-5 dark:text-white before:content-['//'] before:pr-2 after:content-[attr(data-backdrop-text)] after:absolute after:top-0 after:left-0 after:font-poppins after:font-bold after:uppercase after:text-4xl after:opacity-15" data-backdrop-text="About Me">About Me</h6>
-          <h2 class="text-4xl font-poppins font-semibold mb-2 dark:text-white max-w-96">{{ profile().role }}</h2>
-          <ul class="space-y-3 mb-4">
-            <li class="list-none inline-block px-4 py-2 me-2 rounded-full border border-black/20 dark:border-white/30 border-dashed text-pColor hover:text-black dark:text-white/70 dark:hover:text-white transition ease-linear duration-100">
-              <i class="bi bi-camera pe-1"></i> {{ profile().skill_1_name || 'Photoshoot' }} <div class="inline-block font-mono text-sm">(<span class="counter">{{ profile().photoshoot_pct }}</span>%)</div>
+        <div class="w-full text-center lg:text-left">
+          <h6 class="font-mono font-medium uppercase text-xs sm:text-sm tracking-wider relative pt-2 mb-3 sm:mb-4 dark:text-white before:content-['//'] before:pr-2">About Me</h6>
+          <h2 class="text-2xl sm:text-3xl lg:text-4xl font-poppins font-semibold mb-3 dark:text-white break-words">{{ profile().role }}</h2>
+          <ul class="flex flex-wrap justify-center lg:justify-start gap-2 mb-4">
+            <li class="list-none px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full border border-black/20 dark:border-white/30 border-dashed text-xs sm:text-sm text-pColor hover:text-black dark:text-white/70 dark:hover:text-white transition ease-linear duration-100">
+              <i class="bi bi-camera pe-1"></i> {{ profile().skill_1_name || 'ASP.NET Core & Backend' }} <div class="inline-block font-mono">(<span class="counter">{{ profile().photoshoot_pct }}</span>%)</div>
             </li>
-            <li class="list-none inline-block px-4 py-2 me-2 rounded-full border border-black/20 dark:border-white/30 border-dashed text-pColor hover:text-black dark:text-white/70 dark:hover:text-white transition ease-linear duration-100">
-              <i class="bi bi-code-slash pe-1"></i> {{ profile().skill_2_name || 'Tailwind' }} <div class="inline-block font-mono text-sm">(<span class="counter">{{ profile().tailwind_pct }}</span>%)</div>
+            <li class="list-none px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full border border-black/20 dark:border-white/30 border-dashed text-xs sm:text-sm text-pColor hover:text-black dark:text-white/70 dark:hover:text-white transition ease-linear duration-100">
+              <i class="bi bi-code-slash pe-1"></i> {{ profile().skill_2_name || 'Angular & Next.js' }} <div class="inline-block font-mono">(<span class="counter">{{ profile().tailwind_pct }}</span>%)</div>
             </li>
-            <li class="list-none inline-block px-4 py-2 me-2 rounded-full border border-black/20 dark:border-white/30 border-dashed text-pColor hover:text-black dark:text-white/70 dark:hover:text-white transition ease-linear duration-100">
-              <i class="bi bi-search pe-1"></i> {{ profile().skill_3_name || 'SEO' }} <div class="inline-block font-mono text-sm">(<span class="counter">{{ profile().seo_pct }}</span>%)</div>
+            <li class="list-none px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full border border-black/20 dark:border-white/30 border-dashed text-xs sm:text-sm text-pColor hover:text-black dark:text-white/70 dark:hover:text-white transition ease-linear duration-100">
+              <i class="bi bi-search pe-1"></i> {{ profile().skill_3_name || 'AI & Machine Learning' }} <div class="inline-block font-mono">(<span class="counter">{{ profile().seo_pct }}</span>%)</div>
             </li>
           </ul>
-          <p class="text-pColor dark:text-white/70">{{ profile().bio }}</p>
+          <p class="text-sm sm:text-base text-pColor dark:text-white/70 leading-relaxed">{{ profile().bio }}</p>
         </div>
       </div>
     </div>
 
     <!-- 2. PORTFOLIO SECTION -->
-    <div id="portfolio" class="section bg-white dark:bg-boxDark rounded-lg px-6 py-8 md:px-8 md:py-10 lg:p-12 shadow-sectionBoxShadow hover:shadow-sectionBoxShadowHover transition ease-out duration-[160ms]">
+    <div id="portfolio" class="section bg-white dark:bg-boxDark rounded-lg px-5 py-6 sm:px-8 sm:py-8 md:px-10 md:py-10 lg:p-12 shadow-sectionBoxShadow hover:shadow-sectionBoxShadowHover transition ease-out duration-[160ms]">
       <div class="md:w-4/5 lg:w-3/4">
-        <h6 class="font-mono font-medium uppercase text-sm tracking-wider relative pt-4 mb-5 dark:text-white before:content-['//'] before:pr-2 after:content-[attr(data-backdrop-text)] after:absolute after:top-0 after:left-0 after:font-poppins after:font-bold after:uppercase after:text-4xl after:opacity-15" data-backdrop-text="Portfolio">Portfolio</h6>
-        <h2 class="text-3xl lg:text-4xl font-poppins font-semibold mb-3 lg:mb-4 dark:text-white">My Latest Works</h2>
-        <p class="text-pColor dark:text-white/70">Explore recent creative designs, applications, and digital experiences.</p>
+        <h6 class="font-mono font-medium uppercase text-xs sm:text-sm tracking-wider relative pt-2 mb-3 sm:mb-4 dark:text-white before:content-['//'] before:pr-2">Portfolio</h6>
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-poppins font-semibold mb-2 sm:mb-3 dark:text-white">My Latest Works</h2>
+        <p class="text-sm sm:text-base text-pColor dark:text-white/70">Explore recent creative designs, applications, and digital experiences.</p>
       </div>
       
       <!-- Filter Tabs -->
-      <div class="filter mt-6 lg:mt-12">
-        <ul class="space-x-2">
-          <li *ngFor="let cat of categories()" (click)="setFilter(cat)" [class.filter-btn-active]="currentFilter === cat" class="list-none inline-block font-mono text-sm px-4 py-2 border border-black border-dashed rounded-full hover:bg-black hover:text-white transition ease-linear duration-100 cursor-pointer dark:text-white dark:border-white dark:hover:bg-white dark:hover:text-black capitalize">
+      <div class="filter mt-6 lg:mt-8">
+        <ul class="flex flex-wrap gap-2">
+          <li *ngFor="let cat of categories()" (click)="setFilter(cat)" [class.filter-btn-active]="currentFilter === cat" class="list-none font-mono text-xs sm:text-sm px-3.5 py-1.5 sm:px-4 sm:py-2 border border-black border-dashed rounded-full hover:bg-black hover:text-white transition ease-linear duration-100 cursor-pointer dark:text-white dark:border-white dark:hover:bg-white dark:hover:text-black capitalize">
             {{ cat === 'all' ? 'Show All' : cat }}
           </li>
         </ul>
@@ -53,11 +53,11 @@
         <div class="portfolio-grid grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
           @for (project of filteredProjects(); track project.slug) {
             <div class="portfolio-item">
-              <div class="relative overflow-hidden group rounded-lg after:content-[''] after:absolute after:top-0 after:left-0 after:w-full after:h-full after:bg-gradient-to-t after:from-black/50 after:to-transparent after:opacity-0 after:transition after:ease-out after:duration-[160ms] hover:after:opacity-100">
-                <img [src]="getImageUrl(project.main_image)" [alt]="project.title" class="transition ease-custom duration-500 group-hover:scale-105 group-hover:blur-[1.4px] w-full h-[320px] object-cover" />
-                <span class="z-[1] absolute top-4 right-4 bg-black/40 px-4 py-2 rounded-full backdrop-blur-[5px] text-white font-mono font-normal text-sm uppercase tracking-[0.5px]">{{ project.category }}</span>
-                <div class="z-[1] absolute bottom-0 left-0 w-full px-7 pb-6 invisible opacity-0 translate-y-2 group-hover:translate-y-0 group-hover:visible group-hover:opacity-100 group-hover:mb-0 transition ease-out duration-[160ms]">
-                  <a [routerLink]="['/portfolio', project.slug]" class="font-poppins font-semibold text-2xl lg:text-3xl tracking-[0.5px] portfolio-stroke-text transition-all ease-linear duration-100 block">
+              <div class="relative overflow-hidden group rounded-lg after:content-[''] after:absolute after:top-0 after:left-0 after:w-full after:h-full after:bg-gradient-to-t after:from-black/60 after:to-transparent after:opacity-0 after:transition after:ease-out after:duration-[160ms] hover:after:opacity-100">
+                <img [src]="getImageUrl(project.main_image)" [alt]="project.title" class="transition ease-custom duration-500 group-hover:scale-105 group-hover:blur-[1.4px] w-full h-[240px] sm:h-[280px] md:h-[320px] object-cover" />
+                <span class="z-[1] absolute top-3 right-3 sm:top-4 sm:right-4 bg-black/50 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full backdrop-blur-[5px] text-white font-mono font-normal text-xs uppercase tracking-[0.5px]">{{ project.category }}</span>
+                <div class="z-[1] absolute bottom-0 left-0 w-full px-5 py-4 sm:px-7 sm:pb-6 invisible opacity-0 translate-y-2 group-hover:translate-y-0 group-hover:visible group-hover:opacity-100 group-hover:mb-0 transition ease-out duration-[160ms]">
+                  <a [routerLink]="['/portfolio', project.slug]" class="font-poppins font-semibold text-xl sm:text-2xl lg:text-3xl tracking-[0.5px] portfolio-stroke-text transition-all ease-linear duration-100 block">
                     {{ project.title }}
                   </a>
                 </div>
@@ -69,132 +69,174 @@
     </div>
 
     <!-- 3. TECHNICAL SKILLS SECTION -->
-    <div id="services" class="section bg-white dark:bg-boxDark rounded-lg px-6 py-8 md:px-8 md:py-10 lg:p-12 shadow-sectionBoxShadow hover:shadow-sectionBoxShadowHover transition ease-out duration-[160ms]">
+    <div id="services" class="section bg-white dark:bg-boxDark rounded-lg px-5 py-6 sm:px-8 sm:py-8 md:px-10 md:py-10 lg:p-12 shadow-sectionBoxShadow hover:shadow-sectionBoxShadowHover transition ease-out duration-[160ms]">
       <div class="md:w-4/5 lg:w-3/4">
-        <h6 class="font-mono font-medium uppercase text-sm tracking-wider relative pt-4 mb-5 dark:text-white before:content-['//'] before:pr-2 after:content-[attr(data-backdrop-text)] after:absolute after:top-0 after:left-0 after:font-poppins after:font-bold after:uppercase after:text-4xl after:opacity-15" data-backdrop-text="Skills">Technical Skills</h6>
-        <h2 class="text-3xl lg:text-4xl font-poppins font-semibold mb-3 lg:mb-4 dark:text-white">What I Do</h2>
-        <p class="text-pColor dark:text-white/70">Delivering quality digital solutions tailored to user needs.</p>
+        <h6 class="font-mono font-medium uppercase text-xs sm:text-sm tracking-wider relative pt-2 mb-3 sm:mb-4 dark:text-white before:content-['//'] before:pr-2">Technical Skills</h6>
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-poppins font-semibold mb-2 sm:mb-3 dark:text-white">What I Do</h2>
+        <p class="text-sm sm:text-base text-pColor dark:text-white/70">Delivering quality digital solutions tailored to user needs.</p>
       </div>
-      <div class="mt-6 lg:mt-10 divide-y divide-dashed divide-black/10 dark:divide-white/10">
+      <div class="mt-6 lg:mt-8 divide-y divide-dashed divide-black/10 dark:divide-white/10">
         @for (service of services(); track service.title; let i = $index) {
-          <div class="md:flex py-6 lg:py-8 space-y-2.5 md:space-y-0">
-            <div class="md:min-w-[90px]"><span class="font-mono font-semibold text-5xl stroke-text">0{{ i + 1 }}</span></div>
-            <div class="md:min-w-[270px] dark:text-white">
-              <i [class]="service.icon + ' text-2xl mb-2 inline-block'"></i>
-              <h6 class="font-mono font-medium text-sm uppercase tracking-[0.5px]">{{ service.title }}</h6>
+          <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6 py-5 lg:py-7">
+            <div class="sm:min-w-[70px] md:min-w-[90px]"><span class="font-mono font-semibold text-4xl sm:text-5xl stroke-text">0{{ i + 1 }}</span></div>
+            <div class="sm:min-w-[220px] md:min-w-[260px] dark:text-white">
+              <i [class]="service.icon + ' text-xl sm:text-2xl mb-1 sm:mb-2 inline-block text-indigo-400'"></i>
+              <h6 class="font-mono font-medium text-xs sm:text-sm uppercase tracking-[0.5px]">{{ service.title }}</h6>
             </div>
-            <div><p class="text-pColor dark:text-white/70 leading-7">{{ service.description }}</p></div>
+            <div class="flex-1"><p class="text-xs sm:text-sm md:text-base text-pColor dark:text-white/70 leading-relaxed">{{ service.description }}</p></div>
           </div>
         }
       </div>
     </div>
 
     <!-- 4. RESUME SECTION -->
-    <div id="resume" class="section bg-white dark:bg-boxDark rounded-lg px-6 py-8 md:px-8 md:py-10 lg:p-12 shadow-sectionBoxShadow hover:shadow-sectionBoxShadowHover transition ease-out duration-[160ms]">
+    <div id="resume" class="section bg-white dark:bg-boxDark rounded-lg px-5 py-6 sm:px-8 sm:py-8 md:px-10 md:py-10 lg:p-12 shadow-sectionBoxShadow hover:shadow-sectionBoxShadowHover transition ease-out duration-[160ms]">
       <div class="md:w-4/5 lg:w-3/4">
-        <h6 class="font-mono font-medium uppercase text-sm tracking-wider relative pt-4 mb-5 dark:text-white before:content-['//'] before:pr-2 after:content-[attr(data-backdrop-text)] after:absolute after:top-0 after:left-0 after:font-poppins after:font-bold after:uppercase after:text-4xl after:opacity-15" data-backdrop-text="Resume">Resume</h6>
-        <h2 class="text-3xl lg:text-4xl font-poppins font-semibold mb-3 lg:mb-4 dark:text-white">Education & Experience</h2>
-        <p class="text-pColor dark:text-white/70">My academic journey and professional career track record.</p>
+        <h6 class="font-mono font-medium uppercase text-xs sm:text-sm tracking-wider relative pt-2 mb-3 sm:mb-4 dark:text-white before:content-['//'] before:pr-2">Resume</h6>
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-poppins font-semibold mb-2 sm:mb-3 dark:text-white">Education & Experience</h2>
+        <p class="text-sm sm:text-base text-pColor dark:text-white/70">My academic journey and professional career track record.</p>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-10 mt-6 lg:mt-12">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10 mt-6 lg:mt-10">
         <!-- Education -->
-        <div class="relative pl-5 space-y-7 before:content-[''] before:absolute before:top-0 before:left-0 before:w-[1px] before:h-full before:border-l before:border-black/20 dark:before:border-white/20 before:border-dashed">
-          <div class="text-3xl dark:text-white"><i class="bi bi-mortarboard"></i></div>
+        <div class="relative pl-5 space-y-6 before:content-[''] before:absolute before:top-0 before:left-0 before:w-[1px] before:h-full before:border-l before:border-black/20 dark:before:border-white/20 before:border-dashed">
+          <div class="text-2xl sm:text-3xl dark:text-white"><i class="bi bi-mortarboard"></i></div>
           @for (edu of resumeEducation(); track edu.title) {
             <div class="group">
-              <span class="relative inline-block px-4 py-2 rounded-full border border-black/20 dark:border-white/20 border-dashed font-mono font-medium uppercase text-sm tracking-[0.5px] text-pColor dark:text-white/70 group-hover:text-black dark:group-hover:text-white transition ease-linear duration-100 before:content-[''] before:absolute before:top-1/2 before:left-[-20px] before:w-[20px] before:h-[1px] before:border-t before:border-black/20 dark:before:border-white/20 before:border-dashed after:content-[''] after:absolute after:top-1/2 after:left-[-22px] after:-translate-y-1/2 after:bg-black dark:after:bg-white after:w-[5px] after:h-[5px] after:rounded-full">{{ edu.period }}</span>
-              <h4 class="font-poppins font-medium text-lg lg:text-xl mt-2 mb-1 lg:mt-3 lg:mb-2 dark:text-white">{{ edu.title }}</h4>
-              <span class="text-pColor dark:text-white/70">&#64;{{ edu.organization }}</span>
+              <span class="relative inline-block px-3 py-1 sm:px-4 sm:py-1.5 rounded-full border border-black/20 dark:border-white/20 border-dashed font-mono font-medium uppercase text-xs sm:text-sm tracking-[0.5px] text-pColor dark:text-white/70 group-hover:text-black dark:group-hover:text-white transition ease-linear duration-100 before:content-[''] before:absolute before:top-1/2 before:left-[-20px] before:w-[20px] before:h-[1px] before:border-t before:border-black/20 dark:before:border-white/20 before:border-dashed after:content-[''] after:absolute after:top-1/2 after:left-[-22px] after:-translate-y-1/2 after:bg-black dark:after:bg-white after:w-[5px] after:h-[5px] after:rounded-full">{{ edu.period }}</span>
+              <h4 class="font-poppins font-medium text-base sm:text-lg lg:text-xl mt-2 mb-1 dark:text-white">{{ edu.title }}</h4>
+              <span class="text-xs sm:text-sm text-pColor dark:text-white/70">&#64;{{ edu.organization }}</span>
             </div>
           }
         </div>
 
         <!-- Experience -->
-        <div class="relative pl-5 space-y-7 before:content-[''] before:absolute before:top-0 before:left-0 before:w-[1px] before:h-full before:border-l before:border-black/20 dark:before:border-white/20 before:border-dashed">
-          <div class="text-3xl dark:text-white"><i class="bi bi-briefcase"></i></div>
+        <div class="relative pl-5 space-y-6 before:content-[''] before:absolute before:top-0 before:left-0 before:w-[1px] before:h-full before:border-l before:border-black/20 dark:before:border-white/20 before:border-dashed">
+          <div class="text-2xl sm:text-3xl dark:text-white"><i class="bi bi-briefcase"></i></div>
           @for (exp of resumeExperience(); track exp.title) {
             <div class="group">
-              <span class="relative inline-block px-4 py-2 rounded-full border border-black/20 dark:border-white/20 border-dashed font-mono font-medium uppercase text-sm tracking-[0.5px] text-pColor dark:text-white/70 group-hover:text-black dark:group-hover:text-white transition ease-linear duration-100 before:content-[''] before:absolute before:top-1/2 before:left-[-20px] before:w-[20px] before:h-[1px] before:border-t before:border-black/20 dark:before:border-white/20 before:border-dashed after:content-[''] after:absolute after:top-1/2 after:left-[-22px] after:-translate-y-1/2 after:bg-black dark:after:bg-white after:w-[5px] after:h-[5px] after:rounded-full">{{ exp.period }}</span>
-              <h4 class="font-poppins font-medium text-lg lg:text-xl mt-2 mb-1 lg:mt-3 lg:mb-2 dark:text-white">{{ exp.title }}</h4>
-              <span class="text-pColor dark:text-white/70">&#64;{{ exp.organization }}</span>
+              <span class="relative inline-block px-3 py-1 sm:px-4 sm:py-1.5 rounded-full border border-black/20 dark:border-white/20 border-dashed font-mono font-medium uppercase text-xs sm:text-sm tracking-[0.5px] text-pColor dark:text-white/70 group-hover:text-black dark:group-hover:text-white transition ease-linear duration-100 before:content-[''] before:absolute before:top-1/2 before:left-[-20px] before:w-[20px] before:h-[1px] before:border-t before:border-black/20 dark:before:border-white/20 before:border-dashed after:content-[''] after:absolute after:top-1/2 after:left-[-22px] after:-translate-y-1/2 after:bg-black dark:after:bg-white after:w-[5px] after:h-[5px] after:rounded-full">{{ exp.period }}</span>
+              <h4 class="font-poppins font-medium text-base sm:text-lg lg:text-xl mt-2 mb-1 dark:text-white">{{ exp.title }}</h4>
+              <span class="text-xs sm:text-sm text-pColor dark:text-white/70">&#64;{{ exp.organization }}</span>
             </div>
           }
         </div>
       </div>
     </div>
 
-    <!-- 7. RESEARCH PUBLICATIONS SECTION -->
-    <div id="blog" class="section bg-white dark:bg-boxDark rounded-lg px-6 py-8 md:px-8 md:py-10 lg:p-12 shadow-sectionBoxShadow hover:shadow-sectionBoxShadowHover transition ease-out duration-[160ms]">
+    <!-- 5. RESEARCH PUBLICATIONS SECTION -->
+    <div id="blog" class="section bg-white dark:bg-boxDark rounded-lg px-5 py-6 sm:px-8 sm:py-8 md:px-10 md:py-10 lg:p-12 shadow-sectionBoxShadow hover:shadow-sectionBoxShadowHover transition ease-out duration-[160ms]">
       <div class="md:w-4/5 lg:w-3/4">
-        <h6 class="font-mono font-medium uppercase text-sm tracking-wider relative pt-4 mb-5 dark:text-white before:content-['//'] before:pr-2 after:content-[attr(data-backdrop-text)] after:absolute after:top-0 after:left-0 after:font-poppins after:font-bold after:uppercase after:text-4xl after:opacity-15" data-backdrop-text="Research">Research Publications</h6>
-        <h2 class="text-3xl lg:text-4xl font-poppins font-semibold mb-3 lg:mb-4 dark:text-white">Featured Research Publications</h2>
-        <p class="text-pColor dark:text-white/70">Peer-reviewed conference publications in AI, deep learning, NLP, and biomedical imaging.</p>
+        <h6 class="font-mono font-medium uppercase text-xs sm:text-sm tracking-wider relative pt-2 mb-3 sm:mb-4 dark:text-white before:content-['//'] before:pr-2">Research Publications</h6>
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-poppins font-semibold mb-2 sm:mb-3 dark:text-white">Featured Research Publications</h2>
+        <p class="text-sm sm:text-base text-pColor dark:text-white/70">Peer-reviewed conference publications in AI, deep learning, NLP, and biomedical imaging.</p>
       </div>
 
-      <div class="mt-6 lg:mt-12 space-y-8 md:space-y-8">
+      <div class="mt-6 lg:mt-10 space-y-6 sm:space-y-8">
         @for (post of blogs(); track post.slug) {
-          <div class="flex flex-col md:flex-row md:items-center gap-6 lg:gap-8 group">
-            <div class="overflow-hidden relative rounded-lg flex-shrink-0 w-full md:w-[320px] lg:w-[340px] h-[210px] md:h-[210px] bg-black/5 dark:bg-black/40">
-              <a [routerLink]="['/blog', post.slug]" class="block w-full h-full relative">
-                <img [src]="getImageUrl(post.cover_image)" [alt]="post.title" class="w-full h-full object-cover transition ease-custom duration-500 group-hover:scale-105 group-hover:blur-[1.2px] rounded-lg" />
-                <div class="absolute top-3.5 left-3.5 bg-black/40 px-3.5 py-1.5 rounded-full text-white backdrop-blur-[5px] font-mono font-normal uppercase text-xs tracking-[0.5px] border border-white/10 z-10">{{ post.category || 'Research' }}</div>
-              </a>
+          <div class="p-5 sm:p-6 lg:p-7 rounded-2xl border border-black/10 dark:border-white/10 bg-black/[0.015] dark:bg-white/[0.02] flex flex-col md:flex-row items-stretch md:items-center gap-5 sm:gap-6 lg:gap-8 group hover:border-black/30 dark:hover:border-white/30 transition duration-200">
+            
+            <!-- Cover / Media Banner -->
+            <div class="overflow-hidden relative rounded-xl flex-shrink-0 w-full md:w-[240px] lg:w-[280px] h-[180px] sm:h-[200px] md:h-[180px] lg:h-[190px] bg-black/5 dark:bg-black/40">
+              @if (post.paper_url) {
+                <a [href]="post.paper_url" target="_blank" rel="noopener noreferrer" class="block w-full h-full relative group/img">
+                  <img [src]="getImageUrl(post.cover_image)" [alt]="post.title" class="w-full h-full object-cover transition ease-custom duration-500 group-hover:scale-105 group-hover:blur-[1.2px] rounded-xl" />
+                  <div class="absolute top-3 left-3 bg-black/70 px-3 py-1 rounded-full text-white backdrop-blur-[5px] font-mono font-medium uppercase text-[11px] tracking-[0.5px] border border-white/15 z-10">{{ post.category || 'IEEE Conference' }}</div>
+                </a>
+              } @else {
+                <a [routerLink]="['/blog', post.slug]" class="block w-full h-full relative">
+                  <img [src]="getImageUrl(post.cover_image)" [alt]="post.title" class="w-full h-full object-cover transition ease-custom duration-500 group-hover:scale-105 group-hover:blur-[1.2px] rounded-xl" />
+                  <div class="absolute top-3 left-3 bg-black/70 px-3 py-1 rounded-full text-white backdrop-blur-[5px] font-mono font-medium uppercase text-[11px] tracking-[0.5px] border border-white/15 z-10">{{ post.category || 'IEEE Conference' }}</div>
+                </a>
+              }
             </div>
-            <div class="flex flex-col justify-center flex-1">
-              <div class="flex flex-wrap items-center gap-2 mb-2 font-mono text-xs md:text-sm text-pColor dark:text-white/70">
-                <span>Posted on {{ post.date }}</span>
-                @if (post.author) {
-                  <span>•</span>
-                  <span class="text-black dark:text-white font-medium">{{ post.author }}</span>
+
+            <!-- Content Details -->
+            <div class="flex flex-col justify-between flex-1 gap-2.5 sm:gap-3">
+              
+              <!-- Badges & Metadata -->
+              <div class="flex flex-wrap items-center gap-2 font-mono text-xs text-pColor dark:text-white/70">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 font-medium text-[11px]">
+                  <i class="bi bi-journal-bookmark"></i> IEEE QPAIN 2026
+                </span>
+                <span>•</span>
+                <span class="text-black dark:text-white font-medium text-xs">{{ post.author }}</span>
+                <span>•</span>
+                <span>{{ post.date }}</span>
+              </div>
+
+              <!-- Title -->
+              <h3 class="font-poppins font-semibold text-lg sm:text-xl lg:text-2xl leading-snug break-words">
+                @if (post.paper_url) {
+                  <a [href]="post.paper_url" target="_blank" rel="noopener noreferrer" class="hover:underline dark:text-white transition-colors duration-150 block">{{ post.title }}</a>
+                } @else {
+                  <a [routerLink]="['/blog', post.slug]" class="hover:underline dark:text-white transition-colors duration-150 block">{{ post.title }}</a>
+                }
+              </h3>
+
+              <!-- Summary / Abstract snippet -->
+              <p class="text-xs sm:text-sm text-pColor dark:text-white/70 leading-relaxed line-clamp-2 sm:line-clamp-3">
+                {{ post.summary }}
+              </p>
+
+              <!-- Actions & DOI info -->
+              <div class="pt-2 flex flex-wrap items-center justify-between gap-3">
+                @if (post.paper_url) {
+                  <a [href]="post.paper_url" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 border border-black border-dashed rounded-full px-5 py-2 sm:px-6 sm:py-2.5 font-mono text-xs sm:text-sm hover:bg-black hover:text-white transition ease-out duration-[120ms] dark:text-white dark:border-white dark:hover:bg-white dark:hover:text-black">
+                    <i class="bi bi-box-arrow-up-right text-xs"></i> <span>Read Publication (DOI)</span>
+                  </a>
+                } @else {
+                  <a [routerLink]="['/blog', post.slug]" class="inline-block border border-black border-dashed rounded-full px-5 py-2 sm:px-6 sm:py-2.5 font-mono text-xs sm:text-sm hover:bg-black hover:text-white transition ease-out duration-[120ms] dark:text-white dark:border-white dark:hover:bg-white dark:hover:text-black">Read Publication</a>
+                }
+
+                @if (post.paper_url) {
+                  <span class="text-[11px] font-mono text-pColor/70 dark:text-white/40 truncate max-w-[200px] sm:max-w-[260px] hidden sm:inline-block">
+                    DOI: {{ post.paper_url.replace('https://doi.org/', '') }}
+                  </span>
                 }
               </div>
-              <h3 class="font-poppins font-semibold text-2xl lg:text-3xl leading-snug mb-3 lg:mb-4">
-                <a [routerLink]="['/blog', post.slug]" class="hover:underline dark:text-white transition-colors duration-150 block">{{ post.title }}</a>
-              </h3>
-              <div>
-                <a [routerLink]="['/blog', post.slug]" class="inline-block border border-black border-dashed rounded-full px-6 py-2.5 lg:py-3 font-mono text-sm hover:bg-black hover:text-white transition ease-out duration-[120ms] dark:text-white dark:border-white dark:hover:bg-white dark:hover:text-black">Read Publication</a>
-              </div>
+
             </div>
           </div>
         }
       </div>
     </div>
 
-    <!-- 8. CONTACT SECTION -->
-    <div id="contact" class="section bg-white dark:bg-boxDark rounded-lg px-6 py-8 md:px-8 md:py-10 lg:p-12 shadow-sectionBoxShadow hover:shadow-sectionBoxShadowHover transition ease-out duration-[160ms]">
+    <!-- 6. CONTACT SECTION -->
+    <div id="contact" class="section bg-white dark:bg-boxDark rounded-lg px-5 py-6 sm:px-8 sm:py-8 md:px-10 md:py-10 lg:p-12 shadow-sectionBoxShadow hover:shadow-sectionBoxShadowHover transition ease-out duration-[160ms]">
       <div class="md:w-4/5 lg:w-3/4">
-        <h6 class="font-mono font-medium uppercase text-sm tracking-wider relative pt-4 mb-5 dark:text-white before:content-['//'] before:pr-2 after:content-[attr(data-backdrop-text)] after:absolute after:top-0 after:left-0 after:font-poppins after:font-bold after:uppercase after:text-4xl after:opacity-15" data-backdrop-text="Contact">Get in touch</h6>
-        <h2 class="text-3xl lg:text-4xl font-poppins font-semibold mb-3 lg:mb-4 dark:text-white">Let's Connect</h2>
-        <p class="text-pColor dark:text-white/70">Feel free to reach out for new projects, collaborations, or inquiries.</p>
+        <h6 class="font-mono font-medium uppercase text-xs sm:text-sm tracking-wider relative pt-2 mb-3 sm:mb-4 dark:text-white before:content-['//'] before:pr-2">Get in touch</h6>
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-poppins font-semibold mb-2 sm:mb-3 dark:text-white">Let's Connect</h2>
+        <p class="text-sm sm:text-base text-pColor dark:text-white/70">Feel free to reach out for new projects, collaborations, or inquiries.</p>
       </div>
 
       <div class="xl:w-4/5 mt-6">
-        <ul class="space-y-3">
-          <li class="list-none inline-block px-4 py-2 border border-black/20 border-dashed rounded-full me-2 text-pColor hover:text-black transition ease-linear duration-100 dark:text-white/70 dark:border-white/20 dark:hover:text-white">Phone: {{ profile().phone }}</li>
-          <li class="list-none inline-block px-4 py-2 border border-black/20 border-dashed rounded-full me-2 text-pColor hover:text-black transition ease-linear duration-100 dark:text-white/70 dark:border-white/20 dark:hover:text-white">Email: {{ profile().email }}</li>
-          <li class="list-none inline-block px-4 py-2 border border-black/20 border-dashed rounded-full me-2 text-pColor hover:text-black transition ease-linear duration-100 dark:text-white/70 dark:border-white/20 dark:hover:text-white">Address: {{ profile().address }}</li>
+        <ul class="flex flex-wrap gap-2">
+          <li class="list-none px-4 py-2 border border-black/20 border-dashed rounded-full text-xs sm:text-sm text-pColor hover:text-black transition ease-linear duration-100 dark:text-white/70 dark:border-white/20 dark:hover:text-white break-all">Email: {{ profile().email }}</li>
+          <li class="list-none px-4 py-2 border border-black/20 border-dashed rounded-full text-xs sm:text-sm text-pColor hover:text-black transition ease-linear duration-100 dark:text-white/70 dark:border-white/20 dark:hover:text-white">Address: {{ profile().address }}</li>
         </ul>
       </div>
 
-      <form (ngSubmit)="onSubmitContact()" #contactForm="ngForm" class="space-y-8 mt-8 lg:mt-12">
-        <div class="flex w-full space-x-4">
-          <div class="w-1/2">
-            <input [(ngModel)]="formData.name" name="name" class="bg-transparent w-full border-b border-black/20 border-dashed pb-4 py-0 text-sm text-black placeholder:text-black/40 transition ease-out duration-[120] focus:outline-none focus:border-black dark:text-white dark:placeholder:text-white/50 dark:border-white/20 dark:focus:border-white" type="text" placeholder="Name" required />
+      <form (ngSubmit)="onSubmitContact()" #contactForm="ngForm" class="space-y-6 sm:space-y-8 mt-6 sm:mt-8 lg:mt-10">
+        <div class="flex flex-col sm:flex-row w-full gap-4 sm:gap-6">
+          <div class="w-full sm:w-1/2">
+            <input [(ngModel)]="formData.name" name="name" class="bg-transparent w-full border-b border-black/20 border-dashed pb-3 sm:pb-4 py-1 text-sm text-black placeholder:text-black/40 transition ease-out duration-[120] focus:outline-none focus:border-black dark:text-white dark:placeholder:text-white/50 dark:border-white/20 dark:focus:border-white" type="text" placeholder="Name" required />
           </div>
-          <div class="w-1/2">
-            <input [(ngModel)]="formData.email" name="email" class="bg-transparent w-full border-b border-black/20 border-dashed pb-4 py-0 text-sm text-black placeholder:text-black/40 transition ease-out duration-[120] focus:outline-none focus:border-black dark:text-white dark:placeholder:text-white/50 dark:border-white/20 dark:focus:border-white" type="email" placeholder="E-Mail" required />
+          <div class="w-full sm:w-1/2">
+            <input [(ngModel)]="formData.email" name="email" class="bg-transparent w-full border-b border-black/20 border-dashed pb-3 sm:pb-4 py-1 text-sm text-black placeholder:text-black/40 transition ease-out duration-[120] focus:outline-none focus:border-black dark:text-white dark:placeholder:text-white/50 dark:border-white/20 dark:focus:border-white" type="email" placeholder="E-Mail" required />
           </div>
         </div>
-        <input [(ngModel)]="formData.subject" name="subject" class="w-full bg-transparent border-b border-black/20 border-dashed pb-4 py-0 text-sm text-black placeholder:text-black/40 transition ease-out duration-[120] focus:outline-none focus:border-black dark:text-white dark:placeholder:text-white/50 dark:border-white/20 dark:focus:border-white" type="text" placeholder="Subject" required />
-        <textarea [(ngModel)]="formData.message" name="message" class="bg-transparent w-full h-[200px] border-b border-black/20 border-dashed pb-4 py-0 text-sm text-black placeholder:text-black/40 transition ease-out duration-[120] focus:outline-none focus:border-black dark:text-white dark:placeholder:text-white/50 dark:border-white/20 dark:focus:border-white" placeholder="Message" required></textarea>
+        <input [(ngModel)]="formData.subject" name="subject" class="w-full bg-transparent border-b border-black/20 border-dashed pb-3 sm:pb-4 py-1 text-sm text-black placeholder:text-black/40 transition ease-out duration-[120] focus:outline-none focus:border-black dark:text-white dark:placeholder:text-white/50 dark:border-white/20 dark:focus:border-white" type="text" placeholder="Subject" required />
+        <textarea [(ngModel)]="formData.message" name="message" class="bg-transparent w-full h-[140px] sm:h-[180px] md:h-[200px] border-b border-black/20 border-dashed pb-3 sm:pb-4 py-1 text-sm text-black placeholder:text-black/40 transition ease-out duration-[120] focus:outline-none focus:border-black dark:text-white dark:placeholder:text-white/50 dark:border-white/20 dark:focus:border-white" placeholder="Message" required></textarea>
         
-        <button [disabled]="isSubmitting()" class="inline-block bg-black text-white px-8 py-4 rounded-full font-mono text-sm transition linear duration-100 dark:bg-white/15 dark:hover:bg-white/20 hover:bg-black/80 cursor-pointer" type="submit">
-          @if (isSubmitting()) {
-            <i class="bi bi-arrow-repeat inline-block animate-spin me-2"></i> Sending...
-          } @else {
-            Send Message
-          }
-        </button>
+        <div>
+          <button [disabled]="isSubmitting()" class="w-full sm:w-auto inline-flex items-center justify-center bg-black text-white px-8 py-3.5 sm:py-4 rounded-full font-mono text-sm transition linear duration-100 dark:bg-white/15 dark:hover:bg-white/20 hover:bg-black/80 cursor-pointer" type="submit">
+            @if (isSubmitting()) {
+              <i class="bi bi-arrow-repeat inline-block animate-spin me-2"></i> Sending...
+            } @else {
+              Send Message
+            }
+          </button>
+        </div>
       </form>
     </div>
 

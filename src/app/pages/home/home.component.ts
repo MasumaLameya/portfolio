@@ -65,10 +65,19 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   clients = signal<ClientItem[]>([]);
 
   getImageUrl(url: string | undefined): string {
-    if (!url) return '/assets/images/masuma-profile-me.jpg';
+    const profileImg = '/assets/images/masuma-profile-me.jpg?v=2';
+    if (!url) return profileImg;
+    if (url.includes('masuma-profile-me.jpg') || url.includes('hero-avatar')) return profileImg;
     if (url.startsWith('http://') || url.startsWith('https://')) return url;
     if (url.startsWith('/')) return url;
     return '/' + url;
+  }
+
+  onAvatarError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    if (img) {
+      img.src = '/assets/images/masuma-profile-me.jpg';
+    }
   }
 
   // Unique categories for filter
@@ -94,7 +103,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     try {
       // 1. Profile
       const prof = await this.supabase.getProfile();
-      if (prof) this.profile.set(prof);
+      if (prof) {
+        if (!prof.avatar_url || prof.avatar_url.includes('hero-avatar.1925fb85.jpg')) {
+          prof.avatar_url = '/assets/images/masuma-profile-me.jpg';
+        }
+        this.profile.set(prof);
+      }
 
       // 2. Projects
       const proj = await this.supabase.getProjects();
@@ -116,11 +130,56 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       // 3. Blogs / Research
       const blg = await this.supabase.getBlogs();
       if (blg && blg.length > 0) {
-        this.blogs.set(blg);
+        const enriched = blg.map(b => {
+          let paperUrl = b.paper_url;
+          const lower = ((b.title || '') + ' ' + (b.slug || '')).toLowerCase();
+          if (!paperUrl || paperUrl.includes('searchresult') || paperUrl.includes('google')) {
+            if (lower.includes('bert') || lower.includes('review') || lower.includes('xgboost')) {
+              paperUrl = 'https://doi.org/10.1109/QPAIN69676.2026.11546035';
+            } else if (lower.includes('effivit') || lower.includes('cancer') || lower.includes('pancreatic')) {
+              paperUrl = 'https://doi.org/10.1109/QPAIN69676.2026.11546439';
+            }
+          }
+          let author = b.author;
+          if (!author || author === 'Masuma Akter Lameya') {
+            if (lower.includes('bert') || lower.includes('xgboost')) author = 'Masuma Akter Lameya (1st Author)';
+            if (lower.includes('cancer') || lower.includes('effivit')) author = 'Masuma Akter Lameya (3rd Author)';
+          }
+          let summary = b.summary;
+          if (!summary || summary.startsWith('Conference Publication at')) {
+            if (lower.includes('bert') || lower.includes('review') || lower.includes('xgboost')) {
+              summary = 'A novel hybrid NLP architecture combining fine-tuned BERT representations with an XGBoost classifier for automated developer-oriented categorization of user reviews.';
+            } else if (lower.includes('effivit') || lower.includes('cancer') || lower.includes('pancreatic')) {
+              summary = 'Fused CNN and Vision Transformer framework capturing localized textural lesion patterns alongside global contextual dependencies for highly accurate early-stage cancer detection.';
+            }
+          }
+          return { ...b, paper_url: paperUrl, author, summary };
+        });
+        this.blogs.set(enriched);
       } else {
         this.blogs.set([
-          { title: 'EffiViT-Hybrid: A CNN–Transformer Framework for Pancreatic Cancer Detection from CT Images', slug: 'effivit-hybrid-pancreatic-cancer-detection', category: 'Medical AI (IEEE)', date: '2026', author: 'Masuma Akter Lameya (1st Author)', cover_image: '/assets/images/blog-effivit-cancer.jpg', summary: 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026 — Author Position: 1st Author', content: 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026.\n\nAuthor Position: 1st Author.' },
-          { title: 'Developer-Oriented Classification of Mobile App Reviews Using a Hybrid BERT-XGBoost Ensemble', slug: 'hybrid-bert-xgboost-mobile-app-reviews', category: 'Research (IEEE)', date: '2026', author: 'Masuma Akter Lameya (3rd Author)', cover_image: '/assets/images/blog-bert-xgboost.jpg', summary: 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026 — Author Position: 3rd Author', content: 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026.\n\nAuthor Position: 3rd Author.' }
+          {
+            title: 'Developer-Oriented Classification of Mobile App Reviews Using a Hybrid BERT-XGBoost Ensemble',
+            slug: 'hybrid-bert-xgboost-mobile-app-reviews',
+            category: 'Research (IEEE)',
+            date: '2026',
+            author: 'Masuma Akter Lameya (1st Author)',
+            cover_image: '/assets/images/blog-bert-xgboost.jpg',
+            summary: 'A novel hybrid NLP architecture combining fine-tuned BERT representations with an XGBoost classifier for automated developer-oriented categorization of user reviews.',
+            content: 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026.\n\nAuthor Position: 1st Author.',
+            paper_url: 'https://doi.org/10.1109/QPAIN69676.2026.11546035'
+          },
+          {
+            title: 'EffiViT-Hybrid: A CNN–Transformer Framework for Pancreatic Cancer Detection from CT Images',
+            slug: 'effivit-hybrid-pancreatic-cancer-detection',
+            category: 'Medical AI (IEEE)',
+            date: '2026',
+            author: 'Masuma Akter Lameya (3rd Author)',
+            cover_image: '/assets/images/blog-effivit-cancer.jpg',
+            summary: 'Fused CNN and Vision Transformer framework capturing localized textural lesion patterns alongside global contextual dependencies for highly accurate early-stage cancer detection.',
+            content: 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026.\n\nAuthor Position: 3rd Author.',
+            paper_url: 'https://doi.org/10.1109/QPAIN69676.2026.11546439'
+          }
         ]);
       }
 

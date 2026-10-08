@@ -874,6 +874,10 @@
         </div>
 
         <div class="form-group">
+          <label class="field-label">Paper / Publication URL (e.g. https://doi.org/...)</label>
+          <input type="url" [(ngModel)]="currentBlog.paper_url" placeholder="https://doi.org/10.1109/..." class="form-input" style="font-family: monospace; font-size: 0.75rem;" />
+        </div>
+        <div class="form-group">
           <label class="field-label">Tags (Comma separated)</label>
           <input type="text" [(ngModel)]="blogTagsInput" placeholder="Design, UI/UX, Web" class="form-input" />
         </div>

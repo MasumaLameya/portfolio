@@ -17,49 +17,63 @@ import { SidebarComponent } from '../../components/sidebar/sidebar.component';
       <!-- Blog Single Article Content -->
       <div class="w-full lg:w-3/4 space-y-6 pb-12">
         @if (post) {
-          <div class="section bg-white dark:bg-boxDark rounded-lg px-6 py-8 md:px-8 md:py-10 lg:p-12 shadow-sectionBoxShadow hover:shadow-sectionBoxShadowHover transition ease-out duration-[160ms]">
+          <div class="section bg-white dark:bg-boxDark rounded-lg px-5 py-6 sm:px-8 sm:py-8 md:px-10 md:py-10 lg:p-12 shadow-sectionBoxShadow hover:shadow-sectionBoxShadowHover transition ease-out duration-[160ms]">
             <!-- Meta Info -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
               <div>
-                <h6 class="font-mono font-medium uppercase text-sm tracking-[0.5px] dark:text-white">Posted by:</h6>
-                <p class="text-pColor dark:text-white/70">{{ post.author }}</p>
+                <h6 class="font-mono font-medium uppercase text-xs sm:text-sm tracking-[0.5px] dark:text-white">Posted by:</h6>
+                <p class="text-xs sm:text-sm text-pColor dark:text-white/70">{{ post.author }}</p>
               </div>
               <div>
-                <h6 class="font-mono font-medium uppercase text-sm tracking-[0.5px] dark:text-white">Category:</h6>
-                <p class="text-pColor dark:text-white/70">{{ post.category }}</p>
+                <h6 class="font-mono font-medium uppercase text-xs sm:text-sm tracking-[0.5px] dark:text-white">Category:</h6>
+                <p class="text-xs sm:text-sm text-pColor dark:text-white/70">{{ post.category }}</p>
               </div>
               <div>
-                <h6 class="font-mono font-medium uppercase text-sm tracking-[0.5px] dark:text-white">Posted on:</h6>
-                <p class="text-pColor dark:text-white/70">{{ post.date }}</p>
+                <h6 class="font-mono font-medium uppercase text-xs sm:text-sm tracking-[0.5px] dark:text-white">Posted on:</h6>
+                <p class="text-xs sm:text-sm text-pColor dark:text-white/70">{{ post.date }}</p>
               </div>
             </div>
 
             <!-- Title & Intro -->
             <div class="mt-6 lg:mt-8">
-              <h2 class="text-3xl lg:text-4xl font-poppins font-semibold dark:text-white mb-3">{{ post.title }}</h2>
-              <p class="leading-7 text-pColor dark:text-white/70">{{ post.summary }}</p>
-              <ul class="space-y-3 mt-2">
+              <h2 class="text-2xl sm:text-3xl lg:text-4xl font-poppins font-semibold dark:text-white mb-2 sm:mb-3 break-words">{{ post.title }}</h2>
+              <p class="text-sm sm:text-base leading-relaxed text-pColor dark:text-white/70">{{ post.summary }}</p>
+
+              @if (post.paper_url) {
+                <div class="mt-4">
+                  <a [href]="post.paper_url" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 bg-black text-white dark:bg-white dark:text-black rounded-full font-mono text-xs sm:text-sm font-semibold hover:opacity-90 transition shadow-md">
+                    <i class="bi bi-box-arrow-up-right"></i> Read Full Paper (IEEE DOI)
+                  </a>
+                </div>
+              }
+
+              <ul class="flex flex-wrap gap-2 mt-4">
                 @for (tag of post.tags; track tag) {
-                  <li class="list-none inline-block px-4 py-2 border border-black/20 border-dashed rounded-full me-2 text-pColor hover:text-black transition ease-linear duration-100 dark:text-white/70 dark:border-white/20 dark:hover:text-white">{{ tag }}</li>
+                  <li class="list-none px-3.5 py-1.5 sm:px-4 sm:py-2 border border-black/20 border-dashed rounded-full text-xs sm:text-sm text-pColor hover:text-black transition ease-linear duration-100 dark:text-white/70 dark:border-white/20 dark:hover:text-white">{{ tag }}</li>
                 }
               </ul>
             </div>
 
             <!-- Hero Main Image -->
-            <div class="overflow-hidden rounded-lg mt-6 lg:mt-12">
+            <div class="overflow-hidden rounded-lg mt-6 lg:mt-10">
               <img [src]="post.cover_image" [alt]="post.title" class="w-full h-auto object-cover rounded-lg" />
             </div>
 
             <!-- Content -->
-            <div class="mt-8 text-pColor dark:text-white/80 leading-relaxed space-y-4 whitespace-pre-wrap">
+            <div class="mt-6 sm:mt-8 text-sm sm:text-base text-pColor dark:text-white/80 leading-relaxed space-y-4 whitespace-pre-wrap">
               {{ post.content }}
             </div>
 
-            <!-- Back Button -->
-            <div class="mt-10 pt-6 border-t border-dashed border-black/10 dark:border-white/10 flex justify-between items-center">
-              <a routerLink="/" fragment="blog" class="inline-flex items-center space-x-2 font-mono text-sm px-6 py-3 border border-black border-dashed rounded-full hover:bg-black hover:text-white dark:text-white dark:border-white dark:hover:bg-white dark:hover:text-black transition">
+            <!-- Back Button & Direct Link -->
+            <div class="mt-8 sm:mt-10 pt-6 border-t border-dashed border-black/10 dark:border-white/10 flex flex-wrap gap-4 justify-between items-center">
+              <a routerLink="/" fragment="blog" class="inline-flex items-center space-x-2 font-mono text-xs sm:text-sm px-5 py-2.5 sm:px-6 sm:py-3 border border-black border-dashed rounded-full hover:bg-black hover:text-white dark:text-white dark:border-white dark:hover:bg-white dark:hover:text-black transition">
                 <i class="bi bi-arrow-left"></i> <span>Back to Research Publications</span>
               </a>
+              @if (post.paper_url) {
+                <a [href]="post.paper_url" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-2 font-mono text-xs sm:text-sm px-5 py-2.5 sm:px-6 sm:py-3 bg-black text-white dark:bg-white dark:text-black rounded-full hover:opacity-90 transition">
+                  <span>Open IEEE Paper</span> <i class="bi bi-box-arrow-up-right"></i>
+                </a>
+              }
             </div>
           </div>
         } @else {
@@ -83,7 +97,16 @@ export class BlogDetailComponent implements OnInit {
       const slug = params.get('slug') || '';
       const supabasePost = await this.supabase.getBlogBySlug(slug);
       if (supabasePost) {
-        this.post = supabasePost;
+        let paperUrl = supabasePost.paper_url;
+        const lower = ((supabasePost.title || '') + ' ' + slug).toLowerCase();
+        if (!paperUrl || paperUrl.includes('searchresult')) {
+          if (lower.includes('bert') || lower.includes('review') || lower.includes('xgboost')) {
+            paperUrl = 'https://doi.org/10.1109/QPAIN69676.2026.11546035';
+          } else if (lower.includes('effivit') || lower.includes('cancer') || lower.includes('pancreatic')) {
+            paperUrl = 'https://doi.org/10.1109/QPAIN69676.2026.11546439';
+          }
+        }
+        this.post = { ...supabasePost, paper_url: paperUrl };
       } else {
         const fb = this.fallbackBlogService.getPostBySlug(slug);
         if (fb) {
@@ -96,7 +119,8 @@ export class BlogDetailComponent implements OnInit {
             cover_image: fb.singleImage,
             summary: fb.description,
             content: fb.description,
-            tags: fb.tags
+            tags: fb.tags,
+            paper_url: fb.paper_url
           };
         }
       }
