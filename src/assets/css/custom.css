@@ -64,10 +64,19 @@ body.loaded .preloader {
 }
 
 /* Filter button active & layout state */
+.filter ul {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
 .filter ul li {
-    margin-right: 10px;
-    margin-bottom: 10px;
-    display: inline-block;
+    display: inline-flex !important;
+    align-items: center !important;
+    margin-right: 8px !important;
+    margin-bottom: 8px !important;
 }
 .filter-btn-active {
     background-color: #000 !important;

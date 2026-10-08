@@ -20,7 +20,33 @@ declare var Swiper: any;
   selector: 'app-home',
   standalone: true,
   imports: [CommonModule, RouterLink, FormsModule, SidebarComponent],
-  templateUrl: './home.component.html'
+  templateUrl: './home.component.html',
+  styles: [`
+    .filter ul {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      gap: 10px !important;
+      list-style: none !important;
+      padding: 0 !important;
+    }
+    .filter ul li {
+      display: inline-flex !important;
+      align-items: center !important;
+      padding: 8px 18px !important;
+      border-radius: 9999px !important;
+      cursor: pointer !important;
+      margin: 0 !important;
+      white-space: nowrap !important;
+    }
+    .filter-btn-active {
+      background-color: #000 !important;
+      color: #fff !important;
+    }
+    :host-context(.dark) .filter-btn-active {
+      background-color: #fff !important;
+      color: #000 !important;
+    }
+  `]
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   public supabase = inject(SupabaseService);
