@@ -119,7 +119,7 @@ export class SupabaseService {
   }
 
   private checkVersionAndResetCache(): void {
-    const CURRENT_VERSION = 'v6_masuma_force_sync';
+    const CURRENT_VERSION = 'v7_masuma_project_images';
     if (typeof localStorage !== 'undefined') {
       if (localStorage.getItem('portfolio_data_version') !== CURRENT_VERSION) {
         localStorage.removeItem('portfolio_profile');
@@ -450,7 +450,8 @@ export class SupabaseService {
         designer: 'Masuma Akter Lameya',
         tools: 'ASP.NET Core MVC, MySQL, HTML, CSS, Bootstrap, JavaScript, Gemini AI',
         project_url: 'https://github.com/MasumaLameya',
-        main_image: '/assets/images/portfolio-1.9aa83f65.jpg',
+        main_image: '/assets/images/project-mental-health.jpg',
+        images: ['/assets/images/project-mental-health.jpg'],
         short_description: 'AI-assisted web-based mental health platform integrating PHQ-9 & C-SSRS assessments and Gemini live AI support.',
         full_description: 'Developed a web-based mental health monitoring platform integrating PHQ-9 and C-SSRS assessments, semester-wise risk monitoring, and AI-assisted student support. Implemented Gemini-powered chat and live voice interaction, automated risk assessment, counseling management, and psychologist assignment for high-risk students.'
       },
@@ -464,7 +465,8 @@ export class SupabaseService {
         designer: 'Masuma Akter Lameya',
         tools: 'ASP.NET Core, .NET MVC, REST APIs, MySQL, Entity Framework Core',
         project_url: 'https://github.com/MasumaLameya',
-        main_image: '/assets/images/portfolio-2.dc4d8dd8.jpg',
+        main_image: '/assets/images/project-real-estate-crm.jpg',
+        images: ['/assets/images/project-real-estate-crm.jpg'],
         short_description: 'Comprehensive CRM platform to manage client leads, sales activities, follow-ups, and customer relationship data.',
         full_description: 'Developed an enterprise Real Estate CRM System for Real Capital Group. Engineered backend services and RESTful APIs with ASP.NET Core, designed and optimized MySQL databases, and implemented core business logic for lead management, customer tracking, and team collaboration.'
       },
@@ -478,7 +480,8 @@ export class SupabaseService {
         designer: 'Masuma Akter Lameya',
         tools: 'ASP.NET Core MVC, MySQL, HTML, CSS, Bootstrap, JavaScript',
         project_url: 'https://github.com/MasumaLameya',
-        main_image: '/assets/images/portfolio-3.772523de.jpg',
+        main_image: '/assets/images/project-modern-shop.jpg',
+        images: ['/assets/images/project-modern-shop.jpg'],
         short_description: 'Prototype shop management platform with product browsing, cart, order processing, and administrative dashboard.',
         full_description: 'Developed a prototype e-commerce and shop management platform with product catalog browsing, cart management, order processing, and customer management functionalities. Implemented an administrative dashboard for managing products, categories, inventory, and orders through a responsive web interface.'
       },
@@ -492,7 +495,8 @@ export class SupabaseService {
         designer: 'Masuma Akter Lameya',
         tools: 'ASP.NET Core MVC, MySQL, HTML, CSS, Bootstrap, JavaScript',
         project_url: 'https://github.com/MasumaLameya',
-        main_image: '/assets/images/portfolio-4.884e57ca.jpg',
+        main_image: '/assets/images/project-todonova.jpg',
+        images: ['/assets/images/project-todonova.jpg'],
         short_description: 'Task management web application with priority tracking, deadline reminders, and responsive interface.',
         full_description: 'Developed a web-based task management application for creating, organizing, updating, and tracking daily tasks. Implemented task status and priority management, deadline tracking, and an intuitive responsive user interface for personal and team productivity.'
       }
@@ -504,9 +508,9 @@ export class SupabaseService {
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error || !data || data.length === 0 || data.some(p => p.title === 'Glasses of Cocktail' || p.designer === 'Christina Gray')) {
+      if (error || !data || data.length === 0 || data.some(p => p.title === 'Glasses of Cocktail' || p.designer === 'Christina Gray' || p.main_image?.includes('portfolio-1.9aa83f65'))) {
         const local = localStorage.getItem('portfolio_projects');
-        if (local && !local.includes('Glasses of Cocktail')) return JSON.parse(local);
+        if (local && !local.includes('Glasses of Cocktail') && !local.includes('portfolio-1.9aa83f65')) return JSON.parse(local);
         localStorage.setItem('portfolio_projects', JSON.stringify(defaultProjects));
         return defaultProjects;
       }
@@ -514,7 +518,7 @@ export class SupabaseService {
       return data as ProjectItem[];
     } catch {
       const local = localStorage.getItem('portfolio_projects');
-      if (local && !local.includes('Glasses of Cocktail')) return JSON.parse(local);
+      if (local && !local.includes('Glasses of Cocktail') && !local.includes('portfolio-1.9aa83f65')) return JSON.parse(local);
       localStorage.setItem('portfolio_projects', JSON.stringify(defaultProjects));
       return defaultProjects;
     }
@@ -570,7 +574,7 @@ export class SupabaseService {
         category: 'Research (IEEE)',
         date: '2026',
         author: 'Masuma Akter Lameya (1st Author)',
-        cover_image: '/assets/images/blog-post-1.a6d3ea41.jpg',
+        cover_image: '/assets/images/blog-bert-xgboost.jpg',
         summary: 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN).',
         content: 'Conference Publication: 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026.\n\nAuthor Position: 1st Author\n\nAbstract:\nThis research proposes a hybrid machine learning and deep learning framework combining BERT contextual embeddings with an XGBoost classifier for automated, developer-oriented sentiment and category classification of mobile app reviews. The system effectively extracts actionable bug reports, feature requests, and user experience feedback with high empirical precision.',
         tags: ['IEEE Publication', 'BERT', 'NLP', 'XGBoost', 'Machine Learning']
@@ -582,7 +586,7 @@ export class SupabaseService {
         category: 'Medical AI (IEEE)',
         date: '2026',
         author: 'Masuma Akter Lameya (3rd Author)',
-        cover_image: '/assets/images/blog-post-2.99e40feb.jpg',
+        cover_image: '/assets/images/blog-effivit-cancer.jpg',
         summary: 'Deep learning research combining Convolutional Neural Networks and Vision Transformers for early pancreatic cancer detection.',
         content: 'Conference Publication: 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026.\n\nAuthor Position: 3rd Author\n\nAbstract:\nPancreatic cancer diagnosis from abdominal CT scans is clinically challenging due to complex surrounding anatomy and subtle early lesion margins. This paper introduces EffiViT-Hybrid, a fused architecture that leverages CNN feature extraction for local tissue textures alongside Vision Transformer attention mechanisms for global anatomical context.',
         tags: ['Medical Imaging', 'Vision Transformer', 'Deep Learning', 'Computer Vision', 'Healthcare AI']
@@ -594,7 +598,7 @@ export class SupabaseService {
         category: 'Full-Stack Web',
         date: '2025',
         author: 'Masuma Akter Lameya',
-        cover_image: '/assets/images/blog-post-3.1e8acfca.jpg',
+        cover_image: '/assets/images/blog-enterprise-architecture.jpg',
         summary: 'Key patterns for building maintainable, enterprise-ready full-stack applications with clean architecture and SOLID principles.',
         content: 'In modern full-stack development, decoupling backend business logic via clean architecture, RESTful API contracts, and robust ORMs like Entity Framework Core is paramount. Pairing this with Angular for structured, type-safe client interfaces ensures long-term scalability and ease of testing.',
         tags: ['ASP.NET Core', 'Angular', 'Clean Architecture', 'REST APIs', 'TypeScript']
@@ -607,9 +611,9 @@ export class SupabaseService {
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error || !data || data.length === 0 || data.some(b => b.title === '4 Years of Working From Home' || b.author === 'Christina Gray')) {
+      if (error || !data || data.length === 0 || data.some(b => b.title === '4 Years of Working From Home' || b.author === 'Christina Gray' || b.cover_image?.includes('blog-post-1.a6d3ea41'))) {
         const local = localStorage.getItem('portfolio_blogs');
-        if (local && !local.includes('4 Years of Working')) return JSON.parse(local);
+        if (local && !local.includes('4 Years of Working') && !local.includes('blog-post-1.a6d3ea41')) return JSON.parse(local);
         localStorage.setItem('portfolio_blogs', JSON.stringify(defaultBlogs));
         return defaultBlogs;
       }
@@ -617,7 +621,7 @@ export class SupabaseService {
       return data as BlogItem[];
     } catch {
       const local = localStorage.getItem('portfolio_blogs');
-      if (local && !local.includes('4 Years of Working')) return JSON.parse(local);
+      if (local && !local.includes('4 Years of Working') && !local.includes('blog-post-1.a6d3ea41')) return JSON.parse(local);
       localStorage.setItem('portfolio_blogs', JSON.stringify(defaultBlogs));
       return defaultBlogs;
     }
