@@ -140,14 +140,14 @@
               @if (post.paper_url) {
                 <a [href]="post.paper_url" target="_blank" rel="noopener noreferrer" class="block w-full h-full relative">
                   <img [src]="getImageUrl(post.cover_image)" [alt]="post.title" />
-                  <div class="absolute top-3 left-3 bg-indigo-600 text-white px-3 py-1 rounded-full font-mono font-semibold uppercase text-[10px] tracking-[0.5px] shadow-md z-10">IEEE QPAIN 2026</div>
-                  <div class="absolute top-3 right-3 bg-black/75 px-3 py-1 rounded-full text-white backdrop-blur-[5px] font-mono font-normal uppercase text-[10px] tracking-[0.5px] border border-white/20 z-10">{{ post.category || 'IEEE Conference' }}</div>
+                  <div class="pub-badge-ieee absolute top-3 left-3 px-3 py-1 rounded-full font-mono uppercase text-[11px] shadow-lg z-10">IEEE QPAIN 2026</div>
+                  <div class="absolute top-3 right-3 bg-black/80 text-white backdrop-blur-[5px] font-mono font-normal uppercase text-[10px] tracking-[0.5px] px-3 py-1 rounded-full border border-white/30 z-10">{{ post.category || 'IEEE Conference' }}</div>
                 </a>
               } @else {
                 <a [routerLink]="['/blog', post.slug]" class="block w-full h-full relative">
                   <img [src]="getImageUrl(post.cover_image)" [alt]="post.title" />
-                  <div class="absolute top-3 left-3 bg-indigo-600 text-white px-3 py-1 rounded-full font-mono font-semibold uppercase text-[10px] tracking-[0.5px] shadow-md z-10">IEEE QPAIN 2026</div>
-                  <div class="absolute top-3 right-3 bg-black/75 px-3 py-1 rounded-full text-white backdrop-blur-[5px] font-mono font-normal uppercase text-[10px] tracking-[0.5px] border border-white/20 z-10">{{ post.category || 'IEEE Conference' }}</div>
+                  <div class="pub-badge-ieee absolute top-3 left-3 px-3 py-1 rounded-full font-mono uppercase text-[11px] shadow-lg z-10">IEEE QPAIN 2026</div>
+                  <div class="absolute top-3 right-3 bg-black/80 text-white backdrop-blur-[5px] font-mono font-normal uppercase text-[10px] tracking-[0.5px] px-3 py-1 rounded-full border border-white/30 z-10">{{ post.category || 'IEEE Conference' }}</div>
                 </a>
               }
             </div>
@@ -156,7 +156,7 @@
             <div class="research-body">
               
               <!-- Badges & Metadata -->
-              <div class="flex items-center space-x-2 font-mono text-xs text-pColor dark:text-white/60">
+              <div class="flex items-center space-x-2 font-mono text-xs text-pColor dark:text-white/80">
                 <i class="bi bi-person-badge"></i>
                 <span class="font-medium text-black dark:text-white">{{ post.author }}</span>
                 <span>•</span>
@@ -172,13 +172,17 @@
                 }
               </h3>
 
-              <!-- Action Button -->
-              <div>
+              <!-- Action Button & DOI (pure white text) -->
+              <div class="space-y-2.5">
                 @if (post.paper_url) {
                   <a [href]="post.paper_url" target="_blank" rel="noopener noreferrer" class="research-btn group/btn">
                     <span>View on IEEE Xplore (DOI)</span>
                     <i class="bi bi-box-arrow-up-right text-xs"></i>
                   </a>
+                  <div class="pub-doi-text flex items-center gap-1.5 pt-0.5">
+                    <span class="opacity-80">DOI:</span>
+                    <a [href]="post.paper_url" target="_blank" class="pub-doi-link truncate">{{ post.paper_url.replace('https://doi.org/', '') }}</a>
+                  </div>
                 } @else {
                   <a [routerLink]="['/blog', post.slug]" class="research-btn">
                     <span>Read Publication</span>

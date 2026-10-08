@@ -144,6 +144,28 @@ declare var Swiper: any;
       color: #000;
       border-color: #fff;
     }
+    .pub-badge-ieee {
+      background-color: #4f46e5 !important;
+      color: #ffffff !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.5px !important;
+      border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    }
+    .pub-doi-text {
+      color: #ffffff !important;
+      font-size: 12px !important;
+      font-family: monospace, monospace !important;
+      letter-spacing: 0.5px !important;
+    }
+    .pub-doi-link {
+      color: #ffffff !important;
+      font-weight: 600 !important;
+      text-decoration: underline !important;
+      text-underline-offset: 3px !important;
+    }
+    .pub-doi-link:hover {
+      color: #a5b4fc !important;
+    }
   `]
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
