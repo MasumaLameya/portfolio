@@ -502,6 +502,39 @@ export class AdminDashboardComponent implements OnInit {
     }
   }
 
+  replyByGmail(msg: ContactMessage | null): void {
+    if (!msg || !msg.email) return;
+    const email = msg.email.trim();
+    const subject = encodeURIComponent('Re: ' + (msg.subject || 'Portfolio Inquiry'));
+    const body = encodeURIComponent(`Hi ${msg.name},\n\n\n\n--- Original Message ---\nFrom: ${msg.name} (${msg.email})\nMessage: ${msg.message}`);
+
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(email).catch(() => {});
+    }
+
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}&su=${subject}&body=${body}`;
+    window.open(gmailUrl, '_blank');
+    this.showToast(`Opening Gmail to reply to ${email}`);
+  }
+
+  replyByMailto(msg: ContactMessage | null): void {
+    if (!msg || !msg.email) return;
+    const email = msg.email.trim();
+    const subject = encodeURIComponent('Re: ' + (msg.subject || 'Portfolio Inquiry'));
+    const body = encodeURIComponent(`Hi ${msg.name},\n\n\n\n--- Original Message ---\nFrom: ${msg.name}\n${msg.message}`);
+    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+  }
+
+  copyVisitorEmail(email: string): void {
+    if (!email) return;
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(email);
+      this.showToast(`Email copied: ${email}`);
+    } else {
+      this.showToast(`Email: ${email}`);
+    }
+  }
+
   // ================= SECURITY (PASSWORD / EMAIL) =================
   async changePassword(): Promise<void> {
     if (!this.newPassword || this.newPassword !== this.confirmPassword) {

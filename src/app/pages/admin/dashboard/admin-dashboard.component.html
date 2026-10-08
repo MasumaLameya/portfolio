@@ -696,27 +696,35 @@
       </div>
 
       <!-- Message View Modal -->
-      <div *ngIf="selectedMessage" class="modal-overlay">
-        <div class="modal-dialog">
+      <div *ngIf="selectedMessage" class="modal-overlay" (click)="selectedMessage = null">
+        <div class="modal-dialog" (click)="$event.stopPropagation()">
           <div class="modal-header">
             <h3>Visitor Message</h3>
-            <button (click)="selectedMessage = null" class="modal-close"><i class="bi bi-x-lg"></i></button>
+            <button (click)="selectedMessage = null" class="modal-close" aria-label="Close modal"><i class="bi bi-x-lg"></i></button>
           </div>
           <div style="font-size: 0.825rem; display: flex; flex-direction: column; gap: 0.5rem;">
-            <p style="margin: 0;"><strong style="color: #94a3b8;">From:</strong> <span style="color: #ffffff;">{{ selectedMessage.name }}</span> ({{ selectedMessage.email }})</p>
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+              <p style="margin: 0;"><strong style="color: #94a3b8;">From:</strong> <span style="color: #ffffff;">{{ selectedMessage.name }}</span> ({{ selectedMessage.email }})</p>
+              <button type="button" (click)="copyVisitorEmail(selectedMessage.email)" class="btn-secondary" style="padding: 3px 8px; font-size: 0.72rem; border-radius: 6px; cursor: pointer;">
+                <i class="bi bi-clipboard"></i> Copy Email
+              </button>
+            </div>
             <p style="margin: 0;"><strong style="color: #94a3b8;">Subject:</strong> <span style="color: #ffffff;">{{ selectedMessage.subject }}</span></p>
             <div style="margin-top: 0.5rem;">
               <p style="margin: 0 0 0.25rem 0; font-size: 0.7rem; font-family: monospace; color: #94a3b8;">MESSAGE BODY:</p>
-              <div style="padding: 1rem; background: #090a0f; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); color: #e2e8f0; line-height: 1.6; white-space: pre-wrap;">
+              <div style="padding: 1rem; background: #090a0f; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); color: #e2e8f0; line-height: 1.6; white-space: pre-wrap; user-select: text;">
                 {{ selectedMessage.message }}
               </div>
             </div>
           </div>
-          <div class="modal-footer">
-            <a [href]="'mailto:' + selectedMessage.email + '?subject=Re: ' + selectedMessage.subject" class="btn-primary" style="font-size: 0.75rem;">
-              <i class="bi bi-reply-fill"></i> Reply by Email
-            </a>
-            <button (click)="selectedMessage = null" class="btn-secondary" style="font-size: 0.75rem;">Close</button>
+          <div class="modal-footer" style="display: flex; gap: 0.5rem; justify-content: flex-end; flex-wrap: wrap; margin-top: 1rem;">
+            <button type="button" (click)="replyByGmail(selectedMessage)" class="btn-primary" style="font-size: 0.75rem; background: #ea4335; border-color: #ea4335; color: #ffffff; cursor: pointer;">
+              <i class="bi bi-envelope-fill"></i> Reply via Gmail
+            </button>
+            <button type="button" (click)="replyByMailto(selectedMessage)" class="btn-secondary" style="font-size: 0.75rem; cursor: pointer;">
+              <i class="bi bi-reply-fill"></i> Default Mail App
+            </button>
+            <button type="button" (click)="selectedMessage = null" class="btn-secondary" style="font-size: 0.75rem; cursor: pointer;">Close</button>
           </div>
         </div>
       </div>
