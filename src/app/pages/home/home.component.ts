@@ -357,14 +357,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       // 6. Resume
       const res = await this.supabase.getResumeItems();
       if (res && res.length > 0) {
-        const updatedRes = res.map(r => {
-          if (r.title === 'Software Developer' || (r.organization && r.organization.includes('Real Capital'))) {
-            return { ...r, period: 'June 2026 - Sep 2026' };
-          }
-          return r;
-        });
-        this.resumeExperience.set(updatedRes.filter(r => r.type === 'experience'));
-        this.resumeEducation.set(updatedRes.filter(r => r.type === 'education'));
+        this.resumeExperience.set(res.filter(r => r.type === 'experience'));
+        this.resumeEducation.set(res.filter(r => r.type === 'education'));
       } else {
         this.resumeEducation.set([
           { type: 'education', period: 'Sep 2022 - Sep 2026', title: 'Bachelor of Science in Computer Science and Engineering', organization: 'IUBAT (Dhaka, Bangladesh) — CGPA: 3.86/4.00', description: 'Dean\'s list academic excellence. Specialized in Full-Stack Software Engineering, Deep Learning, Biomedical Signal Processing, Algorithms, and Object-Oriented Programming.' },

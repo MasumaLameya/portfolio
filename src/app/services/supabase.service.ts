@@ -849,7 +849,7 @@ export class SupabaseService {
   // ================= RESUME =================
   async getResumeItems(): Promise<ResumeItem[]> {
     const defaultResume: ResumeItem[] = [
-      { id: 'res_1', type: 'experience', period: '2023 - Present', title: 'Software Developer', organization: 'Real Capital Group (Dhaka, Bangladesh)', description: 'Developed Real Estate CRM System, engineered backend services & RESTful APIs using ASP.NET Core / .NET, designed MySQL databases, and implemented core CRM business logic.', sort_order: 1 },
+      { id: 'res_1', type: 'experience', period: 'June 2026 - Sep 2026', title: 'Software Developer', organization: 'Real Capital Group (Dhaka, Bangladesh)', description: 'Developed Real Estate CRM System, engineered backend services & RESTful APIs using ASP.NET Core / .NET, designed MySQL databases, and implemented core CRM business logic.', sort_order: 1 },
       { id: 'res_2', type: 'experience', period: '2022 - Present', title: 'Event Coordinator', organization: 'IEEE CS IUBAT Student Branch Chapter', description: 'Contributed to technical event planning, workshop coordination, and participant management at IEEE Computer Society.', sort_order: 2 },
       { id: 'res_3', type: 'experience', period: '2022 - Present', title: 'Math Club Manager', organization: 'IUBAT IT Society', description: 'Organized and managed mathematics-focused analytical problem-solving sessions, workshops, and student learning initiatives.', sort_order: 3 },
       { id: 'res_4', type: 'experience', period: '2022 - Present', title: 'Academic Mentor & AI Researcher', organization: 'IUBAT Computer Science & Engineering', description: 'Mentored university students in programming languages, data structures, and learning strategies. Authored 2 IEEE conference research papers in AI & Medical Vision.', sort_order: 4 },
@@ -858,6 +858,16 @@ export class SupabaseService {
       { id: 'res_7', type: 'education', period: '2017 - 2019', title: 'Secondary School Certificate (SSC) — Science', organization: 'Kamarpara School and College — GPA: 5.00/5.00', description: 'Achieved top-tier GPA 5.00 with distinction. Active Science Olympiad participant and competitive problem solver.', sort_order: 3 }
     ];
 
+    const local = typeof localStorage !== 'undefined' ? localStorage.getItem('portfolio_resume') : null;
+    if (local) {
+      try {
+        const parsed = JSON.parse(local);
+        if (Array.isArray(parsed) && parsed.length > 0 && !parsed.some(r => r.organization?.includes('FlaTheme') || r.title?.includes('Bachelor Degree of Business'))) {
+          return parsed;
+        }
+      } catch {}
+    }
+
     try {
       const { data, error } = await this.supabase
         .from('resume_items')
@@ -865,14 +875,6 @@ export class SupabaseService {
         .order('sort_order', { ascending: true });
 
       if (error || !data || data.length === 0 || data.some(r => r.organization?.includes('FlaTheme') || r.title?.includes('Bachelor Degree of Business') || r.title?.includes('Event Coordinator & Math Club Manager'))) {
-        try {
-          for (const item of defaultResume) {
-            const row: any = { ...item };
-            delete row.id;
-            await this.supabase.from('resume_items').upsert([row]);
-          }
-        } catch {}
-
         localStorage.setItem('portfolio_resume', JSON.stringify(defaultResume));
         return defaultResume;
       }
@@ -891,6 +893,7 @@ export class SupabaseService {
     localStorage.setItem('portfolio_resume', JSON.stringify(updated));
     try {
       const payload: any = { ...item };
+      if (payload.id && !payload.id.includes('-')) delete payload.id;
       return await this.supabase.from('resume_items').insert([payload]);
     } catch {
       return { error: null, data: [item] };
@@ -899,10 +902,17 @@ export class SupabaseService {
 
   async updateResumeItem(id: string, item: Partial<ResumeItem>) {
     const list = await this.getResumeItems();
-    const updated = list.map(r => r.id === id ? { ...r, ...item } : r);
+    const updated = list.map(r => (r.id === id || (item.title && r.title === item.title && r.type === item.type)) ? { ...r, ...item } : r);
     localStorage.setItem('portfolio_resume', JSON.stringify(updated));
     try {
-      return await this.supabase.from('resume_items').update(item).eq('id', id);
+      const payload: any = { ...item };
+      delete payload.id;
+      if (id && id.length > 20) {
+        return await this.supabase.from('resume_items').update(payload).eq('id', id);
+      } else if (item.title) {
+        return await this.supabase.from('resume_items').update(payload).eq('title', item.title);
+      }
+      return { error: null, data: [item] };
     } catch {
       return { error: null, data: [item] };
     }
@@ -913,7 +923,10 @@ export class SupabaseService {
     const updated = list.filter(r => r.id !== id);
     localStorage.setItem('portfolio_resume', JSON.stringify(updated));
     try {
-      return await this.supabase.from('resume_items').delete().eq('id', id);
+      if (id && id.length > 20) {
+        return await this.supabase.from('resume_items').delete().eq('id', id);
+      }
+      return { error: null };
     } catch {
       return { error: null };
     }
