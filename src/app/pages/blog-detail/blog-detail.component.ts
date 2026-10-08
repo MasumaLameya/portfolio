@@ -58,7 +58,7 @@ import { SidebarComponent } from '../../components/sidebar/sidebar.component';
             <!-- Back Button -->
             <div class="mt-10 pt-6 border-t border-dashed border-black/10 dark:border-white/10 flex justify-between items-center">
               <a routerLink="/" fragment="blog" class="inline-flex items-center space-x-2 font-mono text-sm px-6 py-3 border border-black border-dashed rounded-full hover:bg-black hover:text-white dark:text-white dark:border-white dark:hover:bg-white dark:hover:text-black transition">
-                <i class="bi bi-arrow-left"></i> <span>Back to All Posts</span>
+                <i class="bi bi-arrow-left"></i> <span>Back to Research Publications</span>
               </a>
             </div>
           </div>
