@@ -351,10 +351,29 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private scrollListener: any;
   private typewriterTimer: any;
+  private syncChannel?: BroadcastChannel;
+  private focusHandler = () => this.fetchData();
+  private visibilityHandler = () => {
+    if (typeof document !== 'undefined' && document.visibilityState === 'visible') {
+      this.fetchData();
+    }
+  };
 
   async ngOnInit(): Promise<void> {
     await this.fetchData();
     this.startTypewriter();
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('focus', this.focusHandler);
+      document.addEventListener('visibilitychange', this.visibilityHandler);
+      window.addEventListener('portfolio_data_updated', this.focusHandler);
+      try {
+        this.syncChannel = new BroadcastChannel('portfolio_sync');
+        this.syncChannel.onmessage = () => {
+          this.fetchData();
+        };
+      } catch {}
+    }
   }
 
   async fetchData(): Promise<void> {
@@ -423,6 +442,14 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     if (this.typewriterTimer) {
       clearTimeout(this.typewriterTimer);
+    }
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('focus', this.focusHandler);
+      document.removeEventListener('visibilitychange', this.visibilityHandler);
+      window.removeEventListener('portfolio_data_updated', this.focusHandler);
+      try {
+        this.syncChannel?.close();
+      } catch {}
     }
   }
 
