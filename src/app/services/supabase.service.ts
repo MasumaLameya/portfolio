@@ -119,7 +119,7 @@ export class SupabaseService {
   }
 
   private checkVersionAndResetCache(): void {
-    const CURRENT_VERSION = 'v14_masuma_real_avatar_forced';
+    const CURRENT_VERSION = 'v15_masuma_me_folder_avatar';
     if (typeof localStorage !== 'undefined') {
       if (localStorage.getItem('portfolio_data_version') !== CURRENT_VERSION) {
         localStorage.removeItem('portfolio_profile');
@@ -317,7 +317,7 @@ export class SupabaseService {
     const defaultProfile: ProfileData = {
       name: 'MST. MASUMA AKTER LAMEYA',
       role: 'Full-Stack Developer & AI Engineer',
-      avatar_url: '/assets/images/masuma-avatar.jpg',
+      avatar_url: '/assets/images/masuma-profile-me.jpg',
       bio: 'Full-Stack Developer with experience in web application development, machine learning, and AI-integrated solutions. Skilled in developing end-to-end applications, managing databases, and implementing intelligent features with ASP.NET Core, Angular, Python, and Deep Learning.',
       typewriter_words: ['Masuma Akter Lameya', 'Full-Stack Developer', 'AI & ML Researcher', 'ASP.NET Core & Angular', 'Medical AI Specialist'],
       skill_1_name: 'ASP.NET Core & Backend',
@@ -349,7 +349,7 @@ export class SupabaseService {
 
       if (error || !data) {
         const local = localStorage.getItem('portfolio_profile');
-        if (local && !local.includes('Christina Gray') && !local.includes('Photographer') && !local.includes('Lorem ipsum')) {
+        if (local && !local.includes('Christina Gray') && !local.includes('Photographer') && !local.includes('Lorem ipsum') && local.includes('masuma-profile-me.jpg')) {
           return JSON.parse(local);
         }
         localStorage.setItem('portfolio_profile', JSON.stringify(defaultProfile));
@@ -357,7 +357,7 @@ export class SupabaseService {
       }
 
       // Check for template relics or old avatar that need auto-migration
-      const isOldAvatar = !data.avatar_url || data.avatar_url.includes('hero-avatar.1925fb85') || data.avatar_url.includes('upload') || data.avatar_url.includes('supabase.co/storage') || !data.avatar_url.includes('masuma-avatar.jpg');
+      const isOldAvatar = !data.avatar_url || !data.avatar_url.includes('masuma-profile-me.jpg');
       const isOldRole = !data.role || data.role.includes('Photographer') || data.role.includes('UI & UX') || data.role.includes('UI/UX');
       const isOldBio = !data.bio || data.bio.includes('Lorem ipsum') || data.bio.includes('dolore magna');
       const isOldName = !data.name || data.name.includes('Christina') || data.name.trim() === '';
