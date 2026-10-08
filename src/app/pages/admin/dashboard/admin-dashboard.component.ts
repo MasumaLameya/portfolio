@@ -368,14 +368,15 @@ export class AdminDashboardComponent implements OnInit {
           this.isSaving.set(false);
           return;
         }
+        let updated: ProjectItem[];
         if (this.modalMode === 'add') {
-          await this.supabase.createProject(this.currentProject);
+          updated = await this.supabase.createProject(this.currentProject);
           this.showToast('Project created successfully!');
         } else {
-          await this.supabase.updateProject(this.currentProject.id!, this.currentProject);
+          updated = await this.supabase.updateProject(this.currentProject.id!, this.currentProject);
           this.showToast('Project updated successfully!');
         }
-        this.projects.set(await this.supabase.getProjects());
+        this.projects.set(updated);
       }
 
       if (this.modalType === 'blogs') {
@@ -385,58 +386,63 @@ export class AdminDashboardComponent implements OnInit {
           return;
         }
         this.currentBlog.tags = this.blogTagsInput.split(',').map(t => t.trim()).filter(t => t);
+        let updated: BlogItem[];
         if (this.modalMode === 'add') {
-          await this.supabase.createBlog(this.currentBlog);
+          updated = await this.supabase.createBlog(this.currentBlog);
           this.showToast('Blog post published!');
         } else {
-          await this.supabase.updateBlog(this.currentBlog.id!, this.currentBlog);
+          updated = await this.supabase.updateBlog(this.currentBlog.id!, this.currentBlog);
           this.showToast('Blog post updated!');
         }
-        this.blogs.set(await this.supabase.getBlogs());
+        this.blogs.set(updated);
       }
 
       if (this.modalType === 'services') {
+        let updated: ServiceItem[];
         if (this.modalMode === 'add') {
-          await this.supabase.createService(this.currentService);
+          updated = await this.supabase.createService(this.currentService);
           this.showToast('Service added!');
         } else {
-          await this.supabase.updateService(this.currentService.id!, this.currentService);
+          updated = await this.supabase.updateService(this.currentService.id!, this.currentService);
           this.showToast('Service updated!');
         }
-        this.services.set(await this.supabase.getServices());
+        this.services.set(updated);
       }
 
       if (this.modalType === 'testimonials') {
+        let updated: TestimonialItem[];
         if (this.modalMode === 'add') {
-          await this.supabase.createTestimonial(this.currentTestimonial);
+          updated = await this.supabase.createTestimonial(this.currentTestimonial);
           this.showToast('Testimonial added!');
         } else {
-          await this.supabase.updateTestimonial(this.currentTestimonial.id!, this.currentTestimonial);
+          updated = await this.supabase.updateTestimonial(this.currentTestimonial.id!, this.currentTestimonial);
           this.showToast('Testimonial updated!');
         }
-        this.testimonials.set(await this.supabase.getTestimonials());
+        this.testimonials.set(updated);
       }
 
       if (this.modalType === 'resume') {
+        let updated: ResumeItem[];
         if (this.modalMode === 'add') {
-          await this.supabase.createResumeItem(this.currentResume);
+          updated = await this.supabase.createResumeItem(this.currentResume);
           this.showToast('Resume entry added!');
         } else {
-          await this.supabase.updateResumeItem(this.currentResume.id!, this.currentResume);
+          updated = await this.supabase.updateResumeItem(this.currentResume.id!, this.currentResume);
           this.showToast('Resume entry updated!');
         }
-        this.resumeItems.set(await this.supabase.getResumeItems());
+        this.resumeItems.set(updated);
       }
 
       if (this.modalType === 'clients') {
+        let updated: ClientItem[];
         if (this.modalMode === 'add') {
-          await this.supabase.createClient(this.currentClient);
+          updated = await this.supabase.createClient(this.currentClient);
           this.showToast('Client added!');
         } else {
-          await this.supabase.updateClient(this.currentClient.id!, this.currentClient);
+          updated = await this.supabase.updateClient(this.currentClient.id!, this.currentClient);
           this.showToast('Client updated!');
         }
-        this.clients.set(await this.supabase.getClients());
+        this.clients.set(updated);
       }
 
       this.closeModal();
@@ -453,32 +459,32 @@ export class AdminDashboardComponent implements OnInit {
 
     try {
       if (type === 'projects') {
-        await this.supabase.deleteProject(id);
-        this.projects.set(this.projects().filter(p => p.id !== id));
+        const updated = await this.supabase.deleteProject(id);
+        this.projects.set(updated);
       }
       if (type === 'blogs') {
-        await this.supabase.deleteBlog(id);
-        this.blogs.set(this.blogs().filter(b => b.id !== id));
+        const updated = await this.supabase.deleteBlog(id);
+        this.blogs.set(updated);
       }
       if (type === 'services') {
-        await this.supabase.deleteService(id);
-        this.services.set(this.services().filter(s => s.id !== id));
+        const updated = await this.supabase.deleteService(id);
+        this.services.set(updated);
       }
       if (type === 'testimonials') {
-        await this.supabase.deleteTestimonial(id);
-        this.testimonials.set(this.testimonials().filter(t => t.id !== id));
+        const updated = await this.supabase.deleteTestimonial(id);
+        this.testimonials.set(updated);
       }
       if (type === 'resume') {
-        await this.supabase.deleteResumeItem(id);
-        this.resumeItems.set(this.resumeItems().filter(r => r.id !== id));
+        const updated = await this.supabase.deleteResumeItem(id);
+        this.resumeItems.set(updated);
       }
       if (type === 'clients') {
-        await this.supabase.deleteClient(id);
-        this.clients.set(this.clients().filter(c => c.id !== id));
+        const updated = await this.supabase.deleteClient(id);
+        this.clients.set(updated);
       }
       if (type === 'messages') {
-        await this.supabase.deleteMessage(id);
-        this.messages.set(this.messages().filter(m => m.id !== id));
+        const updated = await this.supabase.deleteMessage(id);
+        this.messages.set(updated);
         if (this.selectedMessage?.id === id) this.selectedMessage = null;
       }
       this.showToast('Item deleted successfully.');

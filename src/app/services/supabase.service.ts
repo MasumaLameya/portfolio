@@ -520,6 +520,18 @@ export class SupabaseService {
       }
     ];
 
+    if (typeof localStorage !== 'undefined') {
+      const local = localStorage.getItem('portfolio_projects');
+      if (local) {
+        try {
+          const parsed = JSON.parse(local);
+          if (Array.isArray(parsed) && parsed.length > 0 && !parsed.some(p => p.title === 'Glasses of Cocktail' || p.designer === 'Christina Gray')) {
+            return parsed;
+          }
+        } catch {}
+      }
+    }
+
     try {
       const { data, error } = await this.supabase
         .from('projects')
@@ -527,17 +539,19 @@ export class SupabaseService {
         .order('created_at', { ascending: false });
 
       if (error || !data || data.length === 0 || data.some(p => p.title === 'Glasses of Cocktail' || p.designer === 'Christina Gray' || p.main_image?.includes('portfolio-1.9aa83f65'))) {
-        const local = localStorage.getItem('portfolio_projects');
-        if (local && !local.includes('Glasses of Cocktail') && !local.includes('portfolio-1.9aa83f65')) return JSON.parse(local);
-        localStorage.setItem('portfolio_projects', JSON.stringify(defaultProjects));
+        if (typeof localStorage !== 'undefined') {
+          localStorage.setItem('portfolio_projects', JSON.stringify(defaultProjects));
+        }
         return defaultProjects;
       }
-      localStorage.setItem('portfolio_projects', JSON.stringify(data));
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('portfolio_projects', JSON.stringify(data));
+      }
       return data as ProjectItem[];
     } catch {
-      const local = localStorage.getItem('portfolio_projects');
-      if (local && !local.includes('Glasses of Cocktail') && !local.includes('portfolio-1.9aa83f65')) return JSON.parse(local);
-      localStorage.setItem('portfolio_projects', JSON.stringify(defaultProjects));
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('portfolio_projects', JSON.stringify(defaultProjects));
+      }
       return defaultProjects;
     }
   }
@@ -547,39 +561,51 @@ export class SupabaseService {
     return list.find(p => p.slug === slug) || null;
   }
 
-  async createProject(project: ProjectItem) {
+  async createProject(project: ProjectItem): Promise<ProjectItem[]> {
     if (!project.id) project.id = 'proj_' + Date.now();
     const list = await this.getProjects();
     const updated = [project, ...list.filter(p => p.id !== project.id && p.slug !== project.slug)];
-    localStorage.setItem('portfolio_projects', JSON.stringify(updated));
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('portfolio_projects', JSON.stringify(updated));
+    }
     try {
       const payload: any = { ...project };
-      return await this.supabase.from('projects').insert([payload]);
-    } catch {
-      return { error: null, data: [project] };
-    }
+      delete payload.id;
+      await this.supabase.from('projects').insert([payload]);
+    } catch {}
+    return updated;
   }
 
-  async updateProject(id: string, project: Partial<ProjectItem>) {
+  async updateProject(id: string, project: Partial<ProjectItem>): Promise<ProjectItem[]> {
     const list = await this.getProjects();
-    const updated = list.map(p => (p.id === id || p.slug === project.slug) ? { ...p, ...project } : p);
-    localStorage.setItem('portfolio_projects', JSON.stringify(updated));
-    try {
-      return await this.supabase.from('projects').update(project).eq('id', id);
-    } catch {
-      return { error: null, data: [project] };
+    const updated = list.map(p => (p.id === id || (project.slug && p.slug === project.slug) || (project.title && p.title === project.title)) ? { ...p, ...project } : p);
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('portfolio_projects', JSON.stringify(updated));
     }
+    try {
+      const payload: any = { ...project };
+      delete payload.id;
+      if (id && id.length > 20) {
+        await this.supabase.from('projects').update(payload).eq('id', id);
+      } else if (project.slug) {
+        await this.supabase.from('projects').update(payload).eq('slug', project.slug);
+      }
+    } catch {}
+    return updated;
   }
 
-  async deleteProject(id: string) {
+  async deleteProject(id: string): Promise<ProjectItem[]> {
     const list = await this.getProjects();
     const updated = list.filter(p => p.id !== id);
-    localStorage.setItem('portfolio_projects', JSON.stringify(updated));
-    try {
-      return await this.supabase.from('projects').delete().eq('id', id);
-    } catch {
-      return { error: null };
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('portfolio_projects', JSON.stringify(updated));
     }
+    try {
+      if (id && id.length > 20) {
+        await this.supabase.from('projects').delete().eq('id', id);
+      }
+    } catch {}
+    return updated;
   }
 
   // ================= BLOGS / RESEARCH =================
@@ -587,29 +613,43 @@ export class SupabaseService {
     const defaultBlogs: BlogItem[] = [
       {
         id: 'blog_1',
-        title: 'EffiViT-Hybrid: A CNN–Transformer Framework for Pancreatic Cancer Detection from CT Images',
-        slug: 'effivit-hybrid-pancreatic-cancer-detection',
-        category: 'Medical AI (IEEE)',
-        date: '2026',
-        author: 'Masuma Akter Lameya (1st Author)',
-        cover_image: '/assets/images/blog-effivit-cancer.jpg',
-        summary: 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026 — Author Position: 1st Author',
-        content: 'Conference Publication: 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026.\n\nAuthor Position: 1st Author\n\nAbstract:\nPancreatic cancer diagnosis from abdominal CT scans is clinically challenging due to complex surrounding anatomy and subtle early lesion margins. This paper introduces EffiViT-Hybrid, a fused architecture that leverages CNN feature extraction for local tissue textures alongside Vision Transformer attention mechanisms for global anatomical context.',
-        tags: ['IEEE Publication', 'Medical AI', 'Vision Transformer', 'Deep Learning', 'Computer Vision']
-      },
-      {
-        id: 'blog_2',
         title: 'Developer-Oriented Classification of Mobile App Reviews Using a Hybrid BERT-XGBoost Ensemble',
         slug: 'hybrid-bert-xgboost-mobile-app-reviews',
         category: 'Research (IEEE)',
         date: '2026',
-        author: 'Masuma Akter Lameya (3rd Author)',
+        author: 'Masuma Akter Lameya (1st Author)',
         cover_image: '/assets/images/blog-bert-xgboost.jpg',
-        summary: 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026 — Author Position: 3rd Author',
-        content: 'Conference Publication: 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026.\n\nAuthor Position: 3rd Author\n\nAbstract:\nThis research proposes a hybrid machine learning and deep learning framework combining BERT contextual embeddings with an XGBoost classifier for automated, developer-oriented sentiment and category classification of mobile app reviews. The system effectively extracts actionable bug reports, feature requests, and user experience feedback with high empirical precision.',
-        tags: ['IEEE Publication', 'BERT', 'NLP', 'XGBoost', 'Machine Learning']
+        summary: 'A novel hybrid NLP architecture combining fine-tuned BERT representations with an XGBoost classifier for automated developer-oriented categorization of user reviews.',
+        content: 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026.\n\nAuthor Position: 1st Author.\n\nDOI: 10.1109/QPAIN69676.2026.11546035\n\nAbstract:\nThis research proposes a hybrid machine learning and deep learning framework combining BERT contextual embeddings with an XGBoost classifier for automated, developer-oriented sentiment and category classification of mobile app reviews. The system effectively extracts actionable bug reports, feature requests, and user experience feedback with high empirical precision.',
+        tags: ['IEEE Publication', 'BERT', 'NLP', 'XGBoost', 'Machine Learning'],
+        paper_url: 'https://doi.org/10.1109/QPAIN69676.2026.11546035'
+      },
+      {
+        id: 'blog_2',
+        title: 'EffiViT-Hybrid: A CNN–Transformer Framework for Pancreatic Cancer Detection from CT Images',
+        slug: 'effivit-hybrid-pancreatic-cancer-detection',
+        category: 'Medical AI (IEEE)',
+        date: '2026',
+        author: 'Masuma Akter Lameya (3rd Author)',
+        cover_image: '/assets/images/blog-effivit-cancer.jpg',
+        summary: 'Fused CNN and Vision Transformer framework capturing localized textural lesion patterns alongside global contextual dependencies for highly accurate early-stage cancer detection.',
+        content: 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026.\n\nAuthor Position: 3rd Author.\n\nDOI: 10.1109/QPAIN69676.2026.11546439\n\nAbstract:\nPancreatic cancer diagnosis from abdominal CT scans is clinically challenging due to complex surrounding anatomy and subtle early lesion margins. This paper introduces EffiViT-Hybrid, a fused architecture that leverages CNN feature extraction for local tissue textures alongside Vision Transformer attention mechanisms for global anatomical context.',
+        tags: ['IEEE Publication', 'Medical AI', 'Vision Transformer', 'Deep Learning', 'Computer Vision'],
+        paper_url: 'https://doi.org/10.1109/QPAIN69676.2026.11546439'
       }
     ];
+
+    if (typeof localStorage !== 'undefined') {
+      const local = localStorage.getItem('portfolio_blogs');
+      if (local) {
+        try {
+          const parsed = JSON.parse(local);
+          if (Array.isArray(parsed) && parsed.length > 0 && !parsed.some(b => b.author === 'Christina Gray' || b.title === '4 Years of Working From Home')) {
+            return parsed;
+          }
+        } catch {}
+      }
+    }
 
     try {
       const { data, error } = await this.supabase
@@ -617,103 +657,74 @@ export class SupabaseService {
         .select('*')
         .order('created_at', { ascending: false });
 
-      const needsFix = error || !data || data.length === 0 || data.some(b => 
-        b.title === '4 Years of Working From Home' || 
-        b.author === 'Christina Gray' || 
-        b.cover_image?.includes('blog-post-1.a6d3ea41') || 
-        b.title?.includes('Scalable Enterprise Architectures') ||
-        (b.slug === 'effivit-hybrid-pancreatic-cancer-detection' && b.author?.includes('3rd Author')) ||
-        (b.slug === 'hybrid-bert-xgboost-mobile-app-reviews' && b.author?.includes('1st Author'))
-      );
-
-      if (needsFix) {
-        // Asynchronously update / clean database
-        try {
-          for (const b of defaultBlogs) {
-            const row: any = { ...b };
-            delete row.id;
-            await this.supabase.from('blogs').upsert([row], { onConflict: 'slug' });
-          }
-        } catch {}
-
-        localStorage.setItem('portfolio_blogs', JSON.stringify(defaultBlogs));
+      if (error || !data || data.length === 0 || data.some(b => b.author === 'Christina Gray' || b.title === '4 Years of Working From Home')) {
+        if (typeof localStorage !== 'undefined') {
+          localStorage.setItem('portfolio_blogs', JSON.stringify(defaultBlogs));
+        }
         return defaultBlogs;
       }
-      localStorage.setItem('portfolio_blogs', JSON.stringify(data));
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('portfolio_blogs', JSON.stringify(data));
+      }
       return data as BlogItem[];
     } catch {
-      localStorage.setItem('portfolio_blogs', JSON.stringify(defaultBlogs));
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('portfolio_blogs', JSON.stringify(defaultBlogs));
+      }
       return defaultBlogs;
     }
   }
 
   async getBlogBySlug(slug: string): Promise<BlogItem | null> {
-    try {
-      const list = await this.getBlogs();
-      const match = list.find(b => b.slug === slug);
-      if (match) return match;
-
-      const { data, error } = await this.supabase
-        .from('blogs')
-        .select('*')
-        .eq('slug', slug)
-        .maybeSingle();
-
-      if (error || !data) {
-        return null;
-      }
-
-      if (data.slug === 'effivit-hybrid-pancreatic-cancer-detection' && data.author?.includes('3rd Author')) {
-        data.author = 'Masuma Akter Lameya (1st Author)';
-        data.summary = 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026 — Author Position: 1st Author';
-        data.content = data.content?.replace(/3rd Author/g, '1st Author');
-      }
-      if (data.slug === 'hybrid-bert-xgboost-mobile-app-reviews' && data.author?.includes('1st Author')) {
-        data.author = 'Masuma Akter Lameya (3rd Author)';
-        data.summary = 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026 — Author Position: 3rd Author';
-        data.content = data.content?.replace(/1st Author/g, '3rd Author');
-      }
-
-      return data as BlogItem;
-    } catch {
-      const list = await this.getBlogs();
-      return list.find(b => b.slug === slug) || null;
-    }
+    const list = await this.getBlogs();
+    return list.find(b => b.slug === slug) || null;
   }
 
-  async createBlog(blog: BlogItem) {
+  async createBlog(blog: BlogItem): Promise<BlogItem[]> {
+    if (!blog.id) blog.id = 'blog_' + Date.now();
     const list = await this.getBlogs();
-    const updated = [blog, ...list];
-    localStorage.setItem('portfolio_blogs', JSON.stringify(updated));
+    const updated = [blog, ...list.filter(b => b.id !== blog.id && b.slug !== blog.slug)];
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('portfolio_blogs', JSON.stringify(updated));
+    }
     try {
       const payload: any = { ...blog };
       delete payload.id;
-      return await this.supabase.from('blogs').insert([payload]);
-    } catch {
-      return { error: null, data: [blog] };
-    }
+      await this.supabase.from('blogs').insert([payload]);
+    } catch {}
+    return updated;
   }
 
-  async updateBlog(id: string, blog: Partial<BlogItem>) {
+  async updateBlog(id: string, blog: Partial<BlogItem>): Promise<BlogItem[]> {
     const list = await this.getBlogs();
-    const updated = list.map(b => (b.id === id || b.slug === blog.slug) ? { ...b, ...blog } : b);
-    localStorage.setItem('portfolio_blogs', JSON.stringify(updated));
-    try {
-      return await this.supabase.from('blogs').update(blog).eq('id', id);
-    } catch {
-      return { error: null, data: [blog] };
+    const updated = list.map(b => (b.id === id || (blog.slug && b.slug === blog.slug) || (blog.title && b.title === blog.title)) ? { ...b, ...blog } : b);
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('portfolio_blogs', JSON.stringify(updated));
     }
+    try {
+      const payload: any = { ...blog };
+      delete payload.id;
+      if (id && id.length > 20) {
+        await this.supabase.from('blogs').update(payload).eq('id', id);
+      } else if (blog.slug) {
+        await this.supabase.from('blogs').update(payload).eq('slug', blog.slug);
+      }
+    } catch {}
+    return updated;
   }
 
-  async deleteBlog(id: string) {
+  async deleteBlog(id: string): Promise<BlogItem[]> {
     const list = await this.getBlogs();
     const updated = list.filter(b => b.id !== id);
-    localStorage.setItem('portfolio_blogs', JSON.stringify(updated));
-    try {
-      return await this.supabase.from('blogs').delete().eq('id', id);
-    } catch {
-      return { error: null };
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('portfolio_blogs', JSON.stringify(updated));
     }
+    try {
+      if (id && id.length > 20) {
+        await this.supabase.from('blogs').delete().eq('id', id);
+      }
+    } catch {}
+    return updated;
   }
 
   // ================= SERVICES =================
@@ -725,61 +736,85 @@ export class SupabaseService {
       { id: 'srv_4', title: 'Database & API Architecture', description: 'Designing high-performance schemas in MySQL, PostgreSQL, SQL Server, and securing scalable backend services.', icon: 'bi bi-database', sort_order: 4 }
     ];
 
+    if (typeof localStorage !== 'undefined') {
+      const local = localStorage.getItem('portfolio_services');
+      if (local) {
+        try {
+          const parsed = JSON.parse(local);
+          if (Array.isArray(parsed) && parsed.length > 0 && !parsed.some(s => s.title === 'Photography' || s.title === 'Digital Marketing' || s.title === 'Branding & Strategy')) {
+            return parsed;
+          }
+        } catch {}
+      }
+    }
+
     try {
       const { data, error } = await this.supabase
         .from('services')
         .select('*')
         .order('sort_order', { ascending: true });
 
-      if (error || !data || data.length === 0 || data.some(s => s.title === 'Photography' || s.title === 'Digital Marketing' || s.title === 'Branding & Strategy' || s.title === 'User Testing & Personas')) {
-        const local = localStorage.getItem('portfolio_services');
-        if (local && !local.includes('Digital Marketing') && !local.includes('Branding & Strategy')) return JSON.parse(local);
-        localStorage.setItem('portfolio_services', JSON.stringify(defaultServices));
+      if (error || !data || data.length === 0 || data.some(s => s.title === 'Photography' || s.title === 'Digital Marketing' || s.title === 'Branding & Strategy')) {
+        if (typeof localStorage !== 'undefined') {
+          localStorage.setItem('portfolio_services', JSON.stringify(defaultServices));
+        }
         return defaultServices;
       }
-      localStorage.setItem('portfolio_services', JSON.stringify(data));
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('portfolio_services', JSON.stringify(data));
+      }
       return data as ServiceItem[];
     } catch {
-      const local = localStorage.getItem('portfolio_services');
-      if (local && !local.includes('Digital Marketing') && !local.includes('Branding & Strategy')) return JSON.parse(local);
-      localStorage.setItem('portfolio_services', JSON.stringify(defaultServices));
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('portfolio_services', JSON.stringify(defaultServices));
+      }
       return defaultServices;
     }
   }
 
-  async createService(service: ServiceItem) {
+  async createService(service: ServiceItem): Promise<ServiceItem[]> {
     if (!service.id) service.id = 'srv_' + Date.now();
     const list = await this.getServices();
     const updated = [...list.filter(s => s.id !== service.id), service];
-    localStorage.setItem('portfolio_services', JSON.stringify(updated));
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('portfolio_services', JSON.stringify(updated));
+    }
     try {
       const payload: any = { ...service };
-      return await this.supabase.from('services').insert([payload]);
-    } catch {
-      return { error: null, data: [service] };
-    }
+      delete payload.id;
+      await this.supabase.from('services').insert([payload]);
+    } catch {}
+    return updated;
   }
 
-  async updateService(id: string, service: Partial<ServiceItem>) {
+  async updateService(id: string, service: Partial<ServiceItem>): Promise<ServiceItem[]> {
     const list = await this.getServices();
-    const updated = list.map(s => s.id === id ? { ...s, ...service } : s);
-    localStorage.setItem('portfolio_services', JSON.stringify(updated));
-    try {
-      return await this.supabase.from('services').update(service).eq('id', id);
-    } catch {
-      return { error: null, data: [service] };
+    const updated = list.map(s => (s.id === id || (service.title && s.title === service.title)) ? { ...s, ...service } : s);
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('portfolio_services', JSON.stringify(updated));
     }
+    try {
+      const payload: any = { ...service };
+      delete payload.id;
+      if (id && id.length > 20) {
+        await this.supabase.from('services').update(payload).eq('id', id);
+      }
+    } catch {}
+    return updated;
   }
 
-  async deleteService(id: string) {
+  async deleteService(id: string): Promise<ServiceItem[]> {
     const list = await this.getServices();
     const updated = list.filter(s => s.id !== id);
-    localStorage.setItem('portfolio_services', JSON.stringify(updated));
-    try {
-      return await this.supabase.from('services').delete().eq('id', id);
-    } catch {
-      return { error: null };
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('portfolio_services', JSON.stringify(updated));
     }
+    try {
+      if (id && id.length > 20) {
+        await this.supabase.from('services').delete().eq('id', id);
+      }
+    } catch {}
+    return updated;
   }
 
   // ================= TESTIMONIALS =================
@@ -790,60 +825,84 @@ export class SupabaseService {
       { id: 'tst_3', name: 'IEEE Student Branch Committee', role: 'Branch Counselor', company: 'IEEE Computer Society', avatar: '/assets/images/testimonial-3.cb371b2d.jpg', feedback: 'Her leadership as Event Coordinator and dedication as an Academic Mentor has inspired countless students in coding, problem solving, and research.', rating: 5 }
     ];
 
+    if (typeof localStorage !== 'undefined') {
+      const local = localStorage.getItem('portfolio_testimonials');
+      if (local) {
+        try {
+          const parsed = JSON.parse(local);
+          if (Array.isArray(parsed) && parsed.length > 0 && !parsed.some(t => t.name === 'Sandra Radford' || t.company?.includes('FlaTheme'))) {
+            return parsed;
+          }
+        } catch {}
+      }
+    }
+
     try {
       const { data, error } = await this.supabase
         .from('testimonials')
         .select('*');
 
-      if (error || !data || data.length === 0 || data.some(t => t.company?.includes('FlaTheme') || t.name === 'Sandra Radford' || t.feedback?.includes('Lorem ipsum'))) {
-        const local = localStorage.getItem('portfolio_testimonials');
-        if (local && !local.includes('Sandra Radford') && !local.includes('FlaTheme')) return JSON.parse(local);
-        localStorage.setItem('portfolio_testimonials', JSON.stringify(defaultTestimonials));
+      if (error || !data || data.length === 0 || data.some(t => t.name === 'Sandra Radford' || t.company?.includes('FlaTheme'))) {
+        if (typeof localStorage !== 'undefined') {
+          localStorage.setItem('portfolio_testimonials', JSON.stringify(defaultTestimonials));
+        }
         return defaultTestimonials;
       }
-      localStorage.setItem('portfolio_testimonials', JSON.stringify(data));
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('portfolio_testimonials', JSON.stringify(data));
+      }
       return data as TestimonialItem[];
     } catch {
-      const local = localStorage.getItem('portfolio_testimonials');
-      if (local && !local.includes('Sandra Radford') && !local.includes('FlaTheme')) return JSON.parse(local);
-      localStorage.setItem('portfolio_testimonials', JSON.stringify(defaultTestimonials));
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('portfolio_testimonials', JSON.stringify(defaultTestimonials));
+      }
       return defaultTestimonials;
     }
   }
 
-  async createTestimonial(testimonial: TestimonialItem) {
+  async createTestimonial(testimonial: TestimonialItem): Promise<TestimonialItem[]> {
     if (!testimonial.id) testimonial.id = 'tst_' + Date.now();
     const list = await this.getTestimonials();
     const updated = [...list.filter(t => t.id !== testimonial.id), testimonial];
-    localStorage.setItem('portfolio_testimonials', JSON.stringify(updated));
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('portfolio_testimonials', JSON.stringify(updated));
+    }
     try {
       const payload: any = { ...testimonial };
-      return await this.supabase.from('testimonials').insert([payload]);
-    } catch {
-      return { error: null, data: [testimonial] };
-    }
+      delete payload.id;
+      await this.supabase.from('testimonials').insert([payload]);
+    } catch {}
+    return updated;
   }
 
-  async updateTestimonial(id: string, testimonial: Partial<TestimonialItem>) {
+  async updateTestimonial(id: string, testimonial: Partial<TestimonialItem>): Promise<TestimonialItem[]> {
     const list = await this.getTestimonials();
-    const updated = list.map(t => t.id === id ? { ...t, ...testimonial } : t);
-    localStorage.setItem('portfolio_testimonials', JSON.stringify(updated));
-    try {
-      return await this.supabase.from('testimonials').update(testimonial).eq('id', id);
-    } catch {
-      return { error: null, data: [testimonial] };
+    const updated = list.map(t => (t.id === id || (testimonial.name && t.name === testimonial.name)) ? { ...t, ...testimonial } : t);
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('portfolio_testimonials', JSON.stringify(updated));
     }
+    try {
+      const payload: any = { ...testimonial };
+      delete payload.id;
+      if (id && id.length > 20) {
+        await this.supabase.from('testimonials').update(payload).eq('id', id);
+      }
+    } catch {}
+    return updated;
   }
 
-  async deleteTestimonial(id: string) {
+  async deleteTestimonial(id: string): Promise<TestimonialItem[]> {
     const list = await this.getTestimonials();
     const updated = list.filter(t => t.id !== id);
-    localStorage.setItem('portfolio_testimonials', JSON.stringify(updated));
-    try {
-      return await this.supabase.from('testimonials').delete().eq('id', id);
-    } catch {
-      return { error: null };
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('portfolio_testimonials', JSON.stringify(updated));
     }
+    try {
+      if (id && id.length > 20) {
+        await this.supabase.from('testimonials').delete().eq('id', id);
+      }
+    } catch {}
+    return updated;
   }
 
   // ================= RESUME =================
@@ -858,14 +917,16 @@ export class SupabaseService {
       { id: 'res_7', type: 'education', period: '2017 - 2019', title: 'Secondary School Certificate (SSC) — Science', organization: 'Kamarpara School and College — GPA: 5.00/5.00', description: 'Achieved top-tier GPA 5.00 with distinction. Active Science Olympiad participant and competitive problem solver.', sort_order: 3 }
     ];
 
-    const local = typeof localStorage !== 'undefined' ? localStorage.getItem('portfolio_resume') : null;
-    if (local) {
-      try {
-        const parsed = JSON.parse(local);
-        if (Array.isArray(parsed) && parsed.length > 0 && !parsed.some(r => r.organization?.includes('FlaTheme') || r.title?.includes('Bachelor Degree of Business'))) {
-          return parsed;
-        }
-      } catch {}
+    if (typeof localStorage !== 'undefined') {
+      const local = localStorage.getItem('portfolio_resume');
+      if (local) {
+        try {
+          const parsed = JSON.parse(local);
+          if (Array.isArray(parsed) && parsed.length > 0 && !parsed.some(r => r.organization?.includes('FlaTheme') || r.title?.includes('Bachelor Degree of Business'))) {
+            return parsed;
+          }
+        } catch {}
+      }
     }
 
     try {
@@ -875,61 +936,68 @@ export class SupabaseService {
         .order('sort_order', { ascending: true });
 
       if (error || !data || data.length === 0 || data.some(r => r.organization?.includes('FlaTheme') || r.title?.includes('Bachelor Degree of Business') || r.title?.includes('Event Coordinator & Math Club Manager'))) {
-        localStorage.setItem('portfolio_resume', JSON.stringify(defaultResume));
+        if (typeof localStorage !== 'undefined') {
+          localStorage.setItem('portfolio_resume', JSON.stringify(defaultResume));
+        }
         return defaultResume;
       }
-      localStorage.setItem('portfolio_resume', JSON.stringify(data));
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('portfolio_resume', JSON.stringify(data));
+      }
       return data as ResumeItem[];
     } catch {
-      localStorage.setItem('portfolio_resume', JSON.stringify(defaultResume));
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('portfolio_resume', JSON.stringify(defaultResume));
+      }
       return defaultResume;
     }
   }
 
-  async createResumeItem(item: ResumeItem) {
+  async createResumeItem(item: ResumeItem): Promise<ResumeItem[]> {
     if (!item.id) item.id = 'res_' + Date.now();
     const list = await this.getResumeItems();
     const updated = [...list.filter(r => r.id !== item.id), item];
-    localStorage.setItem('portfolio_resume', JSON.stringify(updated));
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('portfolio_resume', JSON.stringify(updated));
+    }
     try {
       const payload: any = { ...item };
-      if (payload.id && !payload.id.includes('-')) delete payload.id;
-      return await this.supabase.from('resume_items').insert([payload]);
-    } catch {
-      return { error: null, data: [item] };
-    }
+      delete payload.id;
+      await this.supabase.from('resume_items').insert([payload]);
+    } catch {}
+    return updated;
   }
 
-  async updateResumeItem(id: string, item: Partial<ResumeItem>) {
+  async updateResumeItem(id: string, item: Partial<ResumeItem>): Promise<ResumeItem[]> {
     const list = await this.getResumeItems();
     const updated = list.map(r => (r.id === id || (item.title && r.title === item.title && r.type === item.type)) ? { ...r, ...item } : r);
-    localStorage.setItem('portfolio_resume', JSON.stringify(updated));
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('portfolio_resume', JSON.stringify(updated));
+    }
     try {
       const payload: any = { ...item };
       delete payload.id;
       if (id && id.length > 20) {
-        return await this.supabase.from('resume_items').update(payload).eq('id', id);
+        await this.supabase.from('resume_items').update(payload).eq('id', id);
       } else if (item.title) {
-        return await this.supabase.from('resume_items').update(payload).eq('title', item.title);
+        await this.supabase.from('resume_items').update(payload).eq('title', item.title);
       }
-      return { error: null, data: [item] };
-    } catch {
-      return { error: null, data: [item] };
-    }
+    } catch {}
+    return updated;
   }
 
-  async deleteResumeItem(id: string) {
+  async deleteResumeItem(id: string): Promise<ResumeItem[]> {
     const list = await this.getResumeItems();
     const updated = list.filter(r => r.id !== id);
-    localStorage.setItem('portfolio_resume', JSON.stringify(updated));
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('portfolio_resume', JSON.stringify(updated));
+    }
     try {
       if (id && id.length > 20) {
-        return await this.supabase.from('resume_items').delete().eq('id', id);
+        await this.supabase.from('resume_items').delete().eq('id', id);
       }
-      return { error: null };
-    } catch {
-      return { error: null };
-    }
+    } catch {}
+    return updated;
   }
 
   // ================= CLIENTS =================
@@ -941,60 +1009,84 @@ export class SupabaseService {
       { id: 'cli_4', name: 'QPAIN IEEE Conference', logo_url: '/assets/images/client-4.39ef1981.png', website_url: 'https://github.com/MasumaLameya' }
     ];
 
+    if (typeof localStorage !== 'undefined') {
+      const local = localStorage.getItem('portfolio_clients');
+      if (local) {
+        try {
+          const parsed = JSON.parse(local);
+          if (Array.isArray(parsed) && parsed.length > 0 && !parsed.some(c => c.name?.includes('Logo') || c.name?.includes('Client 1'))) {
+            return parsed;
+          }
+        } catch {}
+      }
+    }
+
     try {
       const { data, error } = await this.supabase
         .from('clients')
         .select('*');
 
       if (error || !data || data.length === 0 || data.some(c => c.name?.includes('Logo') || c.name?.includes('Client 1'))) {
-        const local = localStorage.getItem('portfolio_clients');
-        if (local && !local.includes('Logo 0')) return JSON.parse(local);
-        localStorage.setItem('portfolio_clients', JSON.stringify(defaultClients));
+        if (typeof localStorage !== 'undefined') {
+          localStorage.setItem('portfolio_clients', JSON.stringify(defaultClients));
+        }
         return defaultClients;
       }
-      localStorage.setItem('portfolio_clients', JSON.stringify(data));
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('portfolio_clients', JSON.stringify(data));
+      }
       return data as ClientItem[];
     } catch {
-      const local = localStorage.getItem('portfolio_clients');
-      if (local && !local.includes('Logo 0')) return JSON.parse(local);
-      localStorage.setItem('portfolio_clients', JSON.stringify(defaultClients));
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('portfolio_clients', JSON.stringify(defaultClients));
+      }
       return defaultClients;
     }
   }
 
-  async createClient(client: ClientItem) {
+  async createClient(client: ClientItem): Promise<ClientItem[]> {
     if (!client.id) client.id = 'cli_' + Date.now();
     const list = await this.getClients();
     const updated = [...list.filter(c => c.id !== client.id), client];
-    localStorage.setItem('portfolio_clients', JSON.stringify(updated));
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('portfolio_clients', JSON.stringify(updated));
+    }
     try {
       const payload: any = { ...client };
-      return await this.supabase.from('clients').insert([payload]);
-    } catch {
-      return { error: null, data: [client] };
-    }
+      delete payload.id;
+      await this.supabase.from('clients').insert([payload]);
+    } catch {}
+    return updated;
   }
 
-  async updateClient(id: string, client: Partial<ClientItem>) {
+  async updateClient(id: string, client: Partial<ClientItem>): Promise<ClientItem[]> {
     const list = await this.getClients();
-    const updated = list.map(c => c.id === id ? { ...c, ...client } : c);
-    localStorage.setItem('portfolio_clients', JSON.stringify(updated));
-    try {
-      return await this.supabase.from('clients').update(client).eq('id', id);
-    } catch {
-      return { error: null, data: [client] };
+    const updated = list.map(c => (c.id === id || (client.name && c.name === client.name)) ? { ...c, ...client } : c);
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('portfolio_clients', JSON.stringify(updated));
     }
+    try {
+      const payload: any = { ...client };
+      delete payload.id;
+      if (id && id.length > 20) {
+        await this.supabase.from('clients').update(payload).eq('id', id);
+      }
+    } catch {}
+    return updated;
   }
 
-  async deleteClient(id: string) {
+  async deleteClient(id: string): Promise<ClientItem[]> {
     const list = await this.getClients();
     const updated = list.filter(c => c.id !== id);
-    localStorage.setItem('portfolio_clients', JSON.stringify(updated));
-    try {
-      return await this.supabase.from('clients').delete().eq('id', id);
-    } catch {
-      return { error: null };
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('portfolio_clients', JSON.stringify(updated));
     }
+    try {
+      if (id && id.length > 20) {
+        await this.supabase.from('clients').delete().eq('id', id);
+      }
+    } catch {}
+    return updated;
   }
 
   // ================= CONTACT MESSAGES =================
@@ -1007,6 +1099,14 @@ export class SupabaseService {
   }
 
   async getMessages(): Promise<ContactMessage[]> {
+    if (typeof localStorage !== 'undefined') {
+      const local = localStorage.getItem('portfolio_messages');
+      if (local) {
+        try {
+          return JSON.parse(local);
+        } catch {}
+      }
+    }
     try {
       const { data, error } = await this.supabase
         .from('contact_messages')
@@ -1014,15 +1114,13 @@ export class SupabaseService {
         .order('created_at', { ascending: false });
 
       if (error || !data) {
-        const local = localStorage.getItem('portfolio_messages');
-        if (local) return JSON.parse(local);
         return [];
       }
-      localStorage.setItem('portfolio_messages', JSON.stringify(data));
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('portfolio_messages', JSON.stringify(data));
+      }
       return data as ContactMessage[];
     } catch {
-      const local = localStorage.getItem('portfolio_messages');
-      if (local) return JSON.parse(local);
       return [];
     }
   }
@@ -1031,14 +1129,15 @@ export class SupabaseService {
     return await this.supabase.from('contact_messages').update({ is_read }).eq('id', id);
   }
 
-  async deleteMessage(id: string) {
+  async deleteMessage(id: string): Promise<ContactMessage[]> {
     const list = await this.getMessages();
     const updated = list.filter(m => m.id !== id);
-    localStorage.setItem('portfolio_messages', JSON.stringify(updated));
-    try {
-      return await this.supabase.from('contact_messages').delete().eq('id', id);
-    } catch {
-      return { error: null };
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('portfolio_messages', JSON.stringify(updated));
     }
+    try {
+      await this.supabase.from('contact_messages').delete().eq('id', id);
+    } catch {}
+    return updated;
   }
 }
