@@ -119,7 +119,7 @@ export class SupabaseService {
   }
 
   private checkVersionAndResetCache(): void {
-    const CURRENT_VERSION = 'v9_masuma_ieee_papers_reordered';
+    const CURRENT_VERSION = 'v10_masuma_authorship_corrected';
     if (typeof localStorage !== 'undefined') {
       if (localStorage.getItem('portfolio_data_version') !== CURRENT_VERSION) {
         localStorage.removeItem('portfolio_profile');
@@ -574,10 +574,10 @@ export class SupabaseService {
         slug: 'effivit-hybrid-pancreatic-cancer-detection',
         category: 'Medical AI (IEEE)',
         date: '2026',
-        author: 'Masuma Akter Lameya (3rd Author)',
+        author: 'Masuma Akter Lameya (1st Author)',
         cover_image: '/assets/images/blog-effivit-cancer.jpg',
-        summary: 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026 — Author Position: 3rd Author',
-        content: 'Conference Publication: 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026.\n\nAuthor Position: 3rd Author\n\nAbstract:\nPancreatic cancer diagnosis from abdominal CT scans is clinically challenging due to complex surrounding anatomy and subtle early lesion margins. This paper introduces EffiViT-Hybrid, a fused architecture that leverages CNN feature extraction for local tissue textures alongside Vision Transformer attention mechanisms for global anatomical context.',
+        summary: 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026 — Author Position: 1st Author',
+        content: 'Conference Publication: 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026.\n\nAuthor Position: 1st Author\n\nAbstract:\nPancreatic cancer diagnosis from abdominal CT scans is clinically challenging due to complex surrounding anatomy and subtle early lesion margins. This paper introduces EffiViT-Hybrid, a fused architecture that leverages CNN feature extraction for local tissue textures alongside Vision Transformer attention mechanisms for global anatomical context.',
         tags: ['IEEE Publication', 'Medical AI', 'Vision Transformer', 'Deep Learning', 'Computer Vision']
       },
       {
@@ -586,10 +586,10 @@ export class SupabaseService {
         slug: 'hybrid-bert-xgboost-mobile-app-reviews',
         category: 'Research (IEEE)',
         date: '2026',
-        author: 'Masuma Akter Lameya (1st Author)',
+        author: 'Masuma Akter Lameya (3rd Author)',
         cover_image: '/assets/images/blog-bert-xgboost.jpg',
-        summary: 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026 — Author Position: 1st Author',
-        content: 'Conference Publication: 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026.\n\nAuthor Position: 1st Author\n\nAbstract:\nThis research proposes a hybrid machine learning and deep learning framework combining BERT contextual embeddings with an XGBoost classifier for automated, developer-oriented sentiment and category classification of mobile app reviews. The system effectively extracts actionable bug reports, feature requests, and user experience feedback with high empirical precision.',
+        summary: 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026 — Author Position: 3rd Author',
+        content: 'Conference Publication: 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026.\n\nAuthor Position: 3rd Author\n\nAbstract:\nThis research proposes a hybrid machine learning and deep learning framework combining BERT contextual embeddings with an XGBoost classifier for automated, developer-oriented sentiment and category classification of mobile app reviews. The system effectively extracts actionable bug reports, feature requests, and user experience feedback with high empirical precision.',
         tags: ['IEEE Publication', 'BERT', 'NLP', 'XGBoost', 'Machine Learning']
       }
     ];
