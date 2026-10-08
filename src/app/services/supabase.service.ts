@@ -119,7 +119,7 @@ export class SupabaseService {
   }
 
   private checkVersionAndResetCache(): void {
-    const CURRENT_VERSION = 'v10_masuma_authorship_corrected';
+    const CURRENT_VERSION = 'v11_masuma_authorship_corrected_sync';
     if (typeof localStorage !== 'undefined') {
       if (localStorage.getItem('portfolio_data_version') !== CURRENT_VERSION) {
         localStorage.removeItem('portfolio_profile');
@@ -600,17 +600,31 @@ export class SupabaseService {
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error || !data || data.length === 0 || data.some(b => b.title === '4 Years of Working From Home' || b.author === 'Christina Gray' || b.cover_image?.includes('blog-post-1.a6d3ea41') || b.title?.includes('Scalable Enterprise Architectures'))) {
-        const local = localStorage.getItem('portfolio_blogs');
-        if (local && !local.includes('4 Years of Working') && !local.includes('blog-post-1.a6d3ea41') && !local.includes('Scalable Enterprise Architectures')) return JSON.parse(local);
+      const needsFix = error || !data || data.length === 0 || data.some(b => 
+        b.title === '4 Years of Working From Home' || 
+        b.author === 'Christina Gray' || 
+        b.cover_image?.includes('blog-post-1.a6d3ea41') || 
+        b.title?.includes('Scalable Enterprise Architectures') ||
+        (b.slug === 'effivit-hybrid-pancreatic-cancer-detection' && b.author?.includes('3rd Author')) ||
+        (b.slug === 'hybrid-bert-xgboost-mobile-app-reviews' && b.author?.includes('1st Author'))
+      );
+
+      if (needsFix) {
+        // Asynchronously update / clean database
+        try {
+          for (const b of defaultBlogs) {
+            const row: any = { ...b };
+            delete row.id;
+            await this.supabase.from('blogs').upsert([row], { onConflict: 'slug' });
+          }
+        } catch {}
+
         localStorage.setItem('portfolio_blogs', JSON.stringify(defaultBlogs));
         return defaultBlogs;
       }
       localStorage.setItem('portfolio_blogs', JSON.stringify(data));
       return data as BlogItem[];
     } catch {
-      const local = localStorage.getItem('portfolio_blogs');
-      if (local && !local.includes('4 Years of Working') && !local.includes('blog-post-1.a6d3ea41') && !local.includes('Scalable Enterprise Architectures')) return JSON.parse(local);
       localStorage.setItem('portfolio_blogs', JSON.stringify(defaultBlogs));
       return defaultBlogs;
     }
@@ -618,6 +632,10 @@ export class SupabaseService {
 
   async getBlogBySlug(slug: string): Promise<BlogItem | null> {
     try {
+      const list = await this.getBlogs();
+      const match = list.find(b => b.slug === slug);
+      if (match) return match;
+
       const { data, error } = await this.supabase
         .from('blogs')
         .select('*')
@@ -625,9 +643,20 @@ export class SupabaseService {
         .maybeSingle();
 
       if (error || !data) {
-        const list = await this.getBlogs();
-        return list.find(b => b.slug === slug) || null;
+        return null;
       }
+
+      if (data.slug === 'effivit-hybrid-pancreatic-cancer-detection' && data.author?.includes('3rd Author')) {
+        data.author = 'Masuma Akter Lameya (1st Author)';
+        data.summary = 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026 — Author Position: 1st Author';
+        data.content = data.content?.replace(/3rd Author/g, '1st Author');
+      }
+      if (data.slug === 'hybrid-bert-xgboost-mobile-app-reviews' && data.author?.includes('1st Author')) {
+        data.author = 'Masuma Akter Lameya (3rd Author)';
+        data.summary = 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026 — Author Position: 3rd Author';
+        data.content = data.content?.replace(/1st Author/g, '3rd Author');
+      }
+
       return data as BlogItem;
     } catch {
       const list = await this.getBlogs();
