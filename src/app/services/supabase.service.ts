@@ -119,7 +119,7 @@ export class SupabaseService {
   }
 
   private checkVersionAndResetCache(): void {
-    const CURRENT_VERSION = 'v13_masuma_real_avatar';
+    const CURRENT_VERSION = 'v14_masuma_real_avatar_forced';
     if (typeof localStorage !== 'undefined') {
       if (localStorage.getItem('portfolio_data_version') !== CURRENT_VERSION) {
         localStorage.removeItem('portfolio_profile');
@@ -356,7 +356,8 @@ export class SupabaseService {
         return defaultProfile;
       }
 
-      // Check for template relics that need auto-migration
+      // Check for template relics or old avatar that need auto-migration
+      const isOldAvatar = !data.avatar_url || data.avatar_url.includes('hero-avatar.1925fb85') || data.avatar_url.includes('upload') || data.avatar_url.includes('supabase.co/storage') || !data.avatar_url.includes('masuma-avatar.jpg');
       const isOldRole = !data.role || data.role.includes('Photographer') || data.role.includes('UI & UX') || data.role.includes('UI/UX');
       const isOldBio = !data.bio || data.bio.includes('Lorem ipsum') || data.bio.includes('dolore magna');
       const isOldName = !data.name || data.name.includes('Christina') || data.name.trim() === '';
@@ -369,11 +370,11 @@ export class SupabaseService {
       const isOldAddress = !data.address || data.address.includes('Melbourne') || data.address.includes('King St') || data.address.includes('London') || data.address.includes('VIC') || (!data.address.toLowerCase().includes('dhaka') && !data.address.toLowerCase().includes('bangladesh'));
       const isOldTypewriter = !data.typewriter_words || data.typewriter_words.some((w: string) => w.includes('UI & UX') || w.includes('Photographer') || w.includes('Freelancer'));
 
-      if (isOldRole || isOldBio || isOldName || isOldSkill1 || isOldSkill2 || isOldSkill3 || isOldStats || isOldEmail || isOldPhone || isOldAddress || isOldTypewriter) {
+      if (isOldAvatar || isOldRole || isOldBio || isOldName || isOldSkill1 || isOldSkill2 || isOldSkill3 || isOldStats || isOldEmail || isOldPhone || isOldAddress || isOldTypewriter) {
         const sanitized: ProfileData = {
           ...defaultProfile,
           id: data.id,
-          avatar_url: data.avatar_url || defaultProfile.avatar_url,
+          avatar_url: isOldAvatar ? defaultProfile.avatar_url : data.avatar_url,
           name: isOldName ? defaultProfile.name : (data.name.toUpperCase().includes('MASUMA') ? data.name : 'MST. MASUMA AKTER LAMEYA'),
           role: isOldRole ? defaultProfile.role : data.role,
           bio: isOldBio ? defaultProfile.bio : data.bio,
