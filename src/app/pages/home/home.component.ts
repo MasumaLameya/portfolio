@@ -36,7 +36,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   profile = signal<ProfileData>({
     name: 'MST. MASUMA AKTER LAMEYA',
     role: 'Full-Stack Developer & AI Engineer',
-    avatar_url: '/assets/images/hero-avatar.1925fb85.jpg',
+    avatar_url: '/assets/images/masuma-avatar.jpg',
     bio: 'Full-Stack Developer with experience in web application development, machine learning, and AI-integrated solutions. Skilled in developing end-to-end applications, managing databases, and implementing intelligent features with ASP.NET Core, Angular, Python, and Deep Learning.',
     typewriter_words: ['Masuma Akter Lameya', 'Full-Stack Developer', 'AI & ML Researcher', 'ASP.NET Core & Angular', 'Medical AI Specialist'],
     skill_1_name: 'ASP.NET Core & Backend',
@@ -65,7 +65,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   clients = signal<ClientItem[]>([]);
 
   getImageUrl(url: string | undefined): string {
-    if (!url) return '/assets/images/hero-avatar.1925fb85.jpg';
+    if (!url) return '/assets/images/masuma-avatar.jpg';
     if (url.startsWith('http://') || url.startsWith('https://')) return url;
     if (url.startsWith('/')) return url;
     return '/' + url;

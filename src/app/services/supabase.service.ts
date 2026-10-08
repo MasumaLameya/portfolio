@@ -119,7 +119,7 @@ export class SupabaseService {
   }
 
   private checkVersionAndResetCache(): void {
-    const CURRENT_VERSION = 'v12_masuma_resume_split';
+    const CURRENT_VERSION = 'v13_masuma_real_avatar';
     if (typeof localStorage !== 'undefined') {
       if (localStorage.getItem('portfolio_data_version') !== CURRENT_VERSION) {
         localStorage.removeItem('portfolio_profile');
@@ -317,7 +317,7 @@ export class SupabaseService {
     const defaultProfile: ProfileData = {
       name: 'MST. MASUMA AKTER LAMEYA',
       role: 'Full-Stack Developer & AI Engineer',
-      avatar_url: '/assets/images/hero-avatar.1925fb85.jpg',
+      avatar_url: '/assets/images/masuma-avatar.jpg',
       bio: 'Full-Stack Developer with experience in web application development, machine learning, and AI-integrated solutions. Skilled in developing end-to-end applications, managing databases, and implementing intelligent features with ASP.NET Core, Angular, Python, and Deep Learning.',
       typewriter_words: ['Masuma Akter Lameya', 'Full-Stack Developer', 'AI & ML Researcher', 'ASP.NET Core & Angular', 'Medical AI Specialist'],
       skill_1_name: 'ASP.NET Core & Backend',
