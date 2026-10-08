@@ -308,10 +308,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     const targetValues = [
       p.photoshoot_pct || 95,
       p.tailwind_pct || 90,
-      p.seo_pct || 80,
-      p.years_experience || 14,
-      parseInt(p.hours_working || '50') || 50,
-      p.projects_done || 90
+      p.seo_pct || 88
     ];
 
     counterElements.forEach((el, idx) => {
