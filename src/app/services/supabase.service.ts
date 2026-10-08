@@ -119,7 +119,7 @@ export class SupabaseService {
   }
 
   private checkVersionAndResetCache(): void {
-    const CURRENT_VERSION = 'v11_masuma_authorship_corrected_sync';
+    const CURRENT_VERSION = 'v12_masuma_resume_split';
     if (typeof localStorage !== 'undefined') {
       if (localStorage.getItem('portfolio_data_version') !== CURRENT_VERSION) {
         localStorage.removeItem('portfolio_profile');
@@ -833,11 +833,12 @@ export class SupabaseService {
   async getResumeItems(): Promise<ResumeItem[]> {
     const defaultResume: ResumeItem[] = [
       { id: 'res_1', type: 'experience', period: '2023 - Present', title: 'Software Developer', organization: 'Real Capital Group (Dhaka, Bangladesh)', description: 'Developed Real Estate CRM System, engineered backend services & RESTful APIs using ASP.NET Core / .NET, designed MySQL databases, and implemented core CRM business logic.', sort_order: 1 },
-      { id: 'res_2', type: 'experience', period: '2022 - Present', title: 'Event Coordinator & Math Club Manager', organization: 'IEEE CS IUBAT Chapter & IUBAT IT Society', description: 'Contributed to technical event planning and participant management at IEEE Computer Society. Managed mathematics-focused analytical problem-solving initiatives at IUBAT IT Society.', sort_order: 2 },
-      { id: 'res_3', type: 'experience', period: '2022 - Present', title: 'Academic Mentor & AI Researcher', organization: 'IUBAT Computer Science & Engineering', description: 'Mentored university students in programming languages, data structures, and learning strategies. Authored 2 IEEE conference research papers in AI & Medical Vision.', sort_order: 3 },
-      { id: 'res_4', type: 'education', period: 'Sep 2022 - Sep 2026', title: 'Bachelor of Science in Computer Science and Engineering', organization: 'IUBAT (Dhaka, Bangladesh) — CGPA: 3.86/4.00', description: 'Dean\'s list academic excellence. Specialized in Full-Stack Software Engineering, Deep Learning, Biomedical Signal Processing, Algorithms, and Object-Oriented Programming.', sort_order: 1 },
-      { id: 'res_5', type: 'education', period: '2019 - 2021', title: 'Higher Secondary Certificate (HSC) — Science', organization: 'Jatir Janak Bangabandhu Sheikh Mujibur Rahman Govt College — GPA: 5.00/5.00', description: 'Graduated with a perfect GPA 5.00 in Science division. Strong foundation in Higher Mathematics, Physics, Chemistry, and Information Technology.', sort_order: 2 },
-      { id: 'res_6', type: 'education', period: '2017 - 2019', title: 'Secondary School Certificate (SSC) — Science', organization: 'Kamarpara School and College — GPA: 5.00/5.00', description: 'Achieved top-tier GPA 5.00 with distinction. Active Science Olympiad participant and competitive problem solver.', sort_order: 3 }
+      { id: 'res_2', type: 'experience', period: '2022 - Present', title: 'Event Coordinator', organization: 'IEEE CS IUBAT Student Branch Chapter', description: 'Contributed to technical event planning, workshop coordination, and participant management at IEEE Computer Society.', sort_order: 2 },
+      { id: 'res_3', type: 'experience', period: '2022 - Present', title: 'Math Club Manager', organization: 'IUBAT IT Society', description: 'Organized and managed mathematics-focused analytical problem-solving sessions, workshops, and student learning initiatives.', sort_order: 3 },
+      { id: 'res_4', type: 'experience', period: '2022 - Present', title: 'Academic Mentor & AI Researcher', organization: 'IUBAT Computer Science & Engineering', description: 'Mentored university students in programming languages, data structures, and learning strategies. Authored 2 IEEE conference research papers in AI & Medical Vision.', sort_order: 4 },
+      { id: 'res_5', type: 'education', period: 'Sep 2022 - Sep 2026', title: 'Bachelor of Science in Computer Science and Engineering', organization: 'IUBAT (Dhaka, Bangladesh) — CGPA: 3.86/4.00', description: 'Dean\'s list academic excellence. Specialized in Full-Stack Software Engineering, Deep Learning, Biomedical Signal Processing, Algorithms, and Object-Oriented Programming.', sort_order: 1 },
+      { id: 'res_6', type: 'education', period: '2019 - 2021', title: 'Higher Secondary Certificate (HSC) — Science', organization: 'Jatir Janak Bangabandhu Sheikh Mujibur Rahman Govt College — GPA: 5.00/5.00', description: 'Graduated with a perfect GPA 5.00 in Science division. Strong foundation in Higher Mathematics, Physics, Chemistry, and Information Technology.', sort_order: 2 },
+      { id: 'res_7', type: 'education', period: '2017 - 2019', title: 'Secondary School Certificate (SSC) — Science', organization: 'Kamarpara School and College — GPA: 5.00/5.00', description: 'Achieved top-tier GPA 5.00 with distinction. Active Science Olympiad participant and competitive problem solver.', sort_order: 3 }
     ];
 
     try {
@@ -846,17 +847,21 @@ export class SupabaseService {
         .select('*')
         .order('sort_order', { ascending: true });
 
-      if (error || !data || data.length === 0 || data.some(r => r.organization?.includes('FlaTheme') || r.title?.includes('Bachelor Degree of Business') || r.title?.includes('Master Degree of Design'))) {
-        const local = localStorage.getItem('portfolio_resume');
-        if (local && !local.includes('Bachelor Degree of Business') && !local.includes('FlaTheme')) return JSON.parse(local);
+      if (error || !data || data.length === 0 || data.some(r => r.organization?.includes('FlaTheme') || r.title?.includes('Bachelor Degree of Business') || r.title?.includes('Event Coordinator & Math Club Manager'))) {
+        try {
+          for (const item of defaultResume) {
+            const row: any = { ...item };
+            delete row.id;
+            await this.supabase.from('resume_items').upsert([row]);
+          }
+        } catch {}
+
         localStorage.setItem('portfolio_resume', JSON.stringify(defaultResume));
         return defaultResume;
       }
       localStorage.setItem('portfolio_resume', JSON.stringify(data));
       return data as ResumeItem[];
     } catch {
-      const local = localStorage.getItem('portfolio_resume');
-      if (local && !local.includes('Bachelor Degree of Business') && !local.includes('FlaTheme')) return JSON.parse(local);
       localStorage.setItem('portfolio_resume', JSON.stringify(defaultResume));
       return defaultResume;
     }

@@ -162,7 +162,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         ]);
         this.resumeExperience.set([
           { type: 'experience', period: '2023 - Present', title: 'Software Developer', organization: 'Real Capital Group (Dhaka, Bangladesh)', description: 'Developed Real Estate CRM System, engineered backend services & RESTful APIs using ASP.NET Core / .NET, designed MySQL databases, and implemented core CRM business logic.' },
-          { type: 'experience', period: '2022 - Present', title: 'Event Coordinator & Math Club Manager', organization: 'IEEE CS IUBAT Chapter & IUBAT IT Society', description: 'Contributed to technical event planning and participant management at IEEE Computer Society. Managed mathematics-focused analytical problem-solving initiatives at IUBAT IT Society.' },
+          { type: 'experience', period: '2022 - Present', title: 'Event Coordinator', organization: 'IEEE CS IUBAT Student Branch Chapter', description: 'Contributed to technical event planning, workshop coordination, and participant management at IEEE Computer Society.' },
+          { type: 'experience', period: '2022 - Present', title: 'Math Club Manager', organization: 'IUBAT IT Society', description: 'Organized and managed mathematics-focused analytical problem-solving sessions, workshops, and student learning initiatives.' },
           { type: 'experience', period: '2022 - Present', title: 'Academic Mentor & AI Researcher', organization: 'IUBAT Computer Science & Engineering', description: 'Mentored university students in programming languages, data structures, and learning strategies. Authored 2 IEEE conference research papers in AI & Medical Vision.' }
         ]);
       }
