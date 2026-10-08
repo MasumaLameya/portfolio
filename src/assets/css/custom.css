@@ -63,7 +63,12 @@ body.loaded .preloader {
     }
 }
 
-/* Filter button active state */
+/* Filter button active & layout state */
+.filter ul li {
+    margin-right: 10px;
+    margin-bottom: 10px;
+    display: inline-block;
+}
 .filter-btn-active {
     background-color: #000 !important;
     color: #fff !important;
