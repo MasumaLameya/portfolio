@@ -151,22 +151,6 @@
       </div>
     </div>
 
-    <!-- 6. CLIENTS SECTION -->
-    <div id="clients" class="bg-white dark:bg-boxDark rounded-lg px-6 py-8 md:px-8 md:py-10 lg:p-12 shadow-sectionBoxShadow hover:shadow-sectionBoxShadowHover transition ease-out duration-[160ms]">
-      <h6 class="font-mono font-medium uppercase text-sm tracking-wider relative pt-4 dark:text-white before:content-['//'] before:pr-2 after:content-[attr(data-backdrop-text)] after:absolute after:top-0 after:left-0 after:font-poppins after:font-bold after:uppercase after:text-4xl after:opacity-15" data-backdrop-text="Clients">My Awesome Clients</h6>
-      <div class="swiper clients-swiper mt-12">
-        <div class="swiper-wrapper">
-          @for (client of clients(); track client.name) {
-            <div class="swiper-slide">
-              <div class="opacity-60 hover:opacity-100 transition ease-out duration-[120ms] flex items-center justify-center h-14">
-                <img [src]="getImageUrl(client.logo_url)" [alt]="client.name" class="max-h-12 object-contain" />
-              </div>
-            </div>
-          }
-        </div>
-      </div>
-    </div>
-
     <!-- 7. BLOG SECTION -->
     <div id="blog" class="section bg-white dark:bg-boxDark rounded-lg px-6 py-8 md:px-8 md:py-10 lg:p-12 shadow-sectionBoxShadow hover:shadow-sectionBoxShadowHover transition ease-out duration-[160ms]">
       <div class="md:w-4/5 lg:w-3/4">

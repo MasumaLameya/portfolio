@@ -284,18 +284,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
             768: { slidesPerView: 2, spaceBetween: 24 }
           }
         });
-
-        new Swiper('.clients-swiper', {
-          slidesPerView: 2,
-          spaceBetween: 20,
-          loop: true,
-          autoplay: { delay: 2500, disableOnInteraction: false },
-          breakpoints: {
-            640: { slidesPerView: 3, spaceBetween: 24 },
-            768: { slidesPerView: 4, spaceBetween: 30 },
-            1024: { slidesPerView: 5, spaceBetween: 36 }
-          }
-        });
       } catch (e) {
         console.warn('Swiper init error:', e);
       }
