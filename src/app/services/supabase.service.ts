@@ -119,7 +119,7 @@ export class SupabaseService {
   }
 
   private checkVersionAndResetCache(): void {
-    const CURRENT_VERSION = 'v7_masuma_project_images';
+    const CURRENT_VERSION = 'v8_masuma_address_sync';
     if (typeof localStorage !== 'undefined') {
       if (localStorage.getItem('portfolio_data_version') !== CURRENT_VERSION) {
         localStorage.removeItem('portfolio_profile');
@@ -366,9 +366,10 @@ export class SupabaseService {
       const isOldStats = data.years_experience === 14 || data.hours_working === '50' || data.hours_working === '50k' || data.projects_done === 90;
       const isOldEmail = !data.email || data.email.includes('flatheme') || data.email.includes('example.com');
       const isOldPhone = !data.phone || data.phone.includes('976') || data.phone.includes('12 34 9999');
+      const isOldAddress = !data.address || data.address.includes('Melbourne') || data.address.includes('King St') || data.address.includes('London') || data.address.includes('VIC') || (!data.address.toLowerCase().includes('dhaka') && !data.address.toLowerCase().includes('bangladesh'));
       const isOldTypewriter = !data.typewriter_words || data.typewriter_words.some((w: string) => w.includes('UI & UX') || w.includes('Photographer') || w.includes('Freelancer'));
 
-      if (isOldRole || isOldBio || isOldName || isOldSkill1 || isOldSkill2 || isOldSkill3 || isOldStats || isOldEmail || isOldPhone || isOldTypewriter) {
+      if (isOldRole || isOldBio || isOldName || isOldSkill1 || isOldSkill2 || isOldSkill3 || isOldStats || isOldEmail || isOldPhone || isOldAddress || isOldTypewriter) {
         const sanitized: ProfileData = {
           ...defaultProfile,
           id: data.id,
@@ -387,7 +388,7 @@ export class SupabaseService {
           projects_done: isOldStats ? defaultProfile.projects_done : (data.projects_done || defaultProfile.projects_done),
           email: isOldEmail ? defaultProfile.email : data.email,
           phone: isOldPhone ? defaultProfile.phone : data.phone,
-          address: !data.address || data.address.includes('London') ? defaultProfile.address : data.address,
+          address: isOldAddress ? defaultProfile.address : data.address,
           typewriter_words: isOldTypewriter ? defaultProfile.typewriter_words : data.typewriter_words,
           social_github: data.social_github || defaultProfile.social_github,
           social_linkedin: data.social_linkedin || defaultProfile.social_linkedin
