@@ -49,7 +49,26 @@ export class HeaderComponent implements OnInit {
     return parts.length > 1 ? parts[parts.length - 1] : '';
   }
 
+  private syncChannel?: BroadcastChannel;
+
   async ngOnInit(): Promise<void> {
+    await this.loadHeaderProfile();
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('portfolio_data_updated', () => this.loadHeaderProfile());
+      window.addEventListener('focus', () => this.loadHeaderProfile());
+      window.addEventListener('pageshow', () => this.loadHeaderProfile());
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') this.loadHeaderProfile();
+      });
+      try {
+        this.syncChannel = new BroadcastChannel('portfolio_sync');
+        this.syncChannel.onmessage = () => this.loadHeaderProfile();
+      } catch {}
+    }
+  }
+
+  private async loadHeaderProfile(): Promise<void> {
     const p = await this.supabase.getProfile();
     if (p) this.profile.set(p);
   }

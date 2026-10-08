@@ -91,41 +91,60 @@ export class BlogDetailComponent implements OnInit {
   private supabase = inject(SupabaseService);
   private fallbackBlogService = inject(BlogService);
   post: BlogItem | undefined;
+  private currentSlug = '';
+  private syncChannel?: BroadcastChannel;
 
   async ngOnInit(): Promise<void> {
     this.route.paramMap.subscribe(async params => {
-      const slug = params.get('slug') || '';
-      const supabasePost = await this.supabase.getBlogBySlug(slug);
-      if (supabasePost) {
-        let paperUrl = supabasePost.paper_url;
-        const lower = ((supabasePost.title || '') + ' ' + slug).toLowerCase();
-        if (!paperUrl || paperUrl.includes('searchresult')) {
-          if (lower.includes('bert') || lower.includes('review') || lower.includes('xgboost')) {
-            paperUrl = 'https://doi.org/10.1109/QPAIN69676.2026.11546035';
-          } else if (lower.includes('effivit') || lower.includes('cancer') || lower.includes('pancreatic')) {
-            paperUrl = 'https://doi.org/10.1109/QPAIN69676.2026.11546439';
-          }
-        }
-        this.post = { ...supabasePost, paper_url: paperUrl };
-      } else {
-        const fb = this.fallbackBlogService.getPostBySlug(slug);
-        if (fb) {
-          this.post = {
-            title: fb.title,
-            slug: fb.slug,
-            category: fb.category,
-            date: fb.postedOn,
-            author: fb.postedBy,
-            cover_image: fb.singleImage,
-            summary: fb.description,
-            content: fb.description,
-            tags: fb.tags,
-            paper_url: fb.paper_url
-          };
-        }
-      }
+      this.currentSlug = params.get('slug') || '';
+      await this.loadPost();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('portfolio_data_updated', () => this.loadPost());
+      window.addEventListener('focus', () => this.loadPost());
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') this.loadPost();
+      });
+      try {
+        this.syncChannel = new BroadcastChannel('portfolio_sync');
+        this.syncChannel.onmessage = () => this.loadPost();
+      } catch {}
+    }
+  }
+
+  private async loadPost(): Promise<void> {
+    if (!this.currentSlug) return;
+    const supabasePost = await this.supabase.getBlogBySlug(this.currentSlug);
+    if (supabasePost) {
+      let paperUrl = supabasePost.paper_url;
+      const lower = ((supabasePost.title || '') + ' ' + this.currentSlug).toLowerCase();
+      if (!paperUrl || paperUrl.includes('searchresult')) {
+        if (lower.includes('bert') || lower.includes('review') || lower.includes('xgboost')) {
+          paperUrl = 'https://doi.org/10.1109/QPAIN69676.2026.11546035';
+        } else if (lower.includes('effivit') || lower.includes('cancer') || lower.includes('pancreatic')) {
+          paperUrl = 'https://doi.org/10.1109/QPAIN69676.2026.11546439';
+        }
+      }
+      this.post = { ...supabasePost, paper_url: paperUrl };
+    } else {
+      const fb = this.fallbackBlogService.getPostBySlug(this.currentSlug);
+      if (fb) {
+        this.post = {
+          title: fb.title,
+          slug: fb.slug,
+          category: fb.category,
+          date: fb.postedOn,
+          author: fb.postedBy,
+          cover_image: fb.singleImage,
+          summary: fb.description,
+          content: fb.description,
+          tags: fb.tags,
+          paper_url: fb.paper_url
+        };
+      }
+    }
   }
 }
 

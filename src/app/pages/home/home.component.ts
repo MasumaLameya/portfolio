@@ -365,6 +365,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (typeof window !== 'undefined') {
       window.addEventListener('focus', this.focusHandler);
+      window.addEventListener('pageshow', this.focusHandler);
       document.addEventListener('visibilitychange', this.visibilityHandler);
       window.addEventListener('portfolio_data_updated', this.focusHandler);
       try {
@@ -445,6 +446,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     if (typeof window !== 'undefined') {
       window.removeEventListener('focus', this.focusHandler);
+      window.removeEventListener('pageshow', this.focusHandler);
       document.removeEventListener('visibilitychange', this.visibilityHandler);
       window.removeEventListener('portfolio_data_updated', this.focusHandler);
       try {

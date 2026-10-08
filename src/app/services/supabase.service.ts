@@ -145,6 +145,7 @@ export class SupabaseService {
       });
       this.isConnected.set(true);
       this.initAuth();
+      this.initRealtime();
     } catch (e) {
       console.warn('Supabase initialization fallback:', e);
       this.isConnected.set(false);
@@ -169,6 +170,20 @@ export class SupabaseService {
       });
     } catch (e) {
       console.warn('Supabase auth initialization notice:', e);
+    }
+  }
+
+  private initRealtime(): void {
+    if (typeof window === 'undefined') return;
+    try {
+      this.supabase
+        .channel('portfolio_realtime_channel')
+        .on('postgres_changes', { event: '*', schema: 'public' }, () => {
+          this.notifyDataUpdated();
+        })
+        .subscribe();
+    } catch (e) {
+      console.warn('Realtime subscription notice:', e);
     }
   }
 

@@ -78,31 +78,50 @@ export class PortfolioDetailComponent implements OnInit {
   private supabase = inject(SupabaseService);
   private fallbackPortfolioService = inject(PortfolioService);
   project: ProjectItem | undefined;
+  private currentSlug = '';
+  private syncChannel?: BroadcastChannel;
 
   async ngOnInit(): Promise<void> {
     this.route.paramMap.subscribe(async params => {
-      const slug = params.get('slug') || '';
-      const supabaseProj = await this.supabase.getProjectBySlug(slug);
-      if (supabaseProj) {
-        this.project = supabaseProj;
-      } else {
-        const fb = this.fallbackPortfolioService.getProjectBySlug(slug);
-        if (fb) {
-          this.project = {
-            title: fb.title,
-            slug: fb.slug,
-            category: fb.categoryLabel,
-            client: fb.client,
-            main_image: fb.image,
-            images: fb.secondaryImages,
-            short_description: fb.description,
-            full_description: fb.description,
-            project_url: 'https://example.com'
-          };
-        }
-      }
+      this.currentSlug = params.get('slug') || '';
+      await this.loadProject();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('portfolio_data_updated', () => this.loadProject());
+      window.addEventListener('focus', () => this.loadProject());
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') this.loadProject();
+      });
+      try {
+        this.syncChannel = new BroadcastChannel('portfolio_sync');
+        this.syncChannel.onmessage = () => this.loadProject();
+      } catch {}
+    }
+  }
+
+  private async loadProject(): Promise<void> {
+    if (!this.currentSlug) return;
+    const supabaseProj = await this.supabase.getProjectBySlug(this.currentSlug);
+    if (supabaseProj) {
+      this.project = supabaseProj;
+    } else {
+      const fb = this.fallbackPortfolioService.getProjectBySlug(this.currentSlug);
+      if (fb) {
+        this.project = {
+          title: fb.title,
+          slug: fb.slug,
+          category: fb.categoryLabel,
+          client: fb.client,
+          main_image: fb.image,
+          images: fb.secondaryImages,
+          short_description: fb.description,
+          full_description: fb.description,
+          project_url: 'https://example.com'
+        };
+      }
+    }
   }
 }
 

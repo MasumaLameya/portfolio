@@ -59,7 +59,26 @@ export class DrawerMenuComponent implements OnInit {
 
   profile = signal<Partial<ProfileData>>({});
 
+  private syncChannel?: BroadcastChannel;
+
   async ngOnInit(): Promise<void> {
+    await this.loadDrawerProfile();
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('portfolio_data_updated', () => this.loadDrawerProfile());
+      window.addEventListener('focus', () => this.loadDrawerProfile());
+      window.addEventListener('pageshow', () => this.loadDrawerProfile());
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') this.loadDrawerProfile();
+      });
+      try {
+        this.syncChannel = new BroadcastChannel('portfolio_sync');
+        this.syncChannel.onmessage = () => this.loadDrawerProfile();
+      } catch {}
+    }
+  }
+
+  private async loadDrawerProfile(): Promise<void> {
     const p = await this.supabase.getProfile();
     if (p) this.profile.set(p);
   }
