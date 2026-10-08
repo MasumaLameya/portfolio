@@ -48,99 +48,101 @@ declare var Swiper: any;
       color: #000 !important;
     }
 
-    /* Research Publication Cards */
-    .pub-card {
+    /* Research Publication Grid & Cards */
+    .research-card {
       display: flex;
       flex-direction: column;
-      gap: 20px;
-      padding: 24px;
       border-radius: 16px;
+      overflow: hidden;
+      background: rgba(0, 0, 0, 0.02);
       border: 1px solid rgba(0, 0, 0, 0.08);
-      background: rgba(0, 0, 0, 0.015);
-      transition: all 0.25s ease;
+      transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
     }
-    :host-context(.dark) .pub-card,
-    :host(.dark) .pub-card {
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(255, 255, 255, 0.02);
+    :host-context(.dark) .research-card,
+    :host(.dark) .research-card {
+      background: #151619;
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
-    .pub-card:hover {
+    .research-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
       border-color: rgba(0, 0, 0, 0.25);
-      transform: translateY(-2px);
     }
-    :host-context(.dark) .pub-card:hover,
-    :host(.dark) .pub-card:hover {
-      border-color: rgba(255, 255, 255, 0.25);
+    :host-context(.dark) .research-card:hover,
+    :host(.dark) .research-card:hover {
+      border-color: rgba(255, 255, 255, 0.22);
     }
-    @media (min-width: 768px) {
-      .pub-card {
-        flex-direction: row;
-        align-items: center;
-        gap: 24px;
-      }
-    }
-    .pub-thumb {
+    .research-thumb {
       width: 100%;
-      height: 180px;
-      border-radius: 12px;
+      height: 220px;
       overflow: hidden;
       position: relative;
-      flex-shrink: 0;
-      background: rgba(0, 0, 0, 0.2);
+      background: #0f1012;
     }
-    @media (min-width: 768px) {
-      .pub-thumb {
-        width: 240px;
-        height: 160px;
-      }
+    .research-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
     }
-    @media (min-width: 1024px) {
-      .pub-thumb {
-        width: 270px;
-        height: 175px;
-      }
+    .research-card:hover .research-thumb img {
+      transform: scale(1.06);
     }
-    .pub-content {
+    .research-body {
+      padding: 22px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      justify-content: space-between;
       flex: 1;
-      min-width: 0;
     }
-    .pub-badge-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      font-size: 12px;
-    }
-    .pub-title {
-      font-size: 18px;
+    .research-title {
+      font-size: 17px;
       font-weight: 600;
-      line-height: 1.4;
-      margin: 0;
+      line-height: 1.45;
+      margin: 10px 0 18px 0;
+      color: #111;
+      transition: color 0.2s ease;
     }
-    @media (min-width: 1024px) {
-      .pub-title {
-        font-size: 20px;
-      }
+    :host-context(.dark) .research-title,
+    :host(.dark) .research-title {
+      color: #fff;
     }
-    .pub-abstract {
-      font-size: 13.5px;
-      line-height: 1.6;
-      margin: 0;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
+    .research-card:hover .research-title {
+      color: #6366f1;
     }
-    .pub-action-row {
+    :host-context(.dark) .research-card:hover .research-title {
+      color: #a5b4fc;
+    }
+    .research-btn {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      padding-top: 4px;
-      flex-wrap: wrap;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-family: monospace;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-weight: 500;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      background: rgba(0, 0, 0, 0.03);
+      color: #111;
+      transition: all 0.2s ease;
+    }
+    :host-context(.dark) .research-btn {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.04);
+      color: #fff;
+    }
+    .research-btn:hover {
+      background: #000;
+      color: #fff;
+      border-color: #000;
+    }
+    :host-context(.dark) .research-btn:hover {
+      background: #fff;
+      color: #000;
+      border-color: #fff;
     }
   `]
 })
