@@ -5,14 +5,14 @@ const supabaseUrl = process.env.SUPABASE_URL ||
                     process.env.PUBLIC_SUPABASE_URL || 
                     process.env.NEXT_PUBLIC_SUPABASE_URL || 
                     process.env.NG_APP_SUPABASE_URL || 
-                    'YOUR_SUPABASE_URL';
+                    'https://euertyrqjpxeerirtars.supabase.co';
 
 const supabaseKey = process.env.SUPABASE_ANON_KEY || 
                     process.env.SUPABASE_KEY || 
                     process.env.PUBLIC_SUPABASE_ANON_KEY || 
                     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 
                     process.env.NG_APP_SUPABASE_ANON_KEY || 
-                    'YOUR_SUPABASE_ANON_KEY';
+                    'sb_publishable_cgG20CGLDSoWLz2I1pW7FQ_HNZpgwm-';
 
 const storageBucket = process.env.STORAGE_BUCKET || 'portfolio-media';
 
