@@ -6,29 +6,29 @@
   <div class="w-full lg:w-3/4 lg:flex-1 space-y-6 pb-12">
     
     <!-- 1. ABOUT ME SECTION -->
-    <div id="about" class="section bg-white dark:bg-boxDark rounded-lg px-5 py-6 sm:px-8 sm:py-8 md:px-10 md:py-10 lg:p-12 shadow-sectionBoxShadow hover:shadow-sectionBoxShadowHover transition ease-out duration-[160ms]">
-      <div class="flex flex-col lg:flex-row items-center lg:items-start gap-6 lg:gap-10">
-        <div class="relative h-fit flex-shrink-0 mx-auto lg:mx-0">
-          <img [src]="getImageUrl(profile().avatar_url)" (error)="onAvatarError($event)" [alt]="profile().name" class="w-44 h-44 sm:w-52 sm:h-52 md:w-60 md:h-60 rounded-full object-cover shadow-md" />
-          <div class="absolute bottom-3 left-1/2 -translate-x-1/2 lg:translate-x-0 lg:left-2 bg-black/40 dark:bg-black/70 px-3.5 py-1.5 rounded-full shadow-avatarText backdrop-blur-[5px] text-white font-mono font-normal uppercase text-xs sm:text-sm tracking-wider max-w-[90%] truncate text-center">
+    <div id="about" class="section bg-white dark:bg-boxDark rounded-lg px-6 py-8 md:px-8 md:py-10 lg:p-12 shadow-sectionBoxShadow hover:shadow-sectionBoxShadowHover transition ease-out duration-[160ms]">
+      <div class="lg:flex lg:space-x-10">
+        <div class="relative h-fit mb-6 lg:mb-0 flex-shrink-0">
+          <img [src]="getImageUrl(profile().avatar_url)" (error)="onAvatarError($event)" [alt]="profile().name" class="w-56 h-56 md:w-64 md:h-64 rounded-full object-cover" />
+          <div class="absolute bottom-4 left-2 bg-black/30 dark:bg-black/60 px-4 py-2 rounded-full shadow-avatarText backdrop-blur-[5px] text-white font-mono font-normal uppercase text-sm tracking-wider">
             <span>{{ typewriterText() }}</span><span class="Typewriter__cursor">|</span>
           </div>
         </div>
-        <div class="w-full text-center lg:text-left">
-          <h6 class="font-mono font-medium uppercase text-xs sm:text-sm tracking-wider relative pt-2 mb-3 sm:mb-4 dark:text-white before:content-['//'] before:pr-2">About Me</h6>
-          <h2 class="text-2xl sm:text-3xl lg:text-4xl font-poppins font-semibold mb-3 dark:text-white break-words">{{ profile().role }}</h2>
-          <ul class="flex flex-wrap justify-center lg:justify-start gap-2 mb-4">
-            <li class="list-none px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full border border-black/20 dark:border-white/30 border-dashed text-xs sm:text-sm text-pColor hover:text-black dark:text-white/70 dark:hover:text-white transition ease-linear duration-100">
-              <i class="bi bi-camera pe-1"></i> {{ profile().skill_1_name || 'ASP.NET Core & Backend' }} <div class="inline-block font-mono">(<span class="counter">{{ profile().photoshoot_pct }}</span>%)</div>
+        <div>
+          <h6 class="font-mono font-medium uppercase text-sm tracking-wider relative pt-4 mb-5 dark:text-white before:content-['//'] before:pr-2">About Me</h6>
+          <h2 class="text-3xl lg:text-4xl font-poppins font-semibold mb-2 dark:text-white">{{ profile().role }}</h2>
+          <ul class="space-y-3 mb-4">
+            <li class="list-none inline-block px-4 py-2 me-2 rounded-full border border-black/20 dark:border-white/30 border-dashed text-pColor hover:text-black dark:text-white/70 dark:hover:text-white transition ease-linear duration-100">
+              <i class="bi bi-camera pe-1"></i> {{ profile().skill_1_name || 'ASP.NET Core & Backend' }} <div class="inline-block font-mono text-sm">(<span class="counter">{{ profile().photoshoot_pct }}</span>%)</div>
             </li>
-            <li class="list-none px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full border border-black/20 dark:border-white/30 border-dashed text-xs sm:text-sm text-pColor hover:text-black dark:text-white/70 dark:hover:text-white transition ease-linear duration-100">
-              <i class="bi bi-code-slash pe-1"></i> {{ profile().skill_2_name || 'Angular & Next.js' }} <div class="inline-block font-mono">(<span class="counter">{{ profile().tailwind_pct }}</span>%)</div>
+            <li class="list-none inline-block px-4 py-2 me-2 rounded-full border border-black/20 dark:border-white/30 border-dashed text-pColor hover:text-black dark:text-white/70 dark:hover:text-white transition ease-linear duration-100">
+              <i class="bi bi-code-slash pe-1"></i> {{ profile().skill_2_name || 'Angular & Next.js' }} <div class="inline-block font-mono text-sm">(<span class="counter">{{ profile().tailwind_pct }}</span>%)</div>
             </li>
-            <li class="list-none px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full border border-black/20 dark:border-white/30 border-dashed text-xs sm:text-sm text-pColor hover:text-black dark:text-white/70 dark:hover:text-white transition ease-linear duration-100">
-              <i class="bi bi-search pe-1"></i> {{ profile().skill_3_name || 'AI & Machine Learning' }} <div class="inline-block font-mono">(<span class="counter">{{ profile().seo_pct }}</span>%)</div>
+            <li class="list-none inline-block px-4 py-2 me-2 rounded-full border border-black/20 dark:border-white/30 border-dashed text-pColor hover:text-black dark:text-white/70 dark:hover:text-white transition ease-linear duration-100">
+              <i class="bi bi-search pe-1"></i> {{ profile().skill_3_name || 'AI & Machine Learning' }} <div class="inline-block font-mono text-sm">(<span class="counter">{{ profile().seo_pct }}</span>%)</div>
             </li>
           </ul>
-          <p class="text-sm sm:text-base text-pColor dark:text-white/70 leading-relaxed">{{ profile().bio }}</p>
+          <p class="text-pColor dark:text-white/70 leading-relaxed">{{ profile().bio }}</p>
         </div>
       </div>
     </div>
