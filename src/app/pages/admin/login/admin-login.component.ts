@@ -24,27 +24,7 @@ import { SupabaseService } from '../../../services/supabase.service';
             <i class="bi bi-shield-lock-fill"></i>
           </div>
           <h1 class="title">Admin Portal</h1>
-          <p class="subtitle">{{ isSignUp() ? 'Create a new admin account' : 'Sign in to access dashboard' }}</p>
-        </div>
-
-        <!-- Mode Toggle Tabs -->
-        <div class="tab-container">
-          <button
-            type="button"
-            (click)="setMode(false)"
-            [class.active-tab]="!isSignUp()"
-            class="tab-btn"
-          >
-            Sign In
-          </button>
-          <button
-            type="button"
-            (click)="setMode(true)"
-            [class.active-tab]="isSignUp()"
-            class="tab-btn"
-          >
-            Create Admin
-          </button>
+          <p class="subtitle">Sign in to access dashboard</p>
         </div>
 
         <!-- Alert Error Message -->
@@ -113,7 +93,7 @@ import { SupabaseService } from '../../../services/supabase.service';
             class="submit-btn"
           >
             <span *ngIf="isLoading()" class="spinner"></span>
-            <span>{{ isLoading() ? 'Processing...' : (isSignUp() ? 'Create Admin Account' : 'Sign In') }}</span>
+            <span>{{ isLoading() ? 'Signing in...' : 'Sign In' }}</span>
           </button>
         </form>
 
@@ -232,34 +212,6 @@ import { SupabaseService } from '../../../services/supabase.service';
       color: #94a3b8;
       margin-top: 0.35rem;
       margin-bottom: 0;
-    }
-
-    .tab-container {
-      display: flex;
-      background-color: #0c0d14;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 0.75rem;
-      padding: 0.25rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .tab-btn {
-      flex: 1;
-      padding: 0.55rem;
-      font-size: 0.8rem;
-      font-weight: 600;
-      border-radius: 0.6rem;
-      border: none;
-      background: transparent;
-      color: #94a3b8;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .tab-btn.active-tab {
-      background-color: #232736;
-      color: #ffffff;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
 
     .alert-box {
@@ -436,7 +388,6 @@ import { SupabaseService } from '../../../services/supabase.service';
 export class AdminLoginComponent {
   email = '';
   password = '';
-  isSignUp = signal(false);
   isLoading = signal(false);
   errorMessage = signal('');
   successMessage = signal('');
@@ -473,12 +424,6 @@ export class AdminLoginComponent {
     }
   }
 
-  setMode(signUp: boolean): void {
-    this.isSignUp.set(signUp);
-    this.errorMessage.set('');
-    this.successMessage.set('');
-  }
-
   togglePassword(): void {
     this.showPassword.update(v => !v);
   }
@@ -495,32 +440,16 @@ export class AdminLoginComponent {
 
     try {
       const trimmedEmail = this.email.trim();
-
-      if (this.isSignUp()) {
-        // Sign Up Mode
-        const { data, error } = await this.supabase.signUp(trimmedEmail, this.password);
-        if (error) {
-          this.errorMessage.set(error.message);
-        } else if (data?.session || data?.user) {
-          this.successMessage.set('Account created successfully! Redirecting to dashboard...');
-          setTimeout(() => this.router.navigate(['/admin']), 800);
+      const { error } = await this.supabase.signIn(trimmedEmail, this.password);
+      if (error) {
+        if (error.message.includes('Invalid login credentials')) {
+          this.errorMessage.set('Invalid email or password. Please check your credentials.');
         } else {
-          this.successMessage.set('Admin account created! Please sign in with your credentials.');
-          this.isSignUp.set(false);
+          this.errorMessage.set(error.message);
         }
       } else {
-        // Sign In Mode
-        const { error } = await this.supabase.signIn(trimmedEmail, this.password);
-        if (error) {
-          if (error.message.includes('Invalid login credentials')) {
-            this.errorMessage.set('Invalid email or password. Click "Create Admin" tab above if you have not registered yet.');
-          } else {
-            this.errorMessage.set(error.message);
-          }
-        } else {
-          this.successMessage.set('Login successful! Loading dashboard...');
-          setTimeout(() => this.router.navigate(['/admin']), 500);
-        }
+        this.successMessage.set('Login successful! Loading dashboard...');
+        setTimeout(() => this.router.navigate(['/admin']), 500);
       }
     } catch (err: any) {
       this.errorMessage.set(err?.message || 'Authentication failed. Please check your connection.');
