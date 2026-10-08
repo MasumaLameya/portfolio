@@ -131,65 +131,65 @@
         <p class="text-pColor dark:text-white/70">Peer-reviewed conference publications in AI, deep learning, NLP, and biomedical imaging.</p>
       </div>
 
-      <div class="mt-10 space-y-8">
+      <div class="mt-8 space-y-6">
         @for (post of blogs(); track post.slug) {
-          <div class="p-6 lg:p-7 rounded-2xl border border-black/10 dark:border-white/10 bg-black/[0.015] dark:bg-white/[0.02] flex flex-col md:flex-row items-stretch md:items-center space-y-5 md:space-y-0 md:space-x-8 group hover:border-black/30 dark:hover:border-white/30 transition duration-200">
+          <div class="pub-card group">
             
             <!-- Cover / Media Banner -->
-            <div class="overflow-hidden relative rounded-xl flex-shrink-0 w-full md:w-[260px] lg:w-[280px] h-[180px] sm:h-[200px] md:h-[190px] bg-black/5 dark:bg-black/40">
+            <div class="pub-thumb">
               @if (post.paper_url) {
-                <a [href]="post.paper_url" target="_blank" rel="noopener noreferrer" class="block w-full h-full relative group/img">
-                  <img [src]="getImageUrl(post.cover_image)" [alt]="post.title" class="w-full h-full object-cover transition ease-custom duration-500 group-hover:scale-105 group-hover:blur-[1.2px] rounded-xl" />
-                  <div class="absolute top-3 left-3 bg-black/70 px-3 py-1 rounded-full text-white backdrop-blur-[5px] font-mono font-medium uppercase text-[11px] tracking-[0.5px] border border-white/15 z-10">{{ post.category || 'IEEE Conference' }}</div>
+                <a [href]="post.paper_url" target="_blank" rel="noopener noreferrer" class="block w-full h-full relative">
+                  <img [src]="getImageUrl(post.cover_image)" [alt]="post.title" class="w-full h-full object-cover transition ease-out duration-300 group-hover:scale-105" />
+                  <div class="absolute top-2.5 left-2.5 bg-black/80 px-2.5 py-1 rounded-full text-white backdrop-blur-[5px] font-mono font-medium uppercase text-[10px] tracking-[0.5px] border border-white/20 z-10">{{ post.category || 'IEEE Conference' }}</div>
                 </a>
               } @else {
                 <a [routerLink]="['/blog', post.slug]" class="block w-full h-full relative">
-                  <img [src]="getImageUrl(post.cover_image)" [alt]="post.title" class="w-full h-full object-cover transition ease-custom duration-500 group-hover:scale-105 group-hover:blur-[1.2px] rounded-xl" />
-                  <div class="absolute top-3 left-3 bg-black/70 px-3 py-1 rounded-full text-white backdrop-blur-[5px] font-mono font-medium uppercase text-[11px] tracking-[0.5px] border border-white/15 z-10">{{ post.category || 'IEEE Conference' }}</div>
+                  <img [src]="getImageUrl(post.cover_image)" [alt]="post.title" class="w-full h-full object-cover transition ease-out duration-300 group-hover:scale-105" />
+                  <div class="absolute top-2.5 left-2.5 bg-black/80 px-2.5 py-1 rounded-full text-white backdrop-blur-[5px] font-mono font-medium uppercase text-[10px] tracking-[0.5px] border border-white/20 z-10">{{ post.category || 'IEEE Conference' }}</div>
                 </a>
               }
             </div>
 
             <!-- Content Details -->
-            <div class="flex flex-col justify-between flex-1 space-y-3">
+            <div class="pub-content">
               
               <!-- Badges & Metadata -->
-              <div class="flex flex-wrap items-center space-x-3 font-mono text-xs text-pColor dark:text-white/70">
-                <span class="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 font-medium text-[11px]">
-                  <i class="bi bi-journal-bookmark me-1"></i> IEEE QPAIN 2026
+              <div class="pub-badge-row">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded bg-indigo-500/10 text-indigo-400 font-medium text-[11px] border border-indigo-500/20">
+                  <i class="bi bi-journal-bookmark me-1.5"></i> IEEE QPAIN 2026
                 </span>
-                <span>•</span>
-                <span class="text-black dark:text-white font-medium text-xs">{{ post.author }}</span>
-                <span>•</span>
-                <span>{{ post.date }}</span>
+                <span class="text-white/40">•</span>
+                <span class="font-medium text-xs dark:text-white text-black">{{ post.author }}</span>
+                <span class="text-white/40">•</span>
+                <span class="font-mono text-xs text-pColor dark:text-white/60">{{ post.date }}</span>
               </div>
 
               <!-- Title -->
-              <h3 class="font-poppins font-semibold text-lg sm:text-xl lg:text-2xl leading-snug">
+              <h3 class="pub-title">
                 @if (post.paper_url) {
-                  <a [href]="post.paper_url" target="_blank" rel="noopener noreferrer" class="hover:underline dark:text-white transition-colors duration-150 block">{{ post.title }}</a>
+                  <a [href]="post.paper_url" target="_blank" rel="noopener noreferrer" class="hover:underline dark:text-white text-black transition-colors duration-150">{{ post.title }}</a>
                 } @else {
-                  <a [routerLink]="['/blog', post.slug]" class="hover:underline dark:text-white transition-colors duration-150 block">{{ post.title }}</a>
+                  <a [routerLink]="['/blog', post.slug]" class="hover:underline dark:text-white text-black transition-colors duration-150">{{ post.title }}</a>
                 }
               </h3>
 
               <!-- Summary / Abstract snippet -->
-              <p class="text-sm text-pColor dark:text-white/70 leading-relaxed line-clamp-2">
+              <p class="pub-abstract text-pColor dark:text-white/70">
                 {{ post.summary }}
               </p>
 
               <!-- Actions & DOI info -->
-              <div class="pt-2 flex flex-wrap items-center justify-between">
+              <div class="pub-action-row">
                 @if (post.paper_url) {
-                  <a [href]="post.paper_url" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-2 border border-black border-dashed rounded-full px-6 py-2.5 font-mono text-sm hover:bg-black hover:text-white transition ease-out duration-[120ms] dark:text-white dark:border-white dark:hover:bg-white dark:hover:text-black">
-                    <i class="bi bi-box-arrow-up-right text-xs me-1.5"></i> <span>Read Publication (DOI)</span>
+                  <a [href]="post.paper_url" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 border border-black dark:border-white/40 border-dashed rounded-full px-5 py-2 font-mono text-xs hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition ease-out duration-150 dark:text-white text-black">
+                    <i class="bi bi-box-arrow-up-right text-[11px]"></i> <span>Read Publication (DOI)</span>
                   </a>
                 } @else {
-                  <a [routerLink]="['/blog', post.slug]" class="inline-block border border-black border-dashed rounded-full px-6 py-2.5 font-mono text-sm hover:bg-black hover:text-white transition ease-out duration-[120ms] dark:text-white dark:border-white dark:hover:bg-white dark:hover:text-black">Read Publication</a>
+                  <a [routerLink]="['/blog', post.slug]" class="inline-block border border-black dark:border-white/40 border-dashed rounded-full px-5 py-2 font-mono text-xs hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition ease-out duration-150 dark:text-white text-black">Read Publication</a>
                 }
 
                 @if (post.paper_url) {
-                  <span class="text-xs font-mono text-pColor/70 dark:text-white/40 truncate max-w-[260px] hidden sm:inline-block">
+                  <span class="text-[11px] font-mono text-pColor/70 dark:text-white/40 truncate max-w-[280px]">
                     DOI: {{ post.paper_url.replace('https://doi.org/', '') }}
                   </span>
                 }

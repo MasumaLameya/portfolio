@@ -28,6 +28,7 @@ declare var Swiper: any;
       gap: 10px !important;
       list-style: none !important;
       padding: 0 !important;
+      margin-bottom: 24px !important;
     }
     .filter ul li {
       display: inline-flex !important;
@@ -45,6 +46,101 @@ declare var Swiper: any;
     :host-context(.dark) .filter-btn-active {
       background-color: #fff !important;
       color: #000 !important;
+    }
+
+    /* Research Publication Cards */
+    .pub-card {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 24px;
+      border-radius: 16px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: rgba(0, 0, 0, 0.015);
+      transition: all 0.25s ease;
+    }
+    :host-context(.dark) .pub-card,
+    :host(.dark) .pub-card {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .pub-card:hover {
+      border-color: rgba(0, 0, 0, 0.25);
+      transform: translateY(-2px);
+    }
+    :host-context(.dark) .pub-card:hover,
+    :host(.dark) .pub-card:hover {
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+    @media (min-width: 768px) {
+      .pub-card {
+        flex-direction: row;
+        align-items: center;
+        gap: 24px;
+      }
+    }
+    .pub-thumb {
+      width: 100%;
+      height: 180px;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      flex-shrink: 0;
+      background: rgba(0, 0, 0, 0.2);
+    }
+    @media (min-width: 768px) {
+      .pub-thumb {
+        width: 240px;
+        height: 160px;
+      }
+    }
+    @media (min-width: 1024px) {
+      .pub-thumb {
+        width: 270px;
+        height: 175px;
+      }
+    }
+    .pub-content {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+      min-width: 0;
+    }
+    .pub-badge-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 12px;
+    }
+    .pub-title {
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.4;
+      margin: 0;
+    }
+    @media (min-width: 1024px) {
+      .pub-title {
+        font-size: 20px;
+      }
+    }
+    .pub-abstract {
+      font-size: 13.5px;
+      line-height: 1.6;
+      margin: 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .pub-action-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 4px;
+      flex-wrap: wrap;
     }
   `]
 })
