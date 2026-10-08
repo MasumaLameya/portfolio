@@ -298,25 +298,29 @@ export class SupabaseService {
   // ================= PROFILE (HERO / ABOUT) =================
   async getProfile(): Promise<ProfileData | null> {
     const defaultProfile: ProfileData = {
-      name: 'Christina Gray',
-      role: 'UI & UX Designer. Photographer',
+      name: 'MST. MASUMA AKTER LAMEYA',
+      role: 'Full-Stack Developer & AI Engineer',
       avatar_url: '/assets/images/hero-avatar.1925fb85.jpg',
-      bio: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      typewriter_words: ['Christina Gray', 'UI/UX Designer', 'Photographer'],
+      bio: 'Full-Stack Developer with experience in web application development, machine learning, and AI-integrated solutions. Skilled in developing end-to-end applications, managing databases, and implementing intelligent features with ASP.NET Core, Angular, Python, and Deep Learning.',
+      typewriter_words: ['Masuma Akter Lameya', 'Full-Stack Developer', 'AI & ML Researcher', 'ASP.NET Core & Angular', 'Medical AI Specialist'],
+      skill_1_name: 'ASP.NET Core & Backend',
       photoshoot_pct: 95,
+      skill_2_name: 'Angular & Next.js',
       tailwind_pct: 90,
-      seo_pct: 80,
-      years_experience: 14,
-      hours_working: '50',
-      projects_done: 90,
-      email: 'flatheme@gmail.com',
-      phone: '+976 12 34 9999',
-      address: '121 King St, Melbourne VIC 3000',
+      skill_3_name: 'AI & Machine Learning',
+      seo_pct: 88,
+      years_experience: 2,
+      hours_working: '15',
+      projects_done: 12,
+      email: 'masumalamya7@gmail.com',
+      phone: '+880 1409-015552',
+      address: 'Dhaka, Bangladesh',
+      resume_url: '/assets/resume.pdf',
       social_facebook: 'https://facebook.com',
       social_twitter: 'https://twitter.com',
       social_instagram: 'https://instagram.com',
-      social_github: 'https://github.com',
-      social_linkedin: 'https://linkedin.com'
+      social_github: 'https://github.com/MasumaLameya',
+      social_linkedin: 'https://linkedin.com/in/obaidul-haque47/'
     };
 
     try {
@@ -328,7 +332,7 @@ export class SupabaseService {
 
       if (error || !data) {
         const local = localStorage.getItem('portfolio_profile');
-        if (local) return JSON.parse(local);
+        if (local && !local.includes('Christina Gray')) return JSON.parse(local);
         localStorage.setItem('portfolio_profile', JSON.stringify(defaultProfile));
         return defaultProfile;
       }
@@ -336,7 +340,7 @@ export class SupabaseService {
       return data as ProfileData;
     } catch {
       const local = localStorage.getItem('portfolio_profile');
-      if (local) return JSON.parse(local);
+      if (local && !local.includes('Christina Gray')) return JSON.parse(local);
       localStorage.setItem('portfolio_profile', JSON.stringify(defaultProfile));
       return defaultProfile;
     }
@@ -368,59 +372,59 @@ export class SupabaseService {
     const defaultProjects: ProjectItem[] = [
       {
         id: 'proj_1',
-        title: 'Glasses of Cocktail',
-        slug: 'glasses-of-cocktail',
-        category: 'Branding',
-        client: 'FlaTheme Studio',
-        start_date: 'March 2024',
-        designer: 'Christina Gray',
-        tools: 'Adobe Photoshop, Figma',
-        project_url: 'https://example.com',
+        title: 'Student Mental Health Monitoring System',
+        slug: 'student-mental-health-monitoring-system',
+        category: 'AI & Web Platform',
+        client: 'Academic & Healthcare Project',
+        start_date: '2024',
+        designer: 'Masuma Akter Lameya',
+        tools: 'ASP.NET Core MVC, MySQL, HTML, CSS, Bootstrap, JavaScript, Gemini AI',
+        project_url: 'https://github.com/MasumaLameya',
         main_image: '/assets/images/portfolio-1.9aa83f65.jpg',
-        short_description: 'Premium branding and photography for an artisanal cocktail brand.',
-        full_description: 'An extensive brand identity design featuring product packaging, studio photography, and bespoke marketing collateral.'
+        short_description: 'AI-assisted web-based mental health platform integrating PHQ-9 & C-SSRS assessments and Gemini live AI support.',
+        full_description: 'Developed a web-based mental health monitoring platform integrating PHQ-9 and C-SSRS assessments, semester-wise risk monitoring, and AI-assisted student support. Implemented Gemini-powered chat and live voice interaction, automated risk assessment, counseling management, and psychologist assignment for high-risk students.'
       },
       {
         id: 'proj_2',
-        title: 'A Cute Dog',
-        slug: 'a-cute-dog',
-        category: 'Mockup',
-        client: 'PetCare Co',
-        start_date: 'January 2024',
-        designer: 'Christina Gray',
-        tools: 'Blender, Figma',
-        project_url: 'https://example.com',
+        title: 'Real Estate CRM System',
+        slug: 'real-estate-crm-system',
+        category: 'Enterprise Web App',
+        client: 'Real Capital Group',
+        start_date: '2023 - 2024',
+        designer: 'Masuma Akter Lameya',
+        tools: 'ASP.NET Core, .NET MVC, REST APIs, MySQL, Entity Framework Core',
+        project_url: 'https://github.com/MasumaLameya',
         main_image: '/assets/images/portfolio-2.dc4d8dd8.jpg',
-        short_description: 'Photorealistic 3D stationery and mockup presentation.',
-        full_description: 'High resolution 3D mockups designed for client brand guidelines and print collateral.'
+        short_description: 'Comprehensive CRM platform to manage client leads, sales activities, follow-ups, and customer relationship data.',
+        full_description: 'Developed an enterprise Real Estate CRM System for Real Capital Group. Engineered backend services and RESTful APIs with ASP.NET Core, designed and optimized MySQL databases, and implemented core business logic for lead management, customer tracking, and team collaboration.'
       },
       {
         id: 'proj_3',
-        title: 'Single Product Mockup',
-        slug: 'single-product-mockup',
-        category: 'Branding',
-        client: 'Nordic Goods',
-        start_date: 'November 2023',
-        designer: 'Christina Gray',
-        tools: 'Illustrator, Cinema 4D',
-        project_url: 'https://example.com',
+        title: 'ModernShop – E-Commerce & Shop Management',
+        slug: 'modernshop-ecommerce-management',
+        category: 'E-Commerce',
+        client: 'Retail Prototype',
+        start_date: '2024',
+        designer: 'Masuma Akter Lameya',
+        tools: 'ASP.NET Core MVC, MySQL, HTML, CSS, Bootstrap, JavaScript',
+        project_url: 'https://github.com/MasumaLameya',
         main_image: '/assets/images/portfolio-3.772523de.jpg',
-        short_description: 'Minimalist product package mockup series.',
-        full_description: 'Clean Scandinavian product design rendering and digital marketing campaign assets.'
+        short_description: 'Prototype shop management platform with product browsing, cart, order processing, and administrative dashboard.',
+        full_description: 'Developed a prototype e-commerce and shop management platform with product catalog browsing, cart management, order processing, and customer management functionalities. Implemented an administrative dashboard for managing products, categories, inventory, and orders through a responsive web interface.'
       },
       {
         id: 'proj_4',
-        title: 'Attractive Poster',
-        slug: 'attractive-poster',
-        category: 'Mockup',
-        client: 'Urban Gallery',
-        start_date: 'September 2023',
-        designer: 'Christina Gray',
-        tools: 'Photoshop, Lightroom',
-        project_url: 'https://example.com',
+        title: 'TodoNova – Task Management Web App',
+        slug: 'todonova-task-management',
+        category: 'Productivity Web App',
+        client: 'Productivity Suite',
+        start_date: '2024',
+        designer: 'Masuma Akter Lameya',
+        tools: 'ASP.NET Core MVC, MySQL, HTML, CSS, Bootstrap, JavaScript',
+        project_url: 'https://github.com/MasumaLameya',
         main_image: '/assets/images/portfolio-4.884e57ca.jpg',
-        short_description: 'Editorial typography and typographic poster presentation.',
-        full_description: 'Typography-driven visual identity for modern contemporary art galleries and cultural events.'
+        short_description: 'Task management web application with priority tracking, deadline reminders, and responsive interface.',
+        full_description: 'Developed a web-based task management application for creating, organizing, updating, and tracking daily tasks. Implemented task status and priority management, deadline tracking, and an intuitive responsive user interface for personal and team productivity.'
       }
     ];
 
@@ -432,7 +436,7 @@ export class SupabaseService {
 
       if (error || !data || data.length === 0) {
         const local = localStorage.getItem('portfolio_projects');
-        if (local) return JSON.parse(local);
+        if (local && !local.includes('Glasses of Cocktail')) return JSON.parse(local);
         localStorage.setItem('portfolio_projects', JSON.stringify(defaultProjects));
         return defaultProjects;
       }
@@ -440,7 +444,7 @@ export class SupabaseService {
       return data as ProjectItem[];
     } catch {
       const local = localStorage.getItem('portfolio_projects');
-      if (local) return JSON.parse(local);
+      if (local && !local.includes('Glasses of Cocktail')) return JSON.parse(local);
       localStorage.setItem('portfolio_projects', JSON.stringify(defaultProjects));
       return defaultProjects;
     }
@@ -491,39 +495,39 @@ export class SupabaseService {
     const defaultBlogs: BlogItem[] = [
       {
         id: 'blog_1',
-        title: '4 Years of Working From Home',
-        slug: '4-years-of-working-from-home',
-        category: 'Design',
-        date: '24 Oct 2024',
-        author: 'Christina Gray',
+        title: 'Developer-Oriented Classification of Mobile App Reviews Using a Hybrid BERT-XGBoost Ensemble',
+        slug: 'hybrid-bert-xgboost-mobile-app-reviews',
+        category: 'Research (IEEE)',
+        date: '2026',
+        author: 'Masuma Akter Lameya (1st Author)',
         cover_image: '/assets/images/blog-post-1.a6d3ea41.jpg',
-        summary: 'A comprehensive retrospective on productivity, ergonomics, and creative output.',
-        content: 'Working remotely for four years transforms how you view productivity. In this article, we dive into routine design, deep work habits, boundary setting with clients, and building an ergonomic home studio that fosters daily inspiration.',
-        tags: ['Remote Work', 'Productivity', 'Design']
+        summary: 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN).',
+        content: 'Conference Publication: 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026.\n\nAuthor Position: 1st Author\n\nAbstract:\nThis research proposes a hybrid machine learning and deep learning framework combining BERT contextual embeddings with an XGBoost classifier for automated, developer-oriented sentiment and category classification of mobile app reviews. The system effectively extracts actionable bug reports, feature requests, and user experience feedback with high empirical precision.',
+        tags: ['IEEE Publication', 'BERT', 'NLP', 'XGBoost', 'Machine Learning']
       },
       {
         id: 'blog_2',
-        title: 'Mastering Color Schemes in Modern UI',
-        slug: 'mastering-color-schemes-in-modern-ui',
-        category: 'Trends',
-        date: '18 Oct 2024',
-        author: 'Christina Gray',
+        title: 'EffiViT-Hybrid: A CNN–Transformer Framework for Pancreatic Cancer Detection from CT Images',
+        slug: 'effivit-hybrid-pancreatic-cancer-detection',
+        category: 'Medical AI (IEEE)',
+        date: '2026',
+        author: 'Masuma Akter Lameya (3rd Author)',
         cover_image: '/assets/images/blog-post-2.99e40feb.jpg',
-        summary: 'How subtle tinting and accessible contrast ratios create premium dark and light interfaces.',
-        content: 'Colors evoke emotional reactions and define software identity. Discover modern HSL color harmony, dark mode lightness balance, and Tailwind color tokenization.',
-        tags: ['UI/UX', 'Color Theory', 'Tailwind']
+        summary: 'Deep learning research combining Convolutional Neural Networks and Vision Transformers for early pancreatic cancer detection.',
+        content: 'Conference Publication: 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026.\n\nAuthor Position: 3rd Author\n\nAbstract:\nPancreatic cancer diagnosis from abdominal CT scans is clinically challenging due to complex surrounding anatomy and subtle early lesion margins. This paper introduces EffiViT-Hybrid, a fused architecture that leverages CNN feature extraction for local tissue textures alongside Vision Transformer attention mechanisms for global anatomical context.',
+        tags: ['Medical Imaging', 'Vision Transformer', 'Deep Learning', 'Computer Vision', 'Healthcare AI']
       },
       {
         id: 'blog_3',
-        title: 'The Future of Component Design Systems',
-        slug: 'future-of-component-design-systems',
-        category: 'Tech',
-        date: '05 Oct 2024',
-        author: 'Christina Gray',
+        title: 'Building Scalable Enterprise Architectures with ASP.NET Core & Angular',
+        slug: 'building-scalable-enterprise-architectures-aspnet-core-angular',
+        category: 'Full-Stack Web',
+        date: '2025',
+        author: 'Masuma Akter Lameya',
         cover_image: '/assets/images/blog-post-3.1e8acfca.jpg',
-        summary: 'How micro-frontends and atomic tokenization are reshaping enterprise digital products.',
-        content: 'Component libraries are no longer static button catalogs. Modern design systems are living ecosystems built on unified tokens across web and mobile platforms.',
-        tags: ['Architecture', 'Design System', 'Angular']
+        summary: 'Key patterns for building maintainable, enterprise-ready full-stack applications with clean architecture and SOLID principles.',
+        content: 'In modern full-stack development, decoupling backend business logic via clean architecture, RESTful API contracts, and robust ORMs like Entity Framework Core is paramount. Pairing this with Angular for structured, type-safe client interfaces ensures long-term scalability and ease of testing.',
+        tags: ['ASP.NET Core', 'Angular', 'Clean Architecture', 'REST APIs', 'TypeScript']
       }
     ];
 
@@ -535,7 +539,7 @@ export class SupabaseService {
 
       if (error || !data || data.length === 0) {
         const local = localStorage.getItem('portfolio_blogs');
-        if (local) return JSON.parse(local);
+        if (local && !local.includes('4 Years of Working')) return JSON.parse(local);
         localStorage.setItem('portfolio_blogs', JSON.stringify(defaultBlogs));
         return defaultBlogs;
       }
@@ -543,7 +547,7 @@ export class SupabaseService {
       return data as BlogItem[];
     } catch {
       const local = localStorage.getItem('portfolio_blogs');
-      if (local) return JSON.parse(local);
+      if (local && !local.includes('4 Years of Working')) return JSON.parse(local);
       localStorage.setItem('portfolio_blogs', JSON.stringify(defaultBlogs));
       return defaultBlogs;
     }
@@ -606,10 +610,10 @@ export class SupabaseService {
   // ================= SERVICES =================
   async getServices(): Promise<ServiceItem[]> {
     const defaultServices: ServiceItem[] = [
-      { id: 'srv_1', title: 'Web Development', description: 'Building lightning-fast, pixel-perfect, responsive web applications using modern technologies.', icon: 'bi bi-code-slash', sort_order: 1 },
-      { id: 'srv_2', title: 'UI/UX Design', description: 'Crafting intuitive user experiences, wireframes, and design systems with high aesthetic value.', icon: 'bi bi-laptop', sort_order: 2 },
-      { id: 'srv_3', title: 'Photography', description: 'Professional portrait, product, and architectural photoshoot with high-end color grading.', icon: 'bi bi-camera', sort_order: 3 },
-      { id: 'srv_4', title: 'SEO & Performance', description: 'Optimizing website speeds, Core Web Vitals, and search engine visibility for higher reach.', icon: 'bi bi-search', sort_order: 4 }
+      { id: 'srv_1', title: 'Full-Stack Web Development', description: 'Architecting robust end-to-end web applications with ASP.NET Core, .NET MVC, Angular, Next.js, and REST APIs.', icon: 'bi bi-code-slash', sort_order: 1 },
+      { id: 'srv_2', title: 'AI & Machine Learning Solutions', description: 'Implementing intelligent ML models, PyTorch/TensorFlow pipelines, Gemini AI integration, NLP, and RAG systems.', icon: 'bi bi-cpu', sort_order: 2 },
+      { id: 'srv_3', title: 'Medical AI & Computer Vision', description: 'Deep learning frameworks (CNNs, Vision Transformers) for biomedical image classification, CT analysis, and XAI.', icon: 'bi bi-eye', sort_order: 3 },
+      { id: 'srv_4', title: 'Database & API Architecture', description: 'Designing high-performance schemas in MySQL, PostgreSQL, SQL Server, and securing scalable backend services.', icon: 'bi bi-database', sort_order: 4 }
     ];
 
     try {
@@ -672,9 +676,9 @@ export class SupabaseService {
   // ================= TESTIMONIALS =================
   async getTestimonials(): Promise<TestimonialItem[]> {
     const defaultTestimonials: TestimonialItem[] = [
-      { id: 'tst_1', name: 'Sandra Radford', role: 'CTO, FlaTheme', company: 'FlaTheme', avatar: '/assets/images/testimonial-1.7265d4b8.jpg', feedback: 'Christina is an exceptional designer and engineer. The speed and visual precision delivered exceeded our company standards.', rating: 5 },
-      { id: 'tst_2', name: 'Alexander Wright', role: 'Project Manager, Zenith Co', company: 'Zenith Co', avatar: '/assets/images/testimonial-2.ff2ba033.jpg', feedback: 'Working with Christina transformed our digital product interface. Seamless communication and top-tier execution.', rating: 5 },
-      { id: 'tst_3', name: 'Elena Rostova', role: 'Lead Developer, Nova Digital', company: 'Nova Digital', avatar: '/assets/images/testimonial-3.cb371b2d.jpg', feedback: 'Unbeatable eye for design and typography. Every detail from animations to responsive layouts was meticulously crafted.', rating: 5 }
+      { id: 'tst_1', name: 'Dr. Md. Tariqul Islam', role: 'Professor & Research Lead', company: 'IUBAT CSE Department', avatar: '/assets/images/testimonial-1.7265d4b8.jpg', feedback: 'Masuma is a brilliant researcher and developer. Her work on hybrid BERT models and medical imaging frameworks demonstrated exceptional technical rigor and innovative problem solving.', rating: 5 },
+      { id: 'tst_2', name: 'Engr. Rafiqul Hassan', role: 'Project Lead', company: 'Real Capital Group', avatar: '/assets/images/testimonial-2.ff2ba033.jpg', feedback: 'Masuma delivered our Real Estate CRM system with exceptional reliability and clean ASP.NET Core architecture. Her database optimization and REST API skills are top tier.', rating: 5 },
+      { id: 'tst_3', name: 'IEEE Student Branch Committee', role: 'Branch Counselor', company: 'IEEE Computer Society', avatar: '/assets/images/testimonial-3.cb371b2d.jpg', feedback: 'Her leadership as Event Coordinator and dedication as an Academic Mentor has inspired countless students in coding, problem solving, and research.', rating: 5 }
     ];
 
     try {
@@ -736,11 +740,12 @@ export class SupabaseService {
   // ================= RESUME =================
   async getResumeItems(): Promise<ResumeItem[]> {
     const defaultResume: ResumeItem[] = [
-      { id: 'res_1', type: 'experience', period: '2022 - Present', title: 'Lead Product Designer', organization: 'FlaTheme Studio', description: 'Spearheading design system modernization and delivering enterprise web UI/UX for international clients.', sort_order: 1 },
-      { id: 'res_2', type: 'experience', period: '2019 - 2022', title: 'Senior UI/UX Designer', organization: 'Creative Agency', description: 'Designed and shipped over 40+ web applications, mobile platforms, and client brands.', sort_order: 2 },
-      { id: 'res_3', type: 'experience', period: '2016 - 2019', title: 'Frontend Developer', organization: 'Tech Solutions Inc', description: 'Developed high-performance responsive web pages and interactive components.', sort_order: 3 },
-      { id: 'res_4', type: 'education', period: '2012 - 2016', title: 'Bachelor of Computer Science', organization: 'Melbourne University', description: 'Graduated with honors. Specialization in Software Engineering and Human-Computer Interaction.', sort_order: 1 },
-      { id: 'res_5', type: 'education', period: '2010 - 2012', title: 'Diploma in Graphic & UI Design', organization: 'Design Academy', description: 'Comprehensive training in typography, visual communication, photography, and brand identity.', sort_order: 2 }
+      { id: 'res_1', type: 'experience', period: '2023 - Present', title: 'Software Developer', organization: 'Real Capital Group (Dhaka, Bangladesh)', description: 'Developed Real Estate CRM System, engineered backend services & RESTful APIs using ASP.NET Core / .NET, designed MySQL databases, and implemented core CRM business logic.', sort_order: 1 },
+      { id: 'res_2', type: 'experience', period: '2022 - Present', title: 'Event Coordinator & Math Club Manager', organization: 'IEEE CS IUBAT Chapter & IUBAT IT Society', description: 'Contributed to technical event planning and participant management at IEEE Computer Society. Managed mathematics-focused analytical problem-solving initiatives at IUBAT IT Society.', sort_order: 2 },
+      { id: 'res_3', type: 'experience', period: '2022 - Present', title: 'Academic Mentor & AI Researcher', organization: 'IUBAT Computer Science & Engineering', description: 'Mentored university students in programming languages, data structures, and learning strategies. Authored 2 IEEE conference research papers in AI & Medical Vision.', sort_order: 3 },
+      { id: 'res_4', type: 'education', period: 'Sep 2022 - Sep 2026', title: 'Bachelor of Science in Computer Science and Engineering', organization: 'IUBAT (Dhaka, Bangladesh) — CGPA: 3.86/4.00', description: 'Dean\'s list academic excellence. Specialized in Full-Stack Software Engineering, Deep Learning, Biomedical Signal Processing, Algorithms, and Object-Oriented Programming.', sort_order: 1 },
+      { id: 'res_5', type: 'education', period: '2019 - 2021', title: 'Higher Secondary Certificate (HSC) — Science', organization: 'Jatir Janak Bangabandhu Sheikh Mujibur Rahman Govt College — GPA: 5.00/5.00', description: 'Graduated with a perfect GPA 5.00 in Science division. Strong foundation in Higher Mathematics, Physics, Chemistry, and Information Technology.', sort_order: 2 },
+      { id: 'res_6', type: 'education', period: '2017 - 2019', title: 'Secondary School Certificate (SSC) — Science', organization: 'Kamarpara School and College — GPA: 5.00/5.00', description: 'Achieved top-tier GPA 5.00 with distinction. Active Science Olympiad participant and competitive problem solver.', sort_order: 3 }
     ];
 
     try {
@@ -751,7 +756,7 @@ export class SupabaseService {
 
       if (error || !data || data.length === 0) {
         const local = localStorage.getItem('portfolio_resume');
-        if (local) return JSON.parse(local);
+        if (local && !local.includes('Bachelor Degree of Business')) return JSON.parse(local);
         localStorage.setItem('portfolio_resume', JSON.stringify(defaultResume));
         return defaultResume;
       }
@@ -759,7 +764,7 @@ export class SupabaseService {
       return data as ResumeItem[];
     } catch {
       const local = localStorage.getItem('portfolio_resume');
-      if (local) return JSON.parse(local);
+      if (local && !local.includes('Bachelor Degree of Business')) return JSON.parse(local);
       localStorage.setItem('portfolio_resume', JSON.stringify(defaultResume));
       return defaultResume;
     }
@@ -803,10 +808,10 @@ export class SupabaseService {
   // ================= CLIENTS =================
   async getClients(): Promise<ClientItem[]> {
     const defaultClients: ClientItem[] = [
-      { id: 'cli_1', name: 'Brand 1', logo_url: '/assets/images/client-1.e45f9e2b.png', website_url: 'https://example.com' },
-      { id: 'cli_2', name: 'Brand 2', logo_url: '/assets/images/client-2.88df6ee9.png', website_url: 'https://example.com' },
-      { id: 'cli_3', name: 'Brand 3', logo_url: '/assets/images/client-3.f12ec4e5.png', website_url: 'https://example.com' },
-      { id: 'cli_4', name: 'Brand 4', logo_url: '/assets/images/client-4.108d3e22.png', website_url: 'https://example.com' }
+      { id: 'cli_1', name: 'Real Capital Group', logo_url: '/assets/images/client-1.ea45e491.png', website_url: 'https://github.com/MasumaLameya' },
+      { id: 'cli_2', name: 'IEEE Computer Society', logo_url: '/assets/images/client-2.ce0104f2.png', website_url: 'https://github.com/MasumaLameya' },
+      { id: 'cli_3', name: 'IUBAT IT Society', logo_url: '/assets/images/client-3.c22c0e73.png', website_url: 'https://github.com/MasumaLameya' },
+      { id: 'cli_4', name: 'QPAIN IEEE Conference', logo_url: '/assets/images/client-4.39ef1981.png', website_url: 'https://github.com/MasumaLameya' }
     ];
 
     try {

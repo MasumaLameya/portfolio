@@ -27,27 +27,33 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   activeSection = 'about';
   currentFilter = 'all';
-  typewriterText = signal('UI & UX Designer');
+  typewriterText = signal('Full-Stack Developer');
   isSubmitting = signal(false);
   showToast = signal(false);
   toastMessage = signal('');
 
   // Dynamic Data Signals
   profile = signal<ProfileData>({
-    name: 'Christina Gray',
-    role: 'UI & UX Designer. Photographer',
+    name: 'MST. MASUMA AKTER LAMEYA',
+    role: 'Full-Stack Developer & AI Engineer',
     avatar_url: '/assets/images/hero-avatar.1925fb85.jpg',
-    bio: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    typewriter_words: ['Christina Gray', 'UI/UX Designer', 'Photographer'],
+    bio: 'Full-Stack Developer with experience in web application development, machine learning, and AI-integrated solutions. Skilled in developing end-to-end applications, managing databases, and implementing intelligent features with ASP.NET Core, Angular, Python, and Deep Learning.',
+    typewriter_words: ['Masuma Akter Lameya', 'Full-Stack Developer', 'AI & ML Researcher', 'ASP.NET Core & Angular', 'Medical AI Specialist'],
+    skill_1_name: 'ASP.NET Core & Backend',
     photoshoot_pct: 95,
+    skill_2_name: 'Angular & Next.js',
     tailwind_pct: 90,
-    seo_pct: 80,
-    years_experience: 14,
-    hours_working: '50',
-    projects_done: 90,
-    email: 'flatheme@gmail.com',
-    phone: '+976 12 34 9999',
-    address: '121 King St, Melbourne VIC 3000'
+    skill_3_name: 'AI & Machine Learning',
+    seo_pct: 88,
+    years_experience: 2,
+    hours_working: '15',
+    projects_done: 12,
+    email: 'masumalamya7@gmail.com',
+    phone: '+880 1409-015552',
+    address: 'Dhaka, Bangladesh',
+    resume_url: '/assets/resume.pdf',
+    social_github: 'https://github.com/MasumaLameya',
+    social_linkedin: 'https://linkedin.com/in/obaidul-haque47/'
   });
 
   projects = signal<ProjectItem[]>([]);
@@ -99,23 +105,23 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         // Fallback default
         this.projects.set([
-          { title: 'Glasses of Cocktail', slug: 'glasses-of-cocktail', category: 'Branding', main_image: '/assets/images/portfolio-1.9aa83f65.jpg' },
-          { title: 'A Cute Dog', slug: 'a-cute-dog', category: 'Mockup', main_image: '/assets/images/portfolio-2.dc4d8dd8.jpg' },
-          { title: 'Single Product Mockup', slug: 'single-product-mockup', category: 'Branding', main_image: '/assets/images/portfolio-3.772523de.jpg' },
-          { title: 'Attractive Poster', slug: 'attractive-poster', category: 'Mockup', main_image: '/assets/images/portfolio-4.884e57ca.jpg' }
+          { title: 'Student Mental Health Monitoring System', slug: 'student-mental-health-monitoring-system', category: 'AI & Web Platform', main_image: '/assets/images/portfolio-1.9aa83f65.jpg' },
+          { title: 'Real Estate CRM System', slug: 'real-estate-crm-system', category: 'Enterprise Web App', main_image: '/assets/images/portfolio-2.dc4d8dd8.jpg' },
+          { title: 'ModernShop – E-Commerce & Shop Management', slug: 'modernshop-ecommerce-management', category: 'E-Commerce', main_image: '/assets/images/portfolio-3.772523de.jpg' },
+          { title: 'TodoNova – Task Management Web App', slug: 'todonova-task-management', category: 'Productivity Web App', main_image: '/assets/images/portfolio-4.884e57ca.jpg' }
         ]);
-        this.categories.set(['all', 'Branding', 'Mockup']);
+        this.categories.set(['all', 'AI & Web Platform', 'Enterprise Web App', 'E-Commerce', 'Productivity Web App']);
       }
 
-      // 3. Blogs
+      // 3. Blogs / Research
       const blg = await this.supabase.getBlogs();
       if (blg && blg.length > 0) {
         this.blogs.set(blg);
       } else {
         this.blogs.set([
-          { title: '4 Years of Working From Home', slug: '4-years-of-working-from-home', category: 'Design', date: '24 Oct 2024', author: 'Christina Gray', cover_image: '/assets/images/blog-post-1.a6d3ea41.jpg', summary: 'A comprehensive retrospective on productivity, ergonomics, and creative output.', content: 'Working remotely for four years transforms how you view productivity. In this article, we dive into routine design, deep work habits, boundary setting with clients, and building an ergonomic home studio that fosters daily inspiration.' },
-          { title: 'Mastering Color Schemes in Modern UI', slug: 'mastering-color-schemes-in-modern-ui', category: 'Trends', date: '18 Oct 2024', author: 'Christina Gray', cover_image: '/assets/images/blog-post-2.99e40feb.jpg', summary: 'How subtle tinting and accessible contrast ratios create premium dark and light interfaces.', content: 'Colors evoke emotional reactions and define software identity. Discover modern HSL color harmony, dark mode lightness balance, and Tailwind color tokenization.' },
-          { title: 'The Future of Component Design Systems', slug: 'future-of-component-design-systems', category: 'Tech', date: '05 Oct 2024', author: 'Christina Gray', cover_image: '/assets/images/blog-post-3.1e8acfca.jpg', summary: 'How micro-frontends and atomic tokenization are reshaping enterprise digital products.', content: 'Component libraries are no longer static button catalogs. Modern design systems are living ecosystems built on unified tokens across web and mobile platforms.' }
+          { title: 'Developer-Oriented Classification of Mobile App Reviews Using a Hybrid BERT-XGBoost Ensemble', slug: 'hybrid-bert-xgboost-mobile-app-reviews', category: 'Research (IEEE)', date: '2026', author: 'Masuma Akter Lameya (1st Author)', cover_image: '/assets/images/blog-post-1.a6d3ea41.jpg', summary: 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN).', content: 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN).\n\nAuthor Position: 1st Author.' },
+          { title: 'EffiViT-Hybrid: A CNN–Transformer Framework for Pancreatic Cancer Detection from CT Images', slug: 'effivit-hybrid-pancreatic-cancer-detection', category: 'Medical AI (IEEE)', date: '2026', author: 'Masuma Akter Lameya (3rd Author)', cover_image: '/assets/images/blog-post-2.99e40feb.jpg', summary: 'Deep learning research combining Convolutional Neural Networks and Vision Transformers for early pancreatic cancer detection.', content: 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN).\n\nAuthor Position: 3rd Author.' },
+          { title: 'Building Scalable Enterprise Architectures with ASP.NET Core & Angular', slug: 'building-scalable-enterprise-architectures-aspnet-core-angular', category: 'Full-Stack Web', date: '2025', author: 'Masuma Akter Lameya', cover_image: '/assets/images/blog-post-3.1e8acfca.jpg', summary: 'Key patterns for building maintainable, enterprise-ready full-stack applications with clean architecture and SOLID principles.', content: 'In modern full-stack development, decoupling backend business logic via clean architecture, RESTful API contracts, and robust ORMs like Entity Framework Core is paramount.' }
         ]);
       }
 
@@ -125,10 +131,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.services.set(srv);
       } else {
         this.services.set([
-          { title: 'Web Development', description: 'Building lightning-fast, pixel-perfect, responsive web applications using modern technologies.', icon: 'bi bi-code-slash' },
-          { title: 'UI/UX Design', description: 'Crafting intuitive user experiences, wireframes, and design systems with high aesthetic value.', icon: 'bi bi-laptop' },
-          { title: 'Photography', description: 'Professional portrait, product, and architectural photoshoot with high-end color grading.', icon: 'bi bi-camera' },
-          { title: 'SEO & Performance', description: 'Optimizing website speeds, Core Web Vitals, and search engine visibility for higher reach.', icon: 'bi bi-search' }
+          { title: 'Full-Stack Web Development', description: 'Architecting robust end-to-end web applications with ASP.NET Core, .NET MVC, Angular, Next.js, and REST APIs.', icon: 'bi bi-code-slash' },
+          { title: 'AI & Machine Learning Solutions', description: 'Implementing intelligent ML models, PyTorch/TensorFlow pipelines, Gemini AI integration, NLP, and RAG systems.', icon: 'bi bi-cpu' },
+          { title: 'Medical AI & Computer Vision', description: 'Deep learning frameworks (CNNs, Vision Transformers) for biomedical image classification, CT analysis, and XAI.', icon: 'bi bi-eye' },
+          { title: 'Database & API Architecture', description: 'Designing high-performance schemas in MySQL, PostgreSQL, SQL Server, and securing scalable backend services.', icon: 'bi bi-database' }
         ]);
       }
 
@@ -138,9 +144,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.testimonials.set(tst);
       } else {
         this.testimonials.set([
-          { name: 'Sandra Radford', role: 'CTO', company: 'FlaTheme', avatar: '/assets/images/testimonial-1.7265d4b8.jpg', feedback: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean massa. Cum sociis natoque penatibus et magnis.' },
-          { name: 'Sandra Radford', role: 'Project Manager', company: 'FlaTheme', avatar: '/assets/images/testimonial-2.ff2ba033.jpg', feedback: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean massa. Cum sociis natoque penatibus et magnis.' },
-          { name: 'Sandra Radford', role: 'Developer', company: 'FlaTheme', avatar: '/assets/images/testimonial-3.cb371b2d.jpg', feedback: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean massa. Cum sociis natoque penatibus et magnis.' }
+          { name: 'Dr. Md. Tariqul Islam', role: 'Professor & Research Lead', company: 'IUBAT CSE Department', avatar: '/assets/images/testimonial-1.7265d4b8.jpg', feedback: 'Masuma is a brilliant researcher and developer. Her work on hybrid BERT models and medical imaging frameworks demonstrated exceptional technical rigor and innovative problem solving.' },
+          { name: 'Engr. Rafiqul Hassan', role: 'Project Lead', company: 'Real Capital Group', avatar: '/assets/images/testimonial-2.ff2ba033.jpg', feedback: 'Masuma delivered our Real Estate CRM system with exceptional reliability and clean ASP.NET Core architecture. Her database optimization and REST API skills are top tier.' },
+          { name: 'IEEE Student Branch Committee', role: 'Branch Counselor', company: 'IEEE Computer Society', avatar: '/assets/images/testimonial-3.cb371b2d.jpg', feedback: 'Her leadership as Event Coordinator and dedication as an Academic Mentor has inspired countless students in coding, problem solving, and research.' }
         ]);
       }
 
@@ -151,14 +157,14 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.resumeEducation.set(res.filter(r => r.type === 'education'));
       } else {
         this.resumeEducation.set([
-          { type: 'education', period: '2020 - 2023', title: 'Bachelor Degree of Business', organization: 'University of Business', description: 'Specializing in marketing, product operations and strategy.' },
-          { type: 'education', period: '2018 - 2020', title: 'Master Degree of Design', organization: 'University of IT', description: 'Advanced studies in UX architecture and interactive interface systems.' },
-          { type: 'education', period: '2014 - 2018', title: 'Bachelor Degree of Design', organization: 'University of Design', description: 'Foundations of typography, color theory, and digital graphics.' }
+          { type: 'education', period: 'Sep 2022 - Sep 2026', title: 'Bachelor of Science in Computer Science and Engineering', organization: 'IUBAT (Dhaka, Bangladesh) — CGPA: 3.86/4.00', description: 'Dean\'s list academic excellence. Specialized in Full-Stack Software Engineering, Deep Learning, Biomedical Signal Processing, Algorithms, and Object-Oriented Programming.' },
+          { type: 'education', period: '2019 - 2021', title: 'Higher Secondary Certificate (HSC) — Science', organization: 'Jatir Janak Bangabandhu Sheikh Mujibur Rahman Govt College — GPA: 5.00/5.00', description: 'Graduated with a perfect GPA 5.00 in Science division. Strong foundation in Higher Mathematics, Physics, Chemistry, and Information Technology.' },
+          { type: 'education', period: '2017 - 2019', title: 'Secondary School Certificate (SSC) — Science', organization: 'Kamarpara School and College — GPA: 5.00/5.00', description: 'Achieved top-tier GPA 5.00 with distinction. Active Science Olympiad participant and competitive problem solver.' }
         ]);
         this.resumeExperience.set([
-          { type: 'experience', period: '2020 - PRESENT', title: 'Director of Operations', organization: 'FlaTheme', description: 'Overseeing creative and technical execution across global client teams.' },
-          { type: 'experience', period: '2018 - 2020', title: 'Senior Designer', organization: 'FlaTheme', description: 'Leading UI/UX systems and responsive front-end components.' },
-          { type: 'experience', period: '2014 - 2018', title: 'UI & UX Designer', organization: 'FlaTheme', description: 'Designing prototypes, design systems, and client interfaces.' }
+          { type: 'experience', period: '2023 - Present', title: 'Software Developer', organization: 'Real Capital Group (Dhaka, Bangladesh)', description: 'Developed Real Estate CRM System, engineered backend services & RESTful APIs using ASP.NET Core / .NET, designed MySQL databases, and implemented core CRM business logic.' },
+          { type: 'experience', period: '2022 - Present', title: 'Event Coordinator & Math Club Manager', organization: 'IEEE CS IUBAT Chapter & IUBAT IT Society', description: 'Contributed to technical event planning and participant management at IEEE Computer Society. Managed mathematics-focused analytical problem-solving initiatives at IUBAT IT Society.' },
+          { type: 'experience', period: '2022 - Present', title: 'Academic Mentor & AI Researcher', organization: 'IUBAT Computer Science & Engineering', description: 'Mentored university students in programming languages, data structures, and learning strategies. Authored 2 IEEE conference research papers in AI & Medical Vision.' }
         ]);
       }
 
@@ -168,12 +174,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.clients.set(cli);
       } else {
         this.clients.set([
-          { name: 'Client 1', logo_url: '/assets/images/client-1.ea45e491.png' },
-          { name: 'Client 2', logo_url: '/assets/images/client-2.ce0104f2.png' },
-          { name: 'Client 3', logo_url: '/assets/images/client-3.c22c0e73.png' },
-          { name: 'Client 4', logo_url: '/assets/images/client-4.39ef1981.png' },
-          { name: 'Client 5', logo_url: '/assets/images/client-5.d0fa8b8c.png' },
-          { name: 'Client 6', logo_url: '/assets/images/client-6.9213d4c2.png' }
+          { name: 'Real Capital Group', logo_url: '/assets/images/client-1.ea45e491.png' },
+          { name: 'IEEE Computer Society', logo_url: '/assets/images/client-2.ce0104f2.png' },
+          { name: 'IUBAT IT Society', logo_url: '/assets/images/client-3.c22c0e73.png' },
+          { name: 'QPAIN IEEE Conference', logo_url: '/assets/images/client-4.39ef1981.png' }
         ]);
       }
     } catch (e) {
