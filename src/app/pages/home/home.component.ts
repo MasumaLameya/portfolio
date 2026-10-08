@@ -357,8 +357,14 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       // 6. Resume
       const res = await this.supabase.getResumeItems();
       if (res && res.length > 0) {
-        this.resumeExperience.set(res.filter(r => r.type === 'experience'));
-        this.resumeEducation.set(res.filter(r => r.type === 'education'));
+        const updatedRes = res.map(r => {
+          if (r.title === 'Software Developer' || (r.organization && r.organization.includes('Real Capital'))) {
+            return { ...r, period: 'June 2026 - Sep 2026' };
+          }
+          return r;
+        });
+        this.resumeExperience.set(updatedRes.filter(r => r.type === 'experience'));
+        this.resumeEducation.set(updatedRes.filter(r => r.type === 'education'));
       } else {
         this.resumeEducation.set([
           { type: 'education', period: 'Sep 2022 - Sep 2026', title: 'Bachelor of Science in Computer Science and Engineering', organization: 'IUBAT (Dhaka, Bangladesh) — CGPA: 3.86/4.00', description: 'Dean\'s list academic excellence. Specialized in Full-Stack Software Engineering, Deep Learning, Biomedical Signal Processing, Algorithms, and Object-Oriented Programming.' },
@@ -366,7 +372,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           { type: 'education', period: '2017 - 2019', title: 'Secondary School Certificate (SSC) — Science', organization: 'Kamarpara School and College — GPA: 5.00/5.00', description: 'Achieved top-tier GPA 5.00 with distinction. Active Science Olympiad participant and competitive problem solver.' }
         ]);
         this.resumeExperience.set([
-          { type: 'experience', period: '2023 - Present', title: 'Software Developer', organization: 'Real Capital Group (Dhaka, Bangladesh)', description: 'Developed Real Estate CRM System, engineered backend services & RESTful APIs using ASP.NET Core / .NET, designed MySQL databases, and implemented core CRM business logic.' },
+          { type: 'experience', period: 'June 2026 - Sep 2026', title: 'Software Developer', organization: 'Real Capital Group (Dhaka, Bangladesh)', description: 'Developed Real Estate CRM System, engineered backend services & RESTful APIs using ASP.NET Core / .NET, designed MySQL databases, and implemented core CRM business logic.' },
           { type: 'experience', period: '2022 - Present', title: 'Event Coordinator', organization: 'IEEE CS IUBAT Student Branch Chapter', description: 'Contributed to technical event planning, workshop coordination, and participant management at IEEE Computer Society.' },
           { type: 'experience', period: '2022 - Present', title: 'Math Club Manager', organization: 'IUBAT IT Society', description: 'Organized and managed mathematics-focused analytical problem-solving sessions, workshops, and student learning initiatives.' },
           { type: 'experience', period: '2022 - Present', title: 'Academic Mentor & AI Researcher', organization: 'IUBAT Computer Science & Engineering', description: 'Mentored university students in programming languages, data structures, and learning strategies. Authored 2 IEEE conference research papers in AI & Medical Vision.' }
