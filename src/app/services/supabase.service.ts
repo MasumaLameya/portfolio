@@ -345,10 +345,11 @@ export class SupabaseService {
       const { data, error } = await this.supabase
         .from('profile')
         .select('*')
+        .ilike('name', '%Masuma%')
         .limit(1)
         .maybeSingle();
 
-      if (error || !data || data.name?.includes('Christina Gray') || data.name === 'Amaranthine') {
+      if (error || !data || !data.name || data.name.includes('Christina Gray') || data.name === 'Amaranthine' || data.name.includes('Sandra Radford')) {
         if (typeof localStorage !== 'undefined') {
           localStorage.setItem('portfolio_profile', JSON.stringify(defaultProfile));
         }
@@ -478,12 +479,21 @@ export class SupabaseService {
       }
     ];
 
+    const isStaleProject = (p: any) => {
+      if (!p || !p.title) return true;
+      const t = p.title.toLowerCase();
+      const s = (p.slug || '').toLowerCase();
+      return t.includes('cocktail') || t.includes('cute dog') || t.includes('product mockup') || 
+             t.includes('branding design') || t.includes('dashboard & ui') || t.includes('urban street') || 
+             t.includes('ecommerce concept') || s === 'smhms' || p.designer === 'Christina Gray';
+    };
+
     if (typeof localStorage !== 'undefined') {
       const local = localStorage.getItem('portfolio_projects');
       if (local) {
         try {
           const parsed = JSON.parse(local);
-          if (Array.isArray(parsed) && parsed.length > 0 && !parsed.some(p => p.title === 'Glasses of Cocktail' || p.designer === 'Christina Gray')) {
+          if (Array.isArray(parsed) && parsed.length > 0 && !parsed.some(isStaleProject)) {
             return parsed;
           }
         } catch {}
@@ -496,16 +506,25 @@ export class SupabaseService {
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error || !data || data.length === 0 || data.some(p => p.title === 'Glasses of Cocktail' || p.designer === 'Christina Gray' || p.main_image?.includes('portfolio-1.9aa83f65'))) {
+      if (error || !data || data.length === 0) {
         if (typeof localStorage !== 'undefined') {
           localStorage.setItem('portfolio_projects', JSON.stringify(defaultProjects));
         }
         return defaultProjects;
       }
-      if (typeof localStorage !== 'undefined') {
-        localStorage.setItem('portfolio_projects', JSON.stringify(data));
+
+      const valid = (data as ProjectItem[]).filter(p => !isStaleProject(p));
+      if (valid.length === 0) {
+        if (typeof localStorage !== 'undefined') {
+          localStorage.setItem('portfolio_projects', JSON.stringify(defaultProjects));
+        }
+        return defaultProjects;
       }
-      return data as ProjectItem[];
+
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('portfolio_projects', JSON.stringify(valid));
+      }
+      return valid;
     } catch {
       if (typeof localStorage !== 'undefined') {
         localStorage.setItem('portfolio_projects', JSON.stringify(defaultProjects));
@@ -597,12 +616,20 @@ export class SupabaseService {
       }
     ];
 
+    const isStaleBlog = (b: any) => {
+      if (!b || !b.title) return true;
+      const t = b.title.toLowerCase();
+      const a = (b.author || '').toLowerCase();
+      return a.includes('christina') || t.includes('4 years') || t.includes('color schemes') || 
+             t.includes('future of component') || t.includes('faltu') || t.includes('outdoor') || t.includes('drinks');
+    };
+
     if (typeof localStorage !== 'undefined') {
       const local = localStorage.getItem('portfolio_blogs');
       if (local) {
         try {
           const parsed = JSON.parse(local);
-          if (Array.isArray(parsed) && parsed.length > 0 && !parsed.some(b => b.author === 'Christina Gray' || b.title === '4 Years of Working From Home')) {
+          if (Array.isArray(parsed) && parsed.length > 0 && !parsed.some(isStaleBlog)) {
             return parsed;
           }
         } catch {}
@@ -615,16 +642,38 @@ export class SupabaseService {
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error || !data || data.length === 0 || data.some(b => b.author === 'Christina Gray' || b.title === '4 Years of Working From Home')) {
+      if (error || !data || data.length === 0) {
         if (typeof localStorage !== 'undefined') {
           localStorage.setItem('portfolio_blogs', JSON.stringify(defaultBlogs));
         }
         return defaultBlogs;
       }
-      if (typeof localStorage !== 'undefined') {
-        localStorage.setItem('portfolio_blogs', JSON.stringify(data));
+
+      const valid = (data as BlogItem[])
+        .filter(b => !isStaleBlog(b))
+        .map(b => {
+          // Attach DOI link if paper_url not in remote schema
+          if (!b.paper_url) {
+            if (b.title.includes('BERT') || b.slug.includes('bert')) {
+              b.paper_url = 'https://doi.org/10.1109/QPAIN69676.2026.11546035';
+            } else if (b.title.includes('EffiViT') || b.slug.includes('effivit')) {
+              b.paper_url = 'https://doi.org/10.1109/QPAIN69676.2026.11546439';
+            }
+          }
+          return b;
+        });
+
+      if (valid.length === 0) {
+        if (typeof localStorage !== 'undefined') {
+          localStorage.setItem('portfolio_blogs', JSON.stringify(defaultBlogs));
+        }
+        return defaultBlogs;
       }
-      return data as BlogItem[];
+
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('portfolio_blogs', JSON.stringify(valid));
+      }
+      return valid;
     } catch {
       if (typeof localStorage !== 'undefined') {
         localStorage.setItem('portfolio_blogs', JSON.stringify(defaultBlogs));
@@ -648,6 +697,7 @@ export class SupabaseService {
     try {
       const payload: any = { ...blog };
       delete payload.id;
+      delete payload.paper_url;
       await this.supabase.from('blogs').insert([payload]);
     } catch {}
     return updated;
@@ -662,6 +712,7 @@ export class SupabaseService {
     try {
       const payload: any = { ...blog };
       delete payload.id;
+      delete payload.paper_url;
       if (id && id.length > 20) {
         await this.supabase.from('blogs').update(payload).eq('id', id);
       } else if (blog.slug) {
@@ -694,12 +745,18 @@ export class SupabaseService {
       { id: 'srv_4', title: 'Database & API Architecture', description: 'Designing high-performance schemas in MySQL, PostgreSQL, SQL Server, and securing scalable backend services.', icon: 'bi bi-database', sort_order: 4 }
     ];
 
+    const isStaleService = (s: any) => {
+      if (!s || !s.title) return true;
+      const t = s.title.toLowerCase();
+      return t.includes('photography') || t.includes('digital marketing') || t.includes('branding') || t.includes('user testing') || t.includes('personas');
+    };
+
     if (typeof localStorage !== 'undefined') {
       const local = localStorage.getItem('portfolio_services');
       if (local) {
         try {
           const parsed = JSON.parse(local);
-          if (Array.isArray(parsed) && parsed.length > 0 && !parsed.some(s => s.title === 'Photography' || s.title === 'Digital Marketing' || s.title === 'Branding & Strategy')) {
+          if (Array.isArray(parsed) && parsed.length > 0 && !parsed.some(isStaleService)) {
             return parsed;
           }
         } catch {}
@@ -712,16 +769,25 @@ export class SupabaseService {
         .select('*')
         .order('sort_order', { ascending: true });
 
-      if (error || !data || data.length === 0 || data.some(s => s.title === 'Photography' || s.title === 'Digital Marketing' || s.title === 'Branding & Strategy')) {
+      if (error || !data || data.length === 0) {
         if (typeof localStorage !== 'undefined') {
           localStorage.setItem('portfolio_services', JSON.stringify(defaultServices));
         }
         return defaultServices;
       }
-      if (typeof localStorage !== 'undefined') {
-        localStorage.setItem('portfolio_services', JSON.stringify(data));
+
+      const valid = (data as ServiceItem[]).filter(s => !isStaleService(s));
+      if (valid.length === 0) {
+        if (typeof localStorage !== 'undefined') {
+          localStorage.setItem('portfolio_services', JSON.stringify(defaultServices));
+        }
+        return defaultServices;
       }
-      return data as ServiceItem[];
+
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('portfolio_services', JSON.stringify(valid));
+      }
+      return valid;
     } catch {
       if (typeof localStorage !== 'undefined') {
         localStorage.setItem('portfolio_services', JSON.stringify(defaultServices));
@@ -783,12 +849,20 @@ export class SupabaseService {
       { id: 'tst_3', name: 'IEEE Student Branch Committee', role: 'Branch Counselor', company: 'IEEE Computer Society', avatar: '/assets/images/testimonial-3.cb371b2d.jpg', feedback: 'Her leadership as Event Coordinator and dedication as an Academic Mentor has inspired countless students in coding, problem solving, and research.', rating: 5 }
     ];
 
+    const isStaleTestimonial = (t: any) => {
+      if (!t || !t.name) return true;
+      const n = t.name.toLowerCase();
+      const c = (t.company || '').toLowerCase();
+      return n.includes('sandra') || n.includes('alex') || n.includes('sarah') || n.includes('david') || 
+             c.includes('flatheme') || c.includes('novatech') || c.includes('elevate') || c.includes('hypergrowth');
+    };
+
     if (typeof localStorage !== 'undefined') {
       const local = localStorage.getItem('portfolio_testimonials');
       if (local) {
         try {
           const parsed = JSON.parse(local);
-          if (Array.isArray(parsed) && parsed.length > 0 && !parsed.some(t => t.name === 'Sandra Radford' || t.company?.includes('FlaTheme'))) {
+          if (Array.isArray(parsed) && parsed.length > 0 && !parsed.some(isStaleTestimonial)) {
             return parsed;
           }
         } catch {}
@@ -800,16 +874,25 @@ export class SupabaseService {
         .from('testimonials')
         .select('*');
 
-      if (error || !data || data.length === 0 || data.some(t => t.name === 'Sandra Radford' || t.company?.includes('FlaTheme'))) {
+      if (error || !data || data.length === 0) {
         if (typeof localStorage !== 'undefined') {
           localStorage.setItem('portfolio_testimonials', JSON.stringify(defaultTestimonials));
         }
         return defaultTestimonials;
       }
-      if (typeof localStorage !== 'undefined') {
-        localStorage.setItem('portfolio_testimonials', JSON.stringify(data));
+
+      const valid = (data as TestimonialItem[]).filter(t => !isStaleTestimonial(t));
+      if (valid.length === 0) {
+        if (typeof localStorage !== 'undefined') {
+          localStorage.setItem('portfolio_testimonials', JSON.stringify(defaultTestimonials));
+        }
+        return defaultTestimonials;
       }
-      return data as TestimonialItem[];
+
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('portfolio_testimonials', JSON.stringify(valid));
+      }
+      return valid;
     } catch {
       if (typeof localStorage !== 'undefined') {
         localStorage.setItem('portfolio_testimonials', JSON.stringify(defaultTestimonials));
@@ -875,12 +958,20 @@ export class SupabaseService {
       { id: 'res_7', type: 'education', period: '2017 - 2019', title: 'Secondary School Certificate (SSC) — Science', organization: 'Kamarpara School and College — GPA: 5.00/5.00', description: 'Achieved top-tier GPA 5.00 with distinction. Active Science Olympiad participant and competitive problem solver.', sort_order: 3 }
     ];
 
+    const isStaleResume = (r: any) => {
+      if (!r || !r.title) return true;
+      const o = (r.organization || '').toLowerCase();
+      const t = (r.title || '').toLowerCase();
+      return o.includes('flatheme') || t.includes('bachelor degree of business') || t.includes('master degree of design') || 
+             t.includes('bachelor degree of design') || t.includes('director of operations') || t.includes('senior designer');
+    };
+
     if (typeof localStorage !== 'undefined') {
       const local = localStorage.getItem('portfolio_resume');
       if (local) {
         try {
           const parsed = JSON.parse(local);
-          if (Array.isArray(parsed) && parsed.length > 0 && !parsed.some(r => r.organization?.includes('FlaTheme') || r.title?.includes('Bachelor Degree of Business'))) {
+          if (Array.isArray(parsed) && parsed.length > 0 && !parsed.some(isStaleResume)) {
             return parsed;
           }
         } catch {}
@@ -893,16 +984,25 @@ export class SupabaseService {
         .select('*')
         .order('sort_order', { ascending: true });
 
-      if (error || !data || data.length === 0 || data.some(r => r.organization?.includes('FlaTheme') || r.title?.includes('Bachelor Degree of Business') || r.title?.includes('Event Coordinator & Math Club Manager'))) {
+      if (error || !data || data.length === 0) {
         if (typeof localStorage !== 'undefined') {
           localStorage.setItem('portfolio_resume', JSON.stringify(defaultResume));
         }
         return defaultResume;
       }
-      if (typeof localStorage !== 'undefined') {
-        localStorage.setItem('portfolio_resume', JSON.stringify(data));
+
+      const valid = (data as ResumeItem[]).filter(r => !isStaleResume(r));
+      if (valid.length < 4) {
+        if (typeof localStorage !== 'undefined') {
+          localStorage.setItem('portfolio_resume', JSON.stringify(defaultResume));
+        }
+        return defaultResume;
       }
-      return data as ResumeItem[];
+
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('portfolio_resume', JSON.stringify(valid));
+      }
+      return valid;
     } catch {
       if (typeof localStorage !== 'undefined') {
         localStorage.setItem('portfolio_resume', JSON.stringify(defaultResume));
