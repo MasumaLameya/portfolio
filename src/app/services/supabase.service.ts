@@ -198,7 +198,7 @@ export class SupabaseService {
       }
       const { error } = await this.supabase.auth.signInWithPassword({
         email: 'masumalamya7@gmail.com',
-        password: 'adminPassword123!'
+        password: 'Lameya123@'
       });
       if (!error) {
         return true;
@@ -235,7 +235,7 @@ export class SupabaseService {
       
       // Fallback
       if (res.error) {
-        if ((email === 'admin@portfolio.com' && password === 'admin123') || (email && password.length >= 6 && localStorage.getItem('admin_session') === 'true')) {
+        if ((email === 'masumalamya7@gmail.com' && password === 'Lameya123@') || (email === 'admin@portfolio.com' && password === 'admin123') || (email && password.length >= 6 && localStorage.getItem('admin_session') === 'true')) {
           localStorage.setItem('admin_session', 'true');
           localStorage.setItem('admin_email', email);
           return { data: { user: { email } as any, session: {} as any }, error: null };
