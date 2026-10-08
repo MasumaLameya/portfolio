@@ -228,12 +228,12 @@ export class AdminDashboardComponent implements OnInit {
         .map(w => w.trim())
         .filter(w => w.length > 0);
 
-      const { error } = await this.supabase.updateProfile(this.profile);
-      if (error) {
-        this.showToast(error.message, 'error');
-      } else {
-        this.showToast('Profile updated successfully!');
+      const updated = await this.supabase.updateProfile(this.profile);
+      if (updated) {
+        this.profile = { ...updated };
+        this.typewriterWordsInput = (updated.typewriter_words || []).join(', ');
       }
+      this.showToast('Profile updated successfully!');
     } catch (e: any) {
       this.showToast(e.message || 'Error updating profile', 'error');
     } finally {

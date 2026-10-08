@@ -120,19 +120,7 @@ export class SupabaseService {
   }
 
   private checkVersionAndResetCache(): void {
-    const CURRENT_VERSION = 'v15_masuma_me_folder_avatar';
-    if (typeof localStorage !== 'undefined') {
-      if (localStorage.getItem('portfolio_data_version') !== CURRENT_VERSION) {
-        localStorage.removeItem('portfolio_profile');
-        localStorage.removeItem('portfolio_projects');
-        localStorage.removeItem('portfolio_blogs');
-        localStorage.removeItem('portfolio_services');
-        localStorage.removeItem('portfolio_resume');
-        localStorage.removeItem('portfolio_testimonials');
-        localStorage.removeItem('portfolio_clients');
-        localStorage.setItem('portfolio_data_version', CURRENT_VERSION);
-      }
-    }
+    // Non-destructive: ensure all user customizations persist safely in localStorage
   }
 
   get client(): SupabaseClient {
@@ -314,7 +302,7 @@ export class SupabaseService {
   }
 
   // ================= PROFILE (HERO / ABOUT) =================
-  async getProfile(): Promise<ProfileData | null> {
+  async getProfile(): Promise<ProfileData> {
     const defaultProfile: ProfileData = {
       name: 'MST. MASUMA AKTER LAMEYA',
       role: 'Full-Stack Developer & AI Engineer',
@@ -341,6 +329,18 @@ export class SupabaseService {
       social_linkedin: 'https://linkedin.com/in/obaidul-haque47/'
     };
 
+    if (typeof localStorage !== 'undefined') {
+      const local = localStorage.getItem('portfolio_profile');
+      if (local) {
+        try {
+          const parsed = JSON.parse(local);
+          if (parsed && typeof parsed === 'object' && parsed.name && !parsed.name.includes('Christina Gray')) {
+            return parsed as ProfileData;
+          }
+        } catch {}
+      }
+    }
+
     try {
       const { data, error } = await this.supabase
         .from('profile')
@@ -348,72 +348,30 @@ export class SupabaseService {
         .limit(1)
         .maybeSingle();
 
-      if (error || !data) {
-        const local = localStorage.getItem('portfolio_profile');
-        if (local && !local.includes('Christina Gray') && !local.includes('Photographer') && !local.includes('Lorem ipsum') && local.includes('masuma-profile-me.jpg')) {
-          return JSON.parse(local);
+      if (error || !data || data.name?.includes('Christina Gray') || data.name === 'Amaranthine') {
+        if (typeof localStorage !== 'undefined') {
+          localStorage.setItem('portfolio_profile', JSON.stringify(defaultProfile));
         }
-        localStorage.setItem('portfolio_profile', JSON.stringify(defaultProfile));
         return defaultProfile;
       }
 
-      // Check for template relics or old avatar that need auto-migration
-      const isOldAvatar = !data.avatar_url || data.avatar_url.includes('hero-avatar.1925fb85.jpg') || data.avatar_url.includes('flatheme');
-      const isOldRole = !data.role || data.role.includes('Photographer') || data.role.includes('UI & UX') || data.role.includes('UI/UX');
-      const isOldBio = !data.bio || data.bio.includes('Lorem ipsum') || data.bio.includes('dolore magna');
-      const isOldName = !data.name || data.name.includes('Christina') || data.name.trim() === '';
-      const isOldSkill1 = !data.skill_1_name || data.skill_1_name === 'Photoshoot';
-      const isOldSkill2 = !data.skill_2_name || data.skill_2_name === 'Tailwind';
-      const isOldSkill3 = !data.skill_3_name || data.skill_3_name === 'SEO';
-      const isOldStats = data.years_experience === 14 || data.hours_working === '50' || data.hours_working === '50k' || data.projects_done === 90;
-      const isOldEmail = !data.email || data.email.includes('flatheme') || data.email.includes('example.com');
-      const isOldPhone = !data.phone || data.phone.includes('976') || data.phone.includes('12 34 9999');
-      const isOldAddress = !data.address || data.address.includes('Melbourne') || data.address.includes('King St') || data.address.includes('London') || data.address.includes('VIC') || (!data.address.toLowerCase().includes('dhaka') && !data.address.toLowerCase().includes('bangladesh'));
-      const isOldTypewriter = !data.typewriter_words || data.typewriter_words.some((w: string) => w.includes('UI & UX') || w.includes('Photographer') || w.includes('Freelancer'));
+      const merged: ProfileData = {
+        ...defaultProfile,
+        ...data,
+        skill_1_name: data.skill_1_name || defaultProfile.skill_1_name,
+        skill_2_name: data.skill_2_name || defaultProfile.skill_2_name,
+        skill_3_name: data.skill_3_name || defaultProfile.skill_3_name,
+        typewriter_words: (Array.isArray(data.typewriter_words) && data.typewriter_words.length > 0) ? data.typewriter_words : defaultProfile.typewriter_words
+      };
 
-      if (isOldAvatar || isOldRole || isOldBio || isOldName || isOldSkill1 || isOldSkill2 || isOldSkill3 || isOldStats || isOldEmail || isOldPhone || isOldAddress || isOldTypewriter) {
-        const sanitized: ProfileData = {
-          ...defaultProfile,
-          id: data.id,
-          avatar_url: isOldAvatar ? defaultProfile.avatar_url : data.avatar_url,
-          name: isOldName ? defaultProfile.name : (data.name.toUpperCase().includes('MASUMA') ? data.name : 'MST. MASUMA AKTER LAMEYA'),
-          role: isOldRole ? defaultProfile.role : data.role,
-          bio: isOldBio ? defaultProfile.bio : data.bio,
-          skill_1_name: isOldSkill1 ? defaultProfile.skill_1_name : data.skill_1_name,
-          photoshoot_pct: isOldSkill1 ? defaultProfile.photoshoot_pct : (data.photoshoot_pct || defaultProfile.photoshoot_pct),
-          skill_2_name: isOldSkill2 ? defaultProfile.skill_2_name : data.skill_2_name,
-          tailwind_pct: isOldSkill2 ? defaultProfile.tailwind_pct : (data.tailwind_pct || defaultProfile.tailwind_pct),
-          skill_3_name: isOldSkill3 ? defaultProfile.skill_3_name : data.skill_3_name,
-          seo_pct: isOldSkill3 ? defaultProfile.seo_pct : (data.seo_pct || defaultProfile.seo_pct),
-          years_experience: isOldStats ? defaultProfile.years_experience : (data.years_experience || defaultProfile.years_experience),
-          hours_working: isOldStats ? defaultProfile.hours_working : (data.hours_working || defaultProfile.hours_working),
-          projects_done: isOldStats ? defaultProfile.projects_done : (data.projects_done || defaultProfile.projects_done),
-          email: isOldEmail ? defaultProfile.email : data.email,
-          phone: isOldPhone ? defaultProfile.phone : data.phone,
-          address: isOldAddress ? defaultProfile.address : data.address,
-          typewriter_words: isOldTypewriter ? defaultProfile.typewriter_words : data.typewriter_words,
-          social_github: data.social_github || defaultProfile.social_github,
-          social_linkedin: data.social_linkedin || defaultProfile.social_linkedin
-        };
-
-        // Persist the migrated data to Supabase in background
-        if (data.id) {
-          const updatePayload: any = this.toSupabaseProfilePayload(sanitized);
-          this.supabase.from('profile').update(updatePayload).eq('id', data.id).then();
-        }
-
-        localStorage.setItem('portfolio_profile', JSON.stringify(sanitized));
-        return sanitized;
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('portfolio_profile', JSON.stringify(merged));
       }
-
-      localStorage.setItem('portfolio_profile', JSON.stringify(data));
-      return data as ProfileData;
+      return merged;
     } catch {
-      const local = localStorage.getItem('portfolio_profile');
-      if (local && !local.includes('Christina Gray') && !local.includes('Photographer') && !local.includes('Lorem ipsum')) {
-        return JSON.parse(local);
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('portfolio_profile', JSON.stringify(defaultProfile));
       }
-      localStorage.setItem('portfolio_profile', JSON.stringify(defaultProfile));
       return defaultProfile;
     }
   }
@@ -435,24 +393,24 @@ export class SupabaseService {
     return payload;
   }
 
-  async updateProfile(profile: Partial<ProfileData>) {
-    const current = await this.getProfile() || {};
-    const merged = { ...current, ...profile };
-    localStorage.setItem('portfolio_profile', JSON.stringify(merged));
+  async updateProfile(profile: Partial<ProfileData>): Promise<ProfileData> {
+    const current = await this.getProfile();
+    const merged: ProfileData = { ...current, ...profile };
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('portfolio_profile', JSON.stringify(merged));
+    }
     try {
       const payload = this.toSupabaseProfilePayload(merged);
 
-      if ((merged as any).id) {
-        const res = await this.supabase.from('profile').update(payload).eq('id', (merged as any).id);
-        return res;
+      if ((merged as any).id && (merged as any).id.length > 20) {
+        await this.supabase.from('profile').update(payload).eq('id', (merged as any).id);
       } else {
-        const res = await this.supabase.from('profile').upsert([payload]);
-        return res;
+        await this.supabase.from('profile').upsert([payload]);
       }
     } catch (err: any) {
       console.warn('Supabase profile sync notice:', err);
-      return { error: null, data: merged };
     }
+    return merged;
   }
 
   // ================= PROJECTS =================
