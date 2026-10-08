@@ -89,35 +89,7 @@
       </div>
     </div>
 
-    <!-- 4. TESTIMONIALS SECTION -->
-    <div id="testimonial" class="section bg-white dark:bg-boxDark rounded-lg px-6 py-8 md:px-8 md:py-10 lg:p-12 shadow-sectionBoxShadow hover:shadow-sectionBoxShadowHover transition ease-out duration-[160ms]">
-      <div class="flex justify-between items-center">
-        <h6 class="font-mono font-medium uppercase text-sm tracking-wider relative pt-4 dark:text-white before:content-['//'] before:pr-2 after:content-[attr(data-backdrop-text)] after:absolute after:top-0 after:left-0 after:font-poppins after:font-bold after:uppercase after:text-4xl after:opacity-15" data-backdrop-text="Testimonial">What People Say</h6>
-        <ul class="space-x-1.5 flex">
-          <li class="swiper-testimonial-prev list-none inline-flex justify-center items-center w-10 h-10 rounded-full border border-black border-dashed cursor-pointer transition ease-out duration-[120ms] hover:bg-black hover:text-white dark:text-white dark:border-white dark:hover:bg-white dark:hover:text-black"><i class="bi bi-arrow-left"></i></li>
-          <li class="swiper-testimonial-next list-none inline-flex justify-center items-center w-10 h-10 rounded-full border border-black border-dashed cursor-pointer transition ease-out duration-[120ms] hover:bg-black hover:text-white dark:text-white dark:border-white dark:hover:bg-white dark:hover:text-black"><i class="bi bi-arrow-right"></i></li>
-        </ul>
-      </div>
-      <div class="swiper testimonial-swiper mt-5">
-        <div class="swiper-wrapper">
-          @for (testi of testimonials(); track testi.name) {
-            <div class="swiper-slide">
-              <div class="z-[1] relative pt-4 pl-4">
-                <div class="-z-[1] absolute top-0 left-0 text-5xl opacity-10 dark:text-white"><i class="bi bi-quote"></i></div>
-                <div class="text-yellow-400 mb-3"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
-                <p class="text-pColor dark:text-white/70 leading-7">{{ testi.feedback }}</p>
-              </div>
-              <div class="flex items-center mt-5">
-                <div class="me-5"><img [src]="getImageUrl(testi.avatar)" [alt]="testi.name" class="w-[70px] h-[70px] rounded-full object-cover" /></div>
-                <div><h4 class="font-poppins font-medium text-lg md:text-xl dark:text-white">{{ testi.name }}</h4><span class="text-sm text-pColor dark:text-white/70">{{ testi.role }} - {{ testi.company }}</span></div>
-              </div>
-            </div>
-          }
-        </div>
-      </div>
-    </div>
-
-    <!-- 5. RESUME SECTION -->
+    <!-- 4. RESUME SECTION -->
     <div id="resume" class="section bg-white dark:bg-boxDark rounded-lg px-6 py-8 md:px-8 md:py-10 lg:p-12 shadow-sectionBoxShadow hover:shadow-sectionBoxShadowHover transition ease-out duration-[160ms]">
       <div class="md:w-4/5 lg:w-3/4">
         <h6 class="font-mono font-medium uppercase text-sm tracking-wider relative pt-4 mb-5 dark:text-white before:content-['//'] before:pr-2 after:content-[attr(data-backdrop-text)] after:absolute after:top-0 after:left-0 after:font-poppins after:font-bold after:uppercase after:text-4xl after:opacity-15" data-backdrop-text="Resume">Resume</h6>

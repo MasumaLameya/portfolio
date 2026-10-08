@@ -27,12 +27,7 @@ import { Router } from '@angular/router';
             <span class="nav-circle hidden lg:inline-block absolute top-1/2 right-0 -translate-y-1/2 w-[5px] h-[5px] before:content-[''] before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:bg-white before:w-[5px] before:h-[5px] before:rounded-full before:opacity-70 before:transition-all before:ease-out before:duration-200 group-hover:before:opacity-100"></span>
           </a>
         </li>
-        <li class="list-none inline-block lg:block">
-          <a (click)="scrollTo('testimonial')" [class.active]="activeSection === 'testimonial'" class="section-link group inline-flex justify-center items-center lg:block lg:justify-normal relative w-9 h-9 border border-transparent border-dashed rounded-full lg:w-auto lg:h-auto lg:border-none lg:rounded-none text-white/70 py-3 transition ease-linear duration-100 hover:text-white cursor-pointer select-none">
-            <span class="hidden lg:inline-block">Testimonial</span><span class="lg:hidden">T</span>
-            <span class="nav-circle hidden lg:inline-block absolute top-1/2 right-0 -translate-y-1/2 w-[5px] h-[5px] before:content-[''] before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:bg-white before:w-[5px] before:h-[5px] before:rounded-full before:opacity-70 before:transition-all before:ease-out before:duration-200 group-hover:before:opacity-100"></span>
-          </a>
-        </li>
+
         <li class="list-none inline-block lg:block">
           <a (click)="scrollTo('resume')" [class.active]="activeSection === 'resume'" class="section-link group inline-flex justify-center items-center lg:block lg:justify-normal relative w-9 h-9 border border-transparent border-dashed rounded-full lg:w-auto lg:h-auto lg:border-none lg:rounded-none text-white/70 py-3 transition ease-linear duration-100 hover:text-white cursor-pointer select-none">
             <span class="hidden lg:inline-block">Resume</span><span class="lg:hidden">R</span>
