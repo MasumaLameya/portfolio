@@ -308,10 +308,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   ]);
 
   resumeExperience = signal<ResumeItem[]>([
-    { id: 'res_1', type: 'experience', period: 'June 2026 - Sep 2026', title: 'Software Developer', organization: 'Real Capital Group (Dhaka, Bangladesh)', description: 'Developed Real Estate CRM System, engineered backend services & RESTful APIs using ASP.NET Core / .NET, designed MySQL databases, and implemented core CRM business logic.', sort_order: 1 },
-    { id: 'res_2', type: 'experience', period: '2022 - Present', title: 'Event Coordinator', organization: 'IEEE CS IUBAT Student Branch Chapter', description: 'Contributed to technical event planning, workshop coordination, and participant management at IEEE Computer Society.', sort_order: 2 },
-    { id: 'res_3', type: 'experience', period: '2022 - Present', title: 'Math Club Manager', organization: 'IUBAT IT Society', description: 'Organized and managed mathematics-focused analytical problem-solving sessions, workshops, and student learning initiatives.', sort_order: 3 },
-    { id: 'res_4', type: 'experience', period: '2022 - Present', title: 'Academic Mentor & AI Researcher', organization: 'IUBAT Computer Science & Engineering', description: 'Mentored university students in programming languages, data structures, and learning strategies. Authored 2 IEEE conference research papers in AI & Medical Vision.', sort_order: 4 }
+    { id: 'res_1', type: 'experience', period: 'June 2026 - September 2026', title: 'Software Developer', organization: 'Real Capital Group (Dhaka, Bangladesh)', description: 'Developed Real Estate CRM System, engineered backend services & RESTful APIs using ASP.NET Core / .NET, designed MySQL databases, and implemented core CRM business logic.', sort_order: 1 },
+    { id: 'res_2', type: 'experience', period: 'April 2026 - Present', title: 'Event Coordinator', organization: 'IEEE CS IUBAT Student Branch Chapter', description: 'Contributed to technical event planning, workshop coordination, and participant management at IEEE Computer Society.', sort_order: 2 },
+    { id: 'res_3', type: 'experience', period: 'June 2025 - October 2026', title: 'Math Club Manager', organization: 'IUBAT IT Society', description: 'Organized and managed mathematics-focused analytical problem-solving sessions, workshops, and student learning initiatives.', sort_order: 3 },
+    { id: 'res_4', type: 'experience', period: 'September 2024 - September 2026', title: 'Academic Mentor', organization: 'IUBAT Computer Science & Engineering', description: 'Mentored university students in programming languages, data structures, and learning strategies. Authored 2 IEEE conference research papers in AI & Medical Vision.', sort_order: 4 }
   ]);
 
   resumeEducation = signal<ResumeItem[]>([

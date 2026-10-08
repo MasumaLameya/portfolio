@@ -949,18 +949,26 @@ export class SupabaseService {
   // ================= RESUME =================
   async getResumeItems(): Promise<ResumeItem[]> {
     const defaultResume: ResumeItem[] = [
-      { id: 'res_1', type: 'experience', period: 'June 2026 - Sep 2026', title: 'Software Developer', organization: 'Real Capital Group (Dhaka, Bangladesh)', description: 'Developed Real Estate CRM System, engineered backend services & RESTful APIs using ASP.NET Core / .NET, designed MySQL databases, and implemented core CRM business logic.', sort_order: 1 },
-      { id: 'res_2', type: 'experience', period: '2022 - Present', title: 'Event Coordinator', organization: 'IEEE CS IUBAT Student Branch Chapter', description: 'Contributed to technical event planning, workshop coordination, and participant management at IEEE Computer Society.', sort_order: 2 },
-      { id: 'res_3', type: 'experience', period: '2022 - Present', title: 'Math Club Manager', organization: 'IUBAT IT Society', description: 'Organized and managed mathematics-focused analytical problem-solving sessions, workshops, and student learning initiatives.', sort_order: 3 },
-      { id: 'res_4', type: 'experience', period: '2022 - Present', title: 'Academic Mentor & AI Researcher', organization: 'IUBAT Computer Science & Engineering', description: 'Mentored university students in programming languages, data structures, and learning strategies. Authored 2 IEEE conference research papers in AI & Medical Vision.', sort_order: 4 },
+      { id: 'res_1', type: 'experience', period: 'June 2026 - September 2026', title: 'Software Developer', organization: 'Real Capital Group (Dhaka, Bangladesh)', description: 'Developed Real Estate CRM System, engineered backend services & RESTful APIs using ASP.NET Core / .NET, designed MySQL databases, and implemented core CRM business logic.', sort_order: 1 },
+      { id: 'res_2', type: 'experience', period: 'April 2026 - Present', title: 'Event Coordinator', organization: 'IEEE CS IUBAT Student Branch Chapter', description: 'Contributed to technical event planning, workshop coordination, and participant management at IEEE Computer Society.', sort_order: 2 },
+      { id: 'res_3', type: 'experience', period: 'June 2025 - October 2026', title: 'Math Club Manager', organization: 'IUBAT IT Society', description: 'Organized and managed mathematics-focused analytical problem-solving sessions, workshops, and student learning initiatives.', sort_order: 3 },
+      { id: 'res_4', type: 'experience', period: 'September 2024 - September 2026', title: 'Academic Mentor', organization: 'IUBAT Computer Science & Engineering', description: 'Mentored university students in programming languages, data structures, and learning strategies. Authored 2 IEEE conference research papers in AI & Medical Vision.', sort_order: 4 },
       { id: 'res_5', type: 'education', period: 'Sep 2022 - Sep 2026', title: 'Bachelor of Science in Computer Science and Engineering', organization: 'IUBAT (Dhaka, Bangladesh) — CGPA: 3.86/4.00', description: 'Dean\'s list academic excellence. Specialized in Full-Stack Software Engineering, Deep Learning, Biomedical Signal Processing, Algorithms, and Object-Oriented Programming.', sort_order: 1 },
       { id: 'res_6', type: 'education', period: '2019 - 2021', title: 'Higher Secondary Certificate (HSC) — Science', organization: 'Jatir Janak Bangabandhu Sheikh Mujibur Rahman Govt College — GPA: 5.00/5.00', description: 'Graduated with a perfect GPA 5.00 in Science division. Strong foundation in Higher Mathematics, Physics, Chemistry, and Information Technology.', sort_order: 2 },
       { id: 'res_7', type: 'education', period: '2017 - 2019', title: 'Secondary School Certificate (SSC) — Science', organization: 'Kamarpara School and College — GPA: 5.00/5.00', description: 'Achieved top-tier GPA 5.00 with distinction. Active Science Olympiad participant and competitive problem solver.', sort_order: 3 }
     ];
 
     const sanitizeResumeItem = (r: ResumeItem): ResumeItem => {
-      if (r.title === 'Software Developer' || (r.title && r.title.toLowerCase().includes('software developer'))) {
-        r.period = 'June 2026 - Sep 2026';
+      const t = (r.title || '').toLowerCase();
+      if (t.includes('software developer')) {
+        r.period = 'June 2026 - September 2026';
+      } else if (t.includes('event coordinator')) {
+        r.period = 'April 2026 - Present';
+      } else if (t.includes('math club manager')) {
+        r.period = 'June 2025 - October 2026';
+      } else if (t.includes('academic mentor')) {
+        r.title = 'Academic Mentor';
+        r.period = 'September 2024 - September 2026';
       }
       return r;
     };
