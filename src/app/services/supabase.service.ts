@@ -114,7 +114,24 @@ export class SupabaseService {
   isConnected = signal<boolean>(false);
 
   constructor() {
+    this.checkVersionAndResetCache();
     this.initClient();
+  }
+
+  private checkVersionAndResetCache(): void {
+    const CURRENT_VERSION = 'v5_masuma_cv_live';
+    if (typeof localStorage !== 'undefined') {
+      if (localStorage.getItem('portfolio_data_version') !== CURRENT_VERSION) {
+        localStorage.removeItem('portfolio_profile');
+        localStorage.removeItem('portfolio_projects');
+        localStorage.removeItem('portfolio_blogs');
+        localStorage.removeItem('portfolio_services');
+        localStorage.removeItem('portfolio_resume');
+        localStorage.removeItem('portfolio_testimonials');
+        localStorage.removeItem('portfolio_clients');
+        localStorage.setItem('portfolio_data_version', CURRENT_VERSION);
+      }
+    }
   }
 
   get client(): SupabaseClient {
@@ -330,10 +347,13 @@ export class SupabaseService {
         .limit(1)
         .maybeSingle();
 
-      if (error || !data) {
+      if (error || !data || !data.name || data.name.includes('Christina') || data.email === 'flatheme@gmail.com') {
         const local = localStorage.getItem('portfolio_profile');
         if (local && !local.includes('Christina Gray')) return JSON.parse(local);
         localStorage.setItem('portfolio_profile', JSON.stringify(defaultProfile));
+        if (data && data.id && data.name && data.name.includes('Christina')) {
+          this.supabase.from('profile').update(defaultProfile).eq('id', data.id).then();
+        }
         return defaultProfile;
       }
       localStorage.setItem('portfolio_profile', JSON.stringify(data));
@@ -434,7 +454,7 @@ export class SupabaseService {
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error || !data || data.length === 0) {
+      if (error || !data || data.length === 0 || data.some(p => p.title === 'Glasses of Cocktail' || p.designer === 'Christina Gray')) {
         const local = localStorage.getItem('portfolio_projects');
         if (local && !local.includes('Glasses of Cocktail')) return JSON.parse(local);
         localStorage.setItem('portfolio_projects', JSON.stringify(defaultProjects));
@@ -537,7 +557,7 @@ export class SupabaseService {
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error || !data || data.length === 0) {
+      if (error || !data || data.length === 0 || data.some(b => b.title === '4 Years of Working From Home' || b.author === 'Christina Gray')) {
         const local = localStorage.getItem('portfolio_blogs');
         if (local && !local.includes('4 Years of Working')) return JSON.parse(local);
         localStorage.setItem('portfolio_blogs', JSON.stringify(defaultBlogs));

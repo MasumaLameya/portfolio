@@ -38,13 +38,13 @@ export class HeaderComponent implements OnInit {
   profile = signal<ProfileData | null>(null);
 
   get firstName(): string {
-    const name = this.profile()?.name || 'Christina Gray';
+    const name = this.profile()?.name || 'Masuma Lameya';
     const parts = name.split(' ');
     return parts.length > 1 ? parts.slice(0, -1).join(' ') : name;
   }
 
   get lastName(): string {
-    const name = this.profile()?.name || 'Christina Gray';
+    const name = this.profile()?.name || 'Masuma Lameya';
     const parts = name.split(' ');
     return parts.length > 1 ? parts[parts.length - 1] : '';
   }

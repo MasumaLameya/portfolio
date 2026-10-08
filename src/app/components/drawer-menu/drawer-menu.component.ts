@@ -11,10 +11,10 @@ import { SupabaseService, ProfileData } from '../../services/supabase.service';
   template: `
     <div [class.show]="isOpen" class="toggle-menu z-20 fixed top-0 right-0 translate-x-3 w-96 h-full bg-black dark:bg-boxDark dark:shadow-darkBox px-10 py-12 transition-all ease-out duration-150 opacity-0 invisible">
       <h6 class="block font-mono font-normal uppercase text-sm tracking-[0.5px] text-white mb-2">Phone:</h6>
-      <h4 class="font-poppins font-medium text-xl text-white">{{ profile().phone || '+(976) 12 34 9999' }}</h4>
+      <h4 class="font-poppins font-medium text-xl text-white">{{ profile().phone || '+880 1409-015552' }}</h4>
       <div class="mt-6">
         <h6 class="block font-mono font-normal uppercase text-sm tracking-[0.5px] text-white mb-2">Email:</h6>
-        <h4 class="font-poppins font-medium text-xl text-white">{{ profile().email || 'flatheme@gmail.com' }}</h4>
+        <h4 class="font-poppins font-medium text-xl text-white">{{ profile().email || 'masumalamya7@gmail.com' }}</h4>
       </div>
       <ul class="space-x-2 mt-4">
         <li *ngIf="profile().social_facebook" class="list-none inline-block"><a [href]="profile().social_facebook" target="_blank" class="inline-flex justify-center items-center bg-white/15 w-10 h-10 rounded-full text-white transition ease-out duration-150 hover:bg-white/20" aria-label="Social link"><i class="bi bi-facebook"></i></a></li>
@@ -36,7 +36,7 @@ import { SupabaseService, ProfileData } from '../../services/supabase.service';
         </li>
       </ul>
       <div class="absolute bottom-12 left-10 right-10">
-        <p class="text-white/70">© 2026 {{ profile().name || 'Christina Gray' }}.</p>
+        <p class="text-white/70">© 2026 {{ profile().name || 'MST. MASUMA AKTER LAMEYA' }}.</p>
       </div>
       <button (click)="closeMenu.emit()" class="menu-close absolute top-4 right-4 inline-flex justify-center items-center bg-white/15 w-10 h-10 rounded-full text-white text-xl transition ease-out duration-150 hover:bg-white/20" aria-label="Close menu">
         <i class="bi bi-x"></i>
