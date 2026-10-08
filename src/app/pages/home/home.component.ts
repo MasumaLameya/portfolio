@@ -216,14 +216,14 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private startTypewriter(): void {
     const words = this.profile().typewriter_words?.length
       ? this.profile().typewriter_words
-      : ['UI & UX Designer', 'Photographer', 'Web Developer', 'Freelancer'];
+      : ['Masuma Akter Lameya', 'Full-Stack Developer', 'AI & ML Researcher', 'ASP.NET Core & Angular', 'Medical AI Specialist'];
 
     let wordIndex = 0;
     let charIndex = 0;
     let isDeleting = false;
 
     const type = () => {
-      const currentWord = words[wordIndex] || 'UI & UX Designer';
+      const currentWord = words[wordIndex] || 'Full-Stack Developer';
       if (isDeleting) {
         this.typewriterText.set(currentWord.substring(0, charIndex - 1));
         charIndex--;

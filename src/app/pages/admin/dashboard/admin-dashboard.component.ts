@@ -48,31 +48,31 @@ export class AdminDashboardComponent implements OnInit {
 
   // Profile Model
   profile: ProfileData = {
-    name: '',
-    role: '',
-    avatar_url: '',
-    bio: '',
-    typewriter_words: [],
+    name: 'MST. MASUMA AKTER LAMEYA',
+    role: 'Full-Stack Developer & AI Engineer',
+    avatar_url: '/assets/images/hero-avatar.1925fb85.jpg',
+    bio: 'Full-Stack Developer with experience in web application development, machine learning, and AI-integrated solutions. Skilled in developing end-to-end applications, managing databases, and implementing intelligent features with ASP.NET Core, Angular, Python, and Deep Learning.',
+    typewriter_words: ['Masuma Akter Lameya', 'Full-Stack Developer', 'AI & ML Researcher', 'ASP.NET Core & Angular', 'Medical AI Specialist'],
     photoshoot_pct: 95,
     tailwind_pct: 90,
-    seo_pct: 80,
-    skill_1_name: 'Photoshoot',
-    skill_2_name: 'Tailwind',
-    skill_3_name: 'SEO',
-    years_experience: 14,
-    hours_working: '50',
-    projects_done: 90,
-    email: '',
-    phone: '',
-    address: '',
-    resume_url: '',
-    social_facebook: '',
-    social_twitter: '',
-    social_instagram: '',
-    social_github: '',
-    social_linkedin: ''
+    seo_pct: 88,
+    skill_1_name: 'ASP.NET Core & Backend',
+    skill_2_name: 'Angular & Next.js',
+    skill_3_name: 'AI & Machine Learning',
+    years_experience: 2,
+    hours_working: '15',
+    projects_done: 12,
+    email: 'masumalamya7@gmail.com',
+    phone: '+880 1409-015552',
+    address: 'Dhaka, Bangladesh',
+    resume_url: '/assets/resume.pdf',
+    social_facebook: 'https://facebook.com',
+    social_twitter: 'https://twitter.com',
+    social_instagram: 'https://instagram.com',
+    social_github: 'https://github.com/MasumaLameya',
+    social_linkedin: 'https://linkedin.com/in/obaidul-haque47/'
   };
-  typewriterWordsInput = '';
+  typewriterWordsInput = 'Masuma Akter Lameya, Full-Stack Developer, AI & ML Researcher, ASP.NET Core & Angular, Medical AI Specialist';
 
   // Data Collections
   projects = signal<ProjectItem[]>([]);

@@ -119,7 +119,7 @@ export class SupabaseService {
   }
 
   private checkVersionAndResetCache(): void {
-    const CURRENT_VERSION = 'v5_masuma_cv_live';
+    const CURRENT_VERSION = 'v6_masuma_force_sync';
     if (typeof localStorage !== 'undefined') {
       if (localStorage.getItem('portfolio_data_version') !== CURRENT_VERSION) {
         localStorage.removeItem('portfolio_profile');
@@ -347,20 +347,70 @@ export class SupabaseService {
         .limit(1)
         .maybeSingle();
 
-      if (error || !data || !data.name || data.name.includes('Christina') || data.email === 'flatheme@gmail.com') {
+      if (error || !data) {
         const local = localStorage.getItem('portfolio_profile');
-        if (local && !local.includes('Christina Gray')) return JSON.parse(local);
-        localStorage.setItem('portfolio_profile', JSON.stringify(defaultProfile));
-        if (data && data.id && data.name && data.name.includes('Christina')) {
-          this.supabase.from('profile').update(defaultProfile).eq('id', data.id).then();
+        if (local && !local.includes('Christina Gray') && !local.includes('Photographer') && !local.includes('Lorem ipsum')) {
+          return JSON.parse(local);
         }
+        localStorage.setItem('portfolio_profile', JSON.stringify(defaultProfile));
         return defaultProfile;
       }
+
+      // Check for template relics that need auto-migration
+      const isOldRole = !data.role || data.role.includes('Photographer') || data.role.includes('UI & UX') || data.role.includes('UI/UX');
+      const isOldBio = !data.bio || data.bio.includes('Lorem ipsum') || data.bio.includes('dolore magna');
+      const isOldName = !data.name || data.name.includes('Christina') || data.name.trim() === '';
+      const isOldSkill1 = !data.skill_1_name || data.skill_1_name === 'Photoshoot';
+      const isOldSkill2 = !data.skill_2_name || data.skill_2_name === 'Tailwind';
+      const isOldSkill3 = !data.skill_3_name || data.skill_3_name === 'SEO';
+      const isOldStats = data.years_experience === 14 || data.hours_working === '50' || data.hours_working === '50k' || data.projects_done === 90;
+      const isOldEmail = !data.email || data.email.includes('flatheme') || data.email.includes('example.com');
+      const isOldPhone = !data.phone || data.phone.includes('976') || data.phone.includes('12 34 9999');
+      const isOldTypewriter = !data.typewriter_words || data.typewriter_words.some((w: string) => w.includes('UI & UX') || w.includes('Photographer') || w.includes('Freelancer'));
+
+      if (isOldRole || isOldBio || isOldName || isOldSkill1 || isOldSkill2 || isOldSkill3 || isOldStats || isOldEmail || isOldPhone || isOldTypewriter) {
+        const sanitized: ProfileData = {
+          ...defaultProfile,
+          id: data.id,
+          avatar_url: data.avatar_url || defaultProfile.avatar_url,
+          name: isOldName ? defaultProfile.name : (data.name.toUpperCase().includes('MASUMA') ? data.name : 'MST. MASUMA AKTER LAMEYA'),
+          role: isOldRole ? defaultProfile.role : data.role,
+          bio: isOldBio ? defaultProfile.bio : data.bio,
+          skill_1_name: isOldSkill1 ? defaultProfile.skill_1_name : data.skill_1_name,
+          photoshoot_pct: isOldSkill1 ? defaultProfile.photoshoot_pct : (data.photoshoot_pct || defaultProfile.photoshoot_pct),
+          skill_2_name: isOldSkill2 ? defaultProfile.skill_2_name : data.skill_2_name,
+          tailwind_pct: isOldSkill2 ? defaultProfile.tailwind_pct : (data.tailwind_pct || defaultProfile.tailwind_pct),
+          skill_3_name: isOldSkill3 ? defaultProfile.skill_3_name : data.skill_3_name,
+          seo_pct: isOldSkill3 ? defaultProfile.seo_pct : (data.seo_pct || defaultProfile.seo_pct),
+          years_experience: isOldStats ? defaultProfile.years_experience : (data.years_experience || defaultProfile.years_experience),
+          hours_working: isOldStats ? defaultProfile.hours_working : (data.hours_working || defaultProfile.hours_working),
+          projects_done: isOldStats ? defaultProfile.projects_done : (data.projects_done || defaultProfile.projects_done),
+          email: isOldEmail ? defaultProfile.email : data.email,
+          phone: isOldPhone ? defaultProfile.phone : data.phone,
+          address: !data.address || data.address.includes('London') ? defaultProfile.address : data.address,
+          typewriter_words: isOldTypewriter ? defaultProfile.typewriter_words : data.typewriter_words,
+          social_github: data.social_github || defaultProfile.social_github,
+          social_linkedin: data.social_linkedin || defaultProfile.social_linkedin
+        };
+
+        // Persist the migrated data to Supabase in background
+        if (data.id) {
+          const updatePayload: any = { ...sanitized };
+          delete updatePayload.id;
+          this.supabase.from('profile').update(updatePayload).eq('id', data.id).then();
+        }
+
+        localStorage.setItem('portfolio_profile', JSON.stringify(sanitized));
+        return sanitized;
+      }
+
       localStorage.setItem('portfolio_profile', JSON.stringify(data));
       return data as ProfileData;
     } catch {
       const local = localStorage.getItem('portfolio_profile');
-      if (local && !local.includes('Christina Gray')) return JSON.parse(local);
+      if (local && !local.includes('Christina Gray') && !local.includes('Photographer') && !local.includes('Lorem ipsum')) {
+        return JSON.parse(local);
+      }
       localStorage.setItem('portfolio_profile', JSON.stringify(defaultProfile));
       return defaultProfile;
     }
@@ -642,9 +692,9 @@ export class SupabaseService {
         .select('*')
         .order('sort_order', { ascending: true });
 
-      if (error || !data || data.length === 0) {
+      if (error || !data || data.length === 0 || data.some(s => s.title === 'Photography' || s.title === 'Digital Marketing' || s.title === 'Branding & Strategy' || s.title === 'User Testing & Personas')) {
         const local = localStorage.getItem('portfolio_services');
-        if (local) return JSON.parse(local);
+        if (local && !local.includes('Digital Marketing') && !local.includes('Branding & Strategy')) return JSON.parse(local);
         localStorage.setItem('portfolio_services', JSON.stringify(defaultServices));
         return defaultServices;
       }
@@ -652,7 +702,7 @@ export class SupabaseService {
       return data as ServiceItem[];
     } catch {
       const local = localStorage.getItem('portfolio_services');
-      if (local) return JSON.parse(local);
+      if (local && !local.includes('Digital Marketing') && !local.includes('Branding & Strategy')) return JSON.parse(local);
       localStorage.setItem('portfolio_services', JSON.stringify(defaultServices));
       return defaultServices;
     }
@@ -706,9 +756,9 @@ export class SupabaseService {
         .from('testimonials')
         .select('*');
 
-      if (error || !data || data.length === 0) {
+      if (error || !data || data.length === 0 || data.some(t => t.company?.includes('FlaTheme') || t.name === 'Sandra Radford' || t.feedback?.includes('Lorem ipsum'))) {
         const local = localStorage.getItem('portfolio_testimonials');
-        if (local) return JSON.parse(local);
+        if (local && !local.includes('Sandra Radford') && !local.includes('FlaTheme')) return JSON.parse(local);
         localStorage.setItem('portfolio_testimonials', JSON.stringify(defaultTestimonials));
         return defaultTestimonials;
       }
@@ -716,7 +766,7 @@ export class SupabaseService {
       return data as TestimonialItem[];
     } catch {
       const local = localStorage.getItem('portfolio_testimonials');
-      if (local) return JSON.parse(local);
+      if (local && !local.includes('Sandra Radford') && !local.includes('FlaTheme')) return JSON.parse(local);
       localStorage.setItem('portfolio_testimonials', JSON.stringify(defaultTestimonials));
       return defaultTestimonials;
     }
@@ -774,9 +824,9 @@ export class SupabaseService {
         .select('*')
         .order('sort_order', { ascending: true });
 
-      if (error || !data || data.length === 0) {
+      if (error || !data || data.length === 0 || data.some(r => r.organization?.includes('FlaTheme') || r.title?.includes('Bachelor Degree of Business') || r.title?.includes('Master Degree of Design'))) {
         const local = localStorage.getItem('portfolio_resume');
-        if (local && !local.includes('Bachelor Degree of Business')) return JSON.parse(local);
+        if (local && !local.includes('Bachelor Degree of Business') && !local.includes('FlaTheme')) return JSON.parse(local);
         localStorage.setItem('portfolio_resume', JSON.stringify(defaultResume));
         return defaultResume;
       }
@@ -784,7 +834,7 @@ export class SupabaseService {
       return data as ResumeItem[];
     } catch {
       const local = localStorage.getItem('portfolio_resume');
-      if (local && !local.includes('Bachelor Degree of Business')) return JSON.parse(local);
+      if (local && !local.includes('Bachelor Degree of Business') && !local.includes('FlaTheme')) return JSON.parse(local);
       localStorage.setItem('portfolio_resume', JSON.stringify(defaultResume));
       return defaultResume;
     }
@@ -839,9 +889,9 @@ export class SupabaseService {
         .from('clients')
         .select('*');
 
-      if (error || !data || data.length === 0) {
+      if (error || !data || data.length === 0 || data.some(c => c.name?.includes('Logo') || c.name?.includes('Client 1'))) {
         const local = localStorage.getItem('portfolio_clients');
-        if (local) return JSON.parse(local);
+        if (local && !local.includes('Logo 0')) return JSON.parse(local);
         localStorage.setItem('portfolio_clients', JSON.stringify(defaultClients));
         return defaultClients;
       }
@@ -849,7 +899,7 @@ export class SupabaseService {
       return data as ClientItem[];
     } catch {
       const local = localStorage.getItem('portfolio_clients');
-      if (local) return JSON.parse(local);
+      if (local && !local.includes('Logo 0')) return JSON.parse(local);
       localStorage.setItem('portfolio_clients', JSON.stringify(defaultClients));
       return defaultClients;
     }
