@@ -119,7 +119,7 @@ export class SupabaseService {
   }
 
   private checkVersionAndResetCache(): void {
-    const CURRENT_VERSION = 'v8_masuma_address_sync';
+    const CURRENT_VERSION = 'v9_masuma_ieee_papers_reordered';
     if (typeof localStorage !== 'undefined') {
       if (localStorage.getItem('portfolio_data_version') !== CURRENT_VERSION) {
         localStorage.removeItem('portfolio_profile');
@@ -565,44 +565,32 @@ export class SupabaseService {
     }
   }
 
-  // ================= BLOGS =================
+  // ================= BLOGS / RESEARCH =================
   async getBlogs(): Promise<BlogItem[]> {
     const defaultBlogs: BlogItem[] = [
       {
         id: 'blog_1',
-        title: 'Developer-Oriented Classification of Mobile App Reviews Using a Hybrid BERT-XGBoost Ensemble',
-        slug: 'hybrid-bert-xgboost-mobile-app-reviews',
-        category: 'Research (IEEE)',
-        date: '2026',
-        author: 'Masuma Akter Lameya (1st Author)',
-        cover_image: '/assets/images/blog-bert-xgboost.jpg',
-        summary: 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN).',
-        content: 'Conference Publication: 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026.\n\nAuthor Position: 1st Author\n\nAbstract:\nThis research proposes a hybrid machine learning and deep learning framework combining BERT contextual embeddings with an XGBoost classifier for automated, developer-oriented sentiment and category classification of mobile app reviews. The system effectively extracts actionable bug reports, feature requests, and user experience feedback with high empirical precision.',
-        tags: ['IEEE Publication', 'BERT', 'NLP', 'XGBoost', 'Machine Learning']
-      },
-      {
-        id: 'blog_2',
         title: 'EffiViT-Hybrid: A CNN–Transformer Framework for Pancreatic Cancer Detection from CT Images',
         slug: 'effivit-hybrid-pancreatic-cancer-detection',
         category: 'Medical AI (IEEE)',
         date: '2026',
         author: 'Masuma Akter Lameya (3rd Author)',
         cover_image: '/assets/images/blog-effivit-cancer.jpg',
-        summary: 'Deep learning research combining Convolutional Neural Networks and Vision Transformers for early pancreatic cancer detection.',
+        summary: 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026 — Author Position: 3rd Author',
         content: 'Conference Publication: 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026.\n\nAuthor Position: 3rd Author\n\nAbstract:\nPancreatic cancer diagnosis from abdominal CT scans is clinically challenging due to complex surrounding anatomy and subtle early lesion margins. This paper introduces EffiViT-Hybrid, a fused architecture that leverages CNN feature extraction for local tissue textures alongside Vision Transformer attention mechanisms for global anatomical context.',
-        tags: ['Medical Imaging', 'Vision Transformer', 'Deep Learning', 'Computer Vision', 'Healthcare AI']
+        tags: ['IEEE Publication', 'Medical AI', 'Vision Transformer', 'Deep Learning', 'Computer Vision']
       },
       {
-        id: 'blog_3',
-        title: 'Building Scalable Enterprise Architectures with ASP.NET Core & Angular',
-        slug: 'building-scalable-enterprise-architectures-aspnet-core-angular',
-        category: 'Full-Stack Web',
-        date: '2025',
-        author: 'Masuma Akter Lameya',
-        cover_image: '/assets/images/blog-enterprise-architecture.jpg',
-        summary: 'Key patterns for building maintainable, enterprise-ready full-stack applications with clean architecture and SOLID principles.',
-        content: 'In modern full-stack development, decoupling backend business logic via clean architecture, RESTful API contracts, and robust ORMs like Entity Framework Core is paramount. Pairing this with Angular for structured, type-safe client interfaces ensures long-term scalability and ease of testing.',
-        tags: ['ASP.NET Core', 'Angular', 'Clean Architecture', 'REST APIs', 'TypeScript']
+        id: 'blog_2',
+        title: 'Developer-Oriented Classification of Mobile App Reviews Using a Hybrid BERT-XGBoost Ensemble',
+        slug: 'hybrid-bert-xgboost-mobile-app-reviews',
+        category: 'Research (IEEE)',
+        date: '2026',
+        author: 'Masuma Akter Lameya (1st Author)',
+        cover_image: '/assets/images/blog-bert-xgboost.jpg',
+        summary: 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026 — Author Position: 1st Author',
+        content: 'Conference Publication: 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN), 2026.\n\nAuthor Position: 1st Author\n\nAbstract:\nThis research proposes a hybrid machine learning and deep learning framework combining BERT contextual embeddings with an XGBoost classifier for automated, developer-oriented sentiment and category classification of mobile app reviews. The system effectively extracts actionable bug reports, feature requests, and user experience feedback with high empirical precision.',
+        tags: ['IEEE Publication', 'BERT', 'NLP', 'XGBoost', 'Machine Learning']
       }
     ];
 
@@ -612,9 +600,9 @@ export class SupabaseService {
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error || !data || data.length === 0 || data.some(b => b.title === '4 Years of Working From Home' || b.author === 'Christina Gray' || b.cover_image?.includes('blog-post-1.a6d3ea41'))) {
+      if (error || !data || data.length === 0 || data.some(b => b.title === '4 Years of Working From Home' || b.author === 'Christina Gray' || b.cover_image?.includes('blog-post-1.a6d3ea41') || b.title?.includes('Scalable Enterprise Architectures'))) {
         const local = localStorage.getItem('portfolio_blogs');
-        if (local && !local.includes('4 Years of Working') && !local.includes('blog-post-1.a6d3ea41')) return JSON.parse(local);
+        if (local && !local.includes('4 Years of Working') && !local.includes('blog-post-1.a6d3ea41') && !local.includes('Scalable Enterprise Architectures')) return JSON.parse(local);
         localStorage.setItem('portfolio_blogs', JSON.stringify(defaultBlogs));
         return defaultBlogs;
       }
@@ -622,7 +610,7 @@ export class SupabaseService {
       return data as BlogItem[];
     } catch {
       const local = localStorage.getItem('portfolio_blogs');
-      if (local && !local.includes('4 Years of Working') && !local.includes('blog-post-1.a6d3ea41')) return JSON.parse(local);
+      if (local && !local.includes('4 Years of Working') && !local.includes('blog-post-1.a6d3ea41') && !local.includes('Scalable Enterprise Architectures')) return JSON.parse(local);
       localStorage.setItem('portfolio_blogs', JSON.stringify(defaultBlogs));
       return defaultBlogs;
     }

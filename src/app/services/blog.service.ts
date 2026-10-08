@@ -23,6 +23,21 @@ export class BlogService {
   private posts = signal<BlogPost[]>([
     {
       id: '1',
+      slug: 'effivit-hybrid-pancreatic-cancer-detection',
+      title: 'EffiViT-Hybrid: A CNN–Transformer Framework for Pancreatic Cancer Detection from CT Images',
+      category: 'Medical AI (IEEE)',
+      postedOn: '2026',
+      postedBy: 'Masuma Akter Lameya (3rd Author)',
+      description: 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN).\n\nAuthor Position: 3rd Author\n\nAbstract: Pancreatic cancer diagnosis from abdominal CT scans presents major clinical challenges due to subtle textural boundaries. This research presents EffiViT-Hybrid, a fused CNN-Vision Transformer architecture designed to capture localized lesion features alongside global context for highly sensitive early-stage cancer detection.',
+      tags: ['#IEEE', '#MedicalImaging', '#VisionTransformer', '#DeepLearning', '#ComputerVision'],
+      image: '/assets/images/blog-effivit-cancer.jpg',
+      singleImage: '/assets/images/blog-effivit-cancer.jpg',
+      secondaryImage: '/assets/images/blog-effivit-cancer.jpg',
+      videoThumb: '/assets/images/blog-effivit-cancer.jpg',
+      videoUrl: 'https://github.com/MasumaLameya'
+    },
+    {
+      id: '2',
       slug: 'hybrid-bert-xgboost-mobile-app-reviews',
       title: 'Developer-Oriented Classification of Mobile App Reviews Using a Hybrid BERT-XGBoost Ensemble',
       category: 'Research (IEEE)',
@@ -34,36 +49,6 @@ export class BlogService {
       singleImage: '/assets/images/blog-bert-xgboost.jpg',
       secondaryImage: '/assets/images/blog-bert-xgboost.jpg',
       videoThumb: '/assets/images/blog-bert-xgboost.jpg',
-      videoUrl: 'https://github.com/MasumaLameya'
-    },
-    {
-      id: '2',
-      slug: 'effivit-hybrid-pancreatic-cancer-detection',
-      title: 'EffiViT-Hybrid: A CNN–Transformer Framework for Pancreatic Cancer Detection from CT Images',
-      category: 'Medical AI (IEEE)',
-      postedOn: '2026',
-      postedBy: 'Masuma Akter Lameya (3rd Author)',
-      description: 'Conference Publication at 2026 IEEE 2nd International Conference on Quantum Photonics, Artificial Intelligence & Networking (QPAIN).\n\nAuthor Position: 3rd Author\n\nAbstract: Pancreatic cancer diagnosis from abdominal CT scans presents major clinical challenges due to subtle textural boundaries. This research presents EffiViT-Hybrid, a fused CNN-Vision Transformer architecture designed to capture localized lesion features alongside global context for highly sensitive early-stage cancer detection.',
-      tags: ['#MedicalImaging', '#VisionTransformer', '#DeepLearning', '#ComputerVision'],
-      image: '/assets/images/blog-effivit-cancer.jpg',
-      singleImage: '/assets/images/blog-effivit-cancer.jpg',
-      secondaryImage: '/assets/images/blog-effivit-cancer.jpg',
-      videoThumb: '/assets/images/blog-effivit-cancer.jpg',
-      videoUrl: 'https://github.com/MasumaLameya'
-    },
-    {
-      id: '3',
-      slug: 'building-scalable-enterprise-architectures-aspnet-core-angular',
-      title: 'Building Scalable Enterprise Architectures with ASP.NET Core & Angular',
-      category: 'Full-Stack Web',
-      postedOn: '2025',
-      postedBy: 'Masuma Akter Lameya',
-      description: 'In modern full-stack development, decoupling backend business logic via clean architecture, RESTful API contracts, and robust ORMs like Entity Framework Core is paramount. Pairing this with Angular for structured, type-safe client interfaces ensures long-term scalability and ease of testing.',
-      tags: ['#ASPNETCore', '#Angular', '#CleanArchitecture', '#RESTAPIs'],
-      image: '/assets/images/blog-enterprise-architecture.jpg',
-      singleImage: '/assets/images/blog-enterprise-architecture.jpg',
-      secondaryImage: '/assets/images/blog-enterprise-architecture.jpg',
-      videoThumb: '/assets/images/blog-enterprise-architecture.jpg',
       videoUrl: 'https://github.com/MasumaLameya'
     }
   ]);

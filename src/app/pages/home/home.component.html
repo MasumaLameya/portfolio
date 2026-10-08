@@ -169,7 +169,13 @@
               </a>
             </div>
             <div class="flex flex-col justify-center flex-1">
-              <p class="font-mono text-xs md:text-sm text-pColor dark:text-white/70 mb-2">Posted on {{ post.date }}</p>
+              <div class="flex flex-wrap items-center gap-2 mb-2 font-mono text-xs md:text-sm text-pColor dark:text-white/70">
+                <span>Posted on {{ post.date }}</span>
+                @if (post.author) {
+                  <span>•</span>
+                  <span class="text-black dark:text-white font-medium">{{ post.author }}</span>
+                }
+              </div>
               <h3 class="font-poppins font-semibold text-2xl lg:text-3xl leading-snug mb-3 lg:mb-4">
                 <a [routerLink]="['/blog', post.slug]" class="hover:underline dark:text-white transition-colors duration-150 block">{{ post.title }}</a>
               </h3>
